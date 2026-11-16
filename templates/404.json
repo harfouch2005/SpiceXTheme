@@ -1,0 +1,98 @@
+{
+  "sections": {
+    "nf": {
+      "type": "spx2-404",
+      "settings": {
+        "heading": "We can't find that page.",
+        "subheading": "The link may be old. All six blends are still right here.",
+        "button_label": "Build your box",
+        "button_link": "shopify://pages/build-your-bundle",
+        "link_label": "Shop all six",
+        "link_url": "shopify://pages/shop-all"
+      }
+    },
+    "flavors": {
+      "type": "spx2-flavors",
+      "blocks": {
+        "f1": {
+          "type": "flavor",
+          "settings": {
+            "product": "daily-blend",
+            "descriptor": "Salt, Pepper & Garlic",
+            "tagline": "Simple and versatile for a flavorful punch.",
+            "bg": "#4D5057",
+            "fg": "#FFFFFF"
+          }
+        },
+        "f2": {
+          "type": "flavor",
+          "settings": {
+            "product": "taco-blast",
+            "descriptor": "Mild Taco Seasoning",
+            "tagline": "Bold and robust, Mexican-inspired flavor.",
+            "bg": "#D4302C",
+            "fg": "#FFFFFF"
+          }
+        },
+        "f3": {
+          "type": "flavor",
+          "settings": {
+            "product": "sweet-sriracha",
+            "descriptor": "Honey Sriracha Seasoning",
+            "tagline": "A perfect blend of sweet and heat.",
+            "bg": "#F47A3F",
+            "fg": "#1F0F05"
+          }
+        },
+        "f4": {
+          "type": "flavor",
+          "settings": {
+            "product": "golden-hive",
+            "descriptor": "Honey BBQ Seasoning",
+            "tagline": "Sweet and smoky with a whole lot of tang.",
+            "bg": "#F7B32B",
+            "fg": "#1F1503"
+          }
+        },
+        "f5": {
+          "type": "flavor",
+          "settings": {
+            "product": "bella-blend",
+            "descriptor": "Italian Seasoning",
+            "tagline": "Savory and earthy with a hint of garlic.",
+            "bg": "#2F6B34",
+            "fg": "#FFFFFF"
+          }
+        },
+        "f6": {
+          "type": "flavor",
+          "settings": {
+            "product": "oh-cajun",
+            "descriptor": "Cajun Seasoning",
+            "tagline": "Deeply smoky and savory with a touch of heat.",
+            "bg": "#8C2F26",
+            "fg": "#FFFFFF"
+          }
+        }
+      },
+      "block_order": [
+        "f1",
+        "f2",
+        "f3",
+        "f4",
+        "f5",
+        "f6"
+      ],
+      "settings": {
+        "heading": "You will forget you are eating healthy.",
+        "subheading": "Add one, or build a box of all six and save $12.95.",
+        "add_label": "Add",
+        "soldout_label": "Sold out"
+      }
+    }
+  },
+  "order": [
+    "nf",
+    "flavors"
+  ]
+}

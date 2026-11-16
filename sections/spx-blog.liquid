@@ -1,0 +1,130 @@
+{%- comment -%}
+  SpiceX Recipes blog index · "The SpiceX Cookbook"
+  - Featured (latest) recipe large, rest in grid
+  - Recipe photo from theme asset named in article tag "img:<filename>"
+  - Meta chips from tags: total:, level:, cal:, blend:
+{%- endcomment -%}
+
+{% style %}
+  .spx-blog { background: #faf7f1; font-family: var(--spx-font-body, 'DM Sans', sans-serif); }
+  .spx-blog *, .spx-blog *::before, .spx-blog *::after { box-sizing: border-box; }
+  .spx-blog__wrap { max-width: 1180px; margin: 0 auto; padding: clamp(30px, 5vw, 64px) clamp(16px, 3vw, 40px) 70px; }
+  .spx-blog__eyebrow { font-size: 11.5px; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: #b0691e; margin: 0 0 12px; text-align: center; }
+  .spx-blog__title { font-family: var(--spx-font-display); font-size: clamp(36px, 5.5vw, 62px); font-weight: 800; letter-spacing: -0.025em; text-align: center; color: #0a0a0a; margin: 0 0 10px; }
+  .spx-blog__title em { font-style: italic; color: #e8a823; }
+  .spx-blog__sub { text-align: center; color: #6b6b6b; font-size: clamp(15px, 1.4vw, 17px); max-width: 56ch; margin: 0 auto 40px; line-height: 1.55; }
+  .spx-blog__card { display: block; background: #fff; border: 1px solid #eee5d5; border-radius: 18px; overflow: hidden; text-decoration: none; color: #0a0a0a; transition: transform 0.25s ease, box-shadow 0.25s ease; }
+  .spx-blog__card:hover { transform: translateY(-4px); box-shadow: 0 24px 48px -20px rgba(10,10,10,0.25); }
+  .spx-blog__card-img { width: 100%; aspect-ratio: 4/3; object-fit: cover; display: block; background: #f0e9da; }
+  .spx-blog__card--featured { display: grid; grid-template-columns: 1.2fr 1fr; margin-bottom: 28px; }
+  .spx-blog__card--featured .spx-blog__card-img { aspect-ratio: auto; height: 100%; min-height: 340px; }
+  .spx-blog__card-body { padding: clamp(18px, 2.5vw, 34px); display: flex; flex-direction: column; justify-content: center; }
+  .spx-blog__chip { display: inline-block; font-size: 10.5px; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: #fff; border-radius: 100px; padding: 6px 12px; margin-bottom: 12px; width: fit-content; }
+  .spx-blog__card-title { font-family: var(--spx-font-display); font-size: clamp(20px, 2.4vw, 32px); font-weight: 800; letter-spacing: -0.015em; line-height: 1.1; margin: 0 0 10px; }
+  .spx-blog__card-ex { font-size: 14px; line-height: 1.55; color: #6b6b6b; margin: 0 0 14px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  .spx-blog__meta { display: flex; flex-wrap: wrap; gap: 8px; }
+  .spx-blog__meta span { font-size: 11.5px; font-weight: 700; letter-spacing: 0.06em; color: #4a4a4a; background: #f5efe2; border-radius: 100px; padding: 6px 12px; }
+  .spx-blog__featured-label { font-size: 11px; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase; color: #b0691e; margin-bottom: 10px; }
+  .spx-blog__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .spx-blog__grid .spx-blog__card-body { padding: 18px 20px 22px; }
+  @media (max-width: 900px) {
+    .spx-blog__card--featured { grid-template-columns: 1fr; }
+    .spx-blog__card--featured .spx-blog__card-img { min-height: 0; aspect-ratio: 4/3; }
+    .spx-blog__grid { grid-template-columns: 1fr; gap: 16px; }
+  }
+  @media (min-width: 901px) and (max-width: 1100px) { .spx-blog__grid { grid-template-columns: repeat(2, 1fr); } }
+{% endstyle %}
+
+{%- liquid
+  assign blend_names = 'Daily Blend,Bella Blend,Taco Blast,Sweet Sriracha,Golden Hive,Oh Cajun' | split: ','
+  assign blend_colors = '#4D5057,#2F6B34,#D4302C,#F47A3F,#F7B32B,#8C2F26' | split: ','
+-%}
+
+<div class="spx-blog">
+  <div class="spx-blog__wrap">
+    <p class="spx-blog__eyebrow">{{ section.settings.eyebrow | escape }}</p>
+    <h1 class="spx-blog__title">{{ section.settings.title }}</h1>
+    <p class="spx-blog__sub">{{ section.settings.sub | escape }}</p>
+
+    {%- for article in blog.articles limit: 24 -%}
+      {%- liquid
+        assign img_asset = ''
+        assign total_t = ''
+        assign level_t = ''
+        assign cal_t = ''
+        assign blend_t = ''
+        for tag in article.tags
+          if tag contains 'img:'
+            assign img_asset = tag | remove: 'img:'
+          elsif tag contains 'total:'
+            assign total_t = tag | remove: 'total:'
+          elsif tag contains 'level:'
+            assign level_t = tag | remove: 'level:'
+          elsif tag contains 'cal:'
+            assign cal_t = tag | remove: 'cal:'
+          elsif tag contains 'blend:'
+            assign blend_t = tag | remove: 'blend:'
+          endif
+        endfor
+        assign chip_color = '#D23C14'
+        for bn in blend_names
+          if blend_t == bn
+            assign chip_color = blend_colors[forloop.index0]
+          endif
+        endfor
+      -%}
+      {%- if forloop.first -%}
+        <a class="spx-blog__card spx-blog__card--featured" href="{{ article.url }}">
+          {%- if img_asset != blank -%}
+            <img class="spx-blog__card-img" src="{{ img_asset | asset_url }}" alt="{{ article.title | escape }}" loading="eager">
+          {%- elsif article.image -%}
+            <img class="spx-blog__card-img" src="{{ article.image | image_url: width: 1000 }}" alt="{{ article.title | escape }}" loading="eager">
+          {%- endif -%}
+          <div class="spx-blog__card-body">
+            <span class="spx-blog__featured-label">★ Featured recipe</span>
+            {%- if blend_t != blank -%}<span class="spx-blog__chip" style="background:{{ chip_color }};">Made with {{ blend_t }}</span>{%- endif -%}
+            <h2 class="spx-blog__card-title">{{ article.title }}</h2>
+            <p class="spx-blog__card-ex">{{ article.excerpt_or_content | strip_html | truncate: 180 }}</p>
+            <div class="spx-blog__meta">
+              {%- if total_t != blank -%}<span>⏱ {{ total_t }}</span>{%- endif -%}
+              {%- if level_t != blank -%}<span>{{ level_t }}</span>{%- endif -%}
+              {%- if cal_t != blank -%}<span>{{ cal_t }} cal</span>{%- endif -%}
+            </div>
+          </div>
+        </a>
+        <div class="spx-blog__grid">
+      {%- else -%}
+        <a class="spx-blog__card" href="{{ article.url }}">
+          {%- if img_asset != blank -%}
+            <img class="spx-blog__card-img" src="{{ img_asset | asset_url }}" alt="{{ article.title | escape }}" loading="lazy">
+          {%- elsif article.image -%}
+            <img class="spx-blog__card-img" src="{{ article.image | image_url: width: 700 }}" alt="{{ article.title | escape }}" loading="lazy">
+          {%- endif -%}
+          <div class="spx-blog__card-body">
+            {%- if blend_t != blank -%}<span class="spx-blog__chip" style="background:{{ chip_color }};">{{ blend_t }}</span>{%- endif -%}
+            <h2 class="spx-blog__card-title">{{ article.title }}</h2>
+            <div class="spx-blog__meta">
+              {%- if total_t != blank -%}<span>⏱ {{ total_t }}</span>{%- endif -%}
+              {%- if level_t != blank -%}<span>{{ level_t }}</span>{%- endif -%}
+              {%- if cal_t != blank -%}<span>{{ cal_t }} cal</span>{%- endif -%}
+            </div>
+          </div>
+        </a>
+      {%- endif -%}
+      {%- if forloop.last -%}</div>{%- endif -%}
+    {%- else -%}
+      <p style="text-align:center;color:#6b6b6b;">Recipes are coming soon · check back shortly.</p>
+    {%- endfor -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "SpiceX blog index",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "The SpiceX Cookbook" },
+    { "type": "html", "id": "title", "label": "Title", "default": "Recipes worth <em>repeating.</em>" },
+    { "type": "text", "id": "sub", "label": "Subheading", "default": "A field guide to big flavor · high-protein, macro-friendly meals built around SpiceX blends. New recipes drop regularly." }
+  ]
+}
+{% endschema %}

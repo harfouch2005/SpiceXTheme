@@ -1,0 +1,165 @@
+{%- comment -%}
+  SpiceX Loox Band · full-width banner that hosts the Loox trust badge (or any Loox app block).
+  - Edge-to-edge horizontal band
+  - Centered content
+  - Optional background + hairline borders
+  - All CSS scoped under #shopify-section-{{ section.id }}
+{%- endcomment -%}
+
+{% style %}
+  #shopify-section-{{ section.id }} {
+    width: 100%;
+    background: {{ section.settings.background_color }};
+    color: {{ section.settings.text_color }};
+    padding: {{ section.settings.padding_y | default: 28 }}px 0;
+    box-sizing: border-box;
+    {% if section.settings.show_borders %}
+      border-top: 1px solid {{ section.settings.border_color }};
+      border-bottom: 1px solid {{ section.settings.border_color }};
+    {% endif %}
+  }
+  #shopify-section-{{ section.id }} *,
+  #shopify-section-{{ section.id }} *::before,
+  #shopify-section-{{ section.id }} *::after { box-sizing: border-box; }
+
+  #shopify-section-{{ section.id }} .spx-loox-band {
+    width: 100%;
+    max-width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    padding: 0 clamp(16px, 4vw, 48px);
+  }
+  #shopify-section-{{ section.id }} .spx-loox-band__title {
+    font-family: var(--spx-font-body);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: inherit;
+    opacity: 0.7;
+    margin: 0;
+    text-align: center;
+    line-height: 1;
+  }
+  #shopify-section-{{ section.id }} .spx-loox-band__app {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  #shopify-section-{{ section.id }} .spx-loox-band__app > * {
+    color: inherit;
+  }
+  #shopify-section-{{ section.id }} .spx-loox-band__empty {
+    font-family: var(--spx-font-body);
+    color: inherit;
+    opacity: 0.5;
+    font-size: 12px;
+    text-align: center;
+  }
+
+  @media (max-width: 600px) {
+    #shopify-section-{{ section.id }} { padding: {{ section.settings.padding_y | default: 28 | minus: 8 }}px 0; }
+    #shopify-section-{{ section.id }} .spx-loox-band__title { font-size: 10px; letter-spacing: 0.18em; }
+  }
+{% endstyle %}
+
+<section class="spx-loox-band" role="region" aria-label="Customer rating">
+  {%- if section.settings.title != blank -%}
+    <p class="spx-loox-band__title">{{ section.settings.title | escape }}</p>
+  {%- endif -%}
+
+  {%- assign has_app = false -%}
+  {%- for block in section.blocks -%}
+    {%- if block.type == '@app' -%}
+      {%- assign has_app = true -%}
+    {%- endif -%}
+  {%- endfor -%}
+
+  {%- if has_app -%}
+    <div class="spx-loox-band__app">
+      {%- for block in section.blocks -%}
+        {%- if block.type == '@app' -%}
+          <div {{ block.shopify_attributes }}>{% render block %}</div>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  {%- else -%}
+    <p class="spx-loox-band__empty">Add a Loox app block to display the trust badge.</p>
+  {%- endif -%}
+</section>
+
+{% schema %}
+{
+  "name": "Loox band",
+  "class": "spx-loox-band-section",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Full-width banner for the Loox trust badge. Add a Loox app block below to populate it."
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Eyebrow text (optional)",
+      "default": "Trusted by thousands"
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#0a0a0a"
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "label": "Vertical padding",
+      "min": 12,
+      "max": 80,
+      "step": 4,
+      "default": 32,
+      "unit": "px"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_borders",
+      "label": "Show top + bottom hairlines",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Hairline color",
+      "default": "#e5e5e5"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "@app"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Loox band",
+      "category": "Social proof"
+    }
+  ]
+}
+{% endschema %}

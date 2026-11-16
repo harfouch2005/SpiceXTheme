@@ -1,0 +1,11 @@
+{
+  "sections": {
+    "main": {
+      "type": "spx2-search",
+      "settings": {}
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

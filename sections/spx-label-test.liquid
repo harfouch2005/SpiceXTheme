@@ -1,0 +1,575 @@
+{%- comment -%}
+  SpiceX "Why SpiceX is Different" · editorial Bite-Toothpaste-style benefits section
+  - Three-column desktop layout: 3 benefits | product photo | 3 benefits
+  - Hand-drawn SVG underline beneath headline (with optional cyan accent line)
+  - Ultra-minimal single-weight line icons (28px, 1.5 stroke, black only)
+  - Warm cream background, generous whitespace, no card backgrounds
+  - All CSS scoped under #shopify-section-{{ section.id }}
+{%- endcomment -%}
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+
+{% style %}
+  #shopify-section-{{ section.id }} {
+    --w-bg: {{ section.settings.bg_color | default: '#f7f3ec' }};
+    --w-ink: #0a0a0a;
+    --w-ink-muted: #6b6b6b;
+    --w-ink-dim: #999999;
+    --w-accent: {{ section.settings.accent_color | default: '#0099d6' }};
+    --w-display: var(--spx-font-display);
+    --w-body: var(--spx-font-body);
+    --w-ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+    background: var(--w-bg);
+    color: var(--w-ink);
+    font-family: var(--w-body);
+    box-sizing: border-box;
+  }
+  #shopify-section-{{ section.id }} *,
+  #shopify-section-{{ section.id }} *::before,
+  #shopify-section-{{ section.id }} *::after { box-sizing: border-box; }
+
+  #shopify-section-{{ section.id }} .why {
+    max-width: 1480px;
+    margin: 0 auto;
+    padding: 128px 56px;
+  }
+
+  /* ===== Headline ===== */
+  #shopify-section-{{ section.id }} .why-headline-wrap {
+    text-align: center;
+    margin: 0 0 96px;
+  }
+  #shopify-section-{{ section.id }} .why-headline {
+    font-family: var(--w-display);
+    font-weight: 500;
+    font-size: clamp(40px, 5vw, 72px);
+    line-height: 1.02;
+    letter-spacing: -0.025em;
+    color: var(--w-ink);
+    margin: 0 0 20px;
+    font-variation-settings: "WONK" 0, "SOFT" 30, "opsz" 144;
+  }
+  #shopify-section-{{ section.id }} .why-underline {
+    display: inline-block;
+    width: 280px;
+    max-width: 80%;
+    height: 16px;
+    overflow: visible;
+    opacity: 0;
+    transition: opacity 0.6s var(--w-ease);
+  }
+  #shopify-section-{{ section.id }} .why-underline.is-in { opacity: 1; }
+  #shopify-section-{{ section.id }} .why-underline path {
+    fill: none;
+    stroke-linecap: round;
+    stroke-width: 2;
+    stroke-dasharray: 320;
+    stroke-dashoffset: 320;
+    transition: stroke-dashoffset 0.9s var(--w-ease);
+  }
+  #shopify-section-{{ section.id }} .why-underline.is-in path { stroke-dashoffset: 0; }
+  #shopify-section-{{ section.id }} .why-underline path.is-main { stroke: var(--w-ink); }
+  #shopify-section-{{ section.id }} .why-underline path.is-accent {
+    stroke: var(--w-accent);
+    transition-delay: 0.35s;
+    stroke-dasharray: 260;
+    stroke-dashoffset: 260;
+  }
+
+  /* ===== Three-column grid ===== */
+  #shopify-section-{{ section.id }} .why-grid {
+    display: grid;
+    grid-template-columns: 0.7fr 2.8fr 0.7fr;
+    gap: 16px;
+    align-items: center;
+  }
+
+  #shopify-section-{{ section.id }} .why-col {
+    display: flex;
+    flex-direction: column;
+    gap: 80px;
+  }
+
+  /* ===== Hero product image · center column ===== */
+  #shopify-section-{{ section.id }} .why-hero {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 820px;
+  }
+  /* Soft radial halo behind product image */
+  #shopify-section-{{ section.id }} .why-hero::before {
+    content: '';
+    position: absolute;
+    width: 110%;
+    height: 90%;
+    background: radial-gradient(ellipse at center, rgba(0, 153, 214, 0.06), transparent 65%);
+    z-index: 0;
+    pointer-events: none;
+  }
+  #shopify-section-{{ section.id }} .why-hero-img {
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+    max-height: 980px;
+    height: auto;
+    object-fit: contain;
+    display: block;
+    opacity: 0;
+    transition: opacity 0.8s var(--w-ease);
+    filter: drop-shadow(0 40px 60px rgba(10, 10, 10, 0.18));
+    z-index: 1;
+  }
+  #shopify-section-{{ section.id }} .why-hero-img.is-in { opacity: 1; }
+  #shopify-section-{{ section.id }} .why-hero-placeholder {
+    width: 100%;
+    max-width: 480px;
+    aspect-ratio: 3/4;
+    border: 1.5px dashed var(--w-ink-dim);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: var(--w-ink-dim);
+    font-family: var(--w-body);
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 32px;
+    line-height: 1.5;
+  }
+
+  /* ===== Benefit ===== */
+  #shopify-section-{{ section.id }} .why-feature {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity 0.7s var(--w-ease), transform 0.7s var(--w-ease);
+  }
+  #shopify-section-{{ section.id }} .why-feature.is-in {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  /* Editorial number prefix */
+  #shopify-section-{{ section.id }} .why-feature-number {
+    font-family: var(--w-display);
+    font-style: italic;
+    font-weight: 500;
+    font-size: 16px;
+    color: var(--w-accent);
+    line-height: 1;
+    margin-bottom: 14px;
+    letter-spacing: -0.01em;
+    font-variation-settings: "WONK" 0, "SOFT" 50;
+  }
+  /* Icon container with colored halo */
+  #shopify-section-{{ section.id }} .why-feature-icon {
+    position: relative;
+    width: 60px;
+    height: 60px;
+    margin-bottom: 20px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    color: var(--icon-color, var(--w-accent));
+  }
+  #shopify-section-{{ section.id }} .why-feature-icon::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: var(--icon-color, var(--w-accent));
+    opacity: 0.10;
+  }
+  #shopify-section-{{ section.id }} .why-feature-icon svg {
+    position: relative;
+    width: 30px;
+    height: 30px;
+    display: block;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    z-index: 1;
+  }
+  #shopify-section-{{ section.id }} .why-feature-label {
+    font-family: var(--w-body);
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--w-ink);
+    margin: 0 0 14px;
+    line-height: 1.3;
+    max-width: 220px;
+  }
+  #shopify-section-{{ section.id }} .why-feature-body {
+    font-family: var(--w-body);
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.6;
+    color: #555555;
+    margin: 0;
+    max-width: 240px;
+  }
+
+  /* Stagger delays (top-left → bottom-right reading order on desktop) */
+  #shopify-section-{{ section.id }} .why-col--left .why-feature:nth-child(1) { transition-delay: 0.05s; }
+  #shopify-section-{{ section.id }} .why-col--right .why-feature:nth-child(1) { transition-delay: 0.15s; }
+  #shopify-section-{{ section.id }} .why-col--left .why-feature:nth-child(2) { transition-delay: 0.25s; }
+  #shopify-section-{{ section.id }} .why-col--right .why-feature:nth-child(2) { transition-delay: 0.35s; }
+  #shopify-section-{{ section.id }} .why-col--left .why-feature:nth-child(3) { transition-delay: 0.45s; }
+  #shopify-section-{{ section.id }} .why-col--right .why-feature:nth-child(3) { transition-delay: 0.55s; }
+
+  /* ===== Tablet ===== */
+  @media (max-width: 1100px) {
+    #shopify-section-{{ section.id }} .why { padding: 96px 32px; }
+    #shopify-section-{{ section.id }} .why-grid {
+      grid-template-columns: 0.65fr 2.2fr 0.65fr;
+      gap: 14px;
+    }
+    #shopify-section-{{ section.id }} .why-col { gap: 56px; }
+    #shopify-section-{{ section.id }} .why-headline { font-size: 48px; }
+    #shopify-section-{{ section.id }} .why-headline-wrap { margin-bottom: 72px; }
+    #shopify-section-{{ section.id }} .why-hero { min-height: 620px; }
+    #shopify-section-{{ section.id }} .why-hero-img { max-height: 720px; }
+    #shopify-section-{{ section.id }} .why-feature-icon { width: 52px; height: 52px; }
+    #shopify-section-{{ section.id }} .why-feature-icon svg { width: 26px; height: 26px; }
+  }
+
+  /* ===== Mobile ===== */
+  @media (max-width: 700px) {
+    #shopify-section-{{ section.id }} .why { padding: 80px 20px; }
+    #shopify-section-{{ section.id }} .why-headline { font-size: 36px; }
+    #shopify-section-{{ section.id }} .why-headline-wrap { margin-bottom: 48px; }
+    #shopify-section-{{ section.id }} .why-grid {
+      grid-template-columns: 1fr 1fr;
+      gap: 40px 24px;
+    }
+    /* Product image spans full width at top */
+    #shopify-section-{{ section.id }} .why-hero {
+      grid-column: 1 / -1;
+      grid-row: 1;
+      min-height: 0;
+      max-height: 400px;
+      margin-bottom: 16px;
+    }
+    #shopify-section-{{ section.id }} .why-hero-img { max-height: 400px; }
+    #shopify-section-{{ section.id }} .why-hero-placeholder { max-width: 320px; aspect-ratio: 4/5; }
+    /* Both columns stack into 2-col grid below image */
+    #shopify-section-{{ section.id }} .why-col {
+      display: contents;
+    }
+    /* Feature stagger doesn't apply when column is "display: contents" · reset and use simple order */
+    #shopify-section-{{ section.id }} .why-feature {
+      grid-column: span 1;
+    }
+    /* Manual ordering: left-col benefits 1,2,3 then right-col benefits 4,5,6 read L→R T→B */
+    #shopify-section-{{ section.id }} .why-col--left .why-feature:nth-child(1) { grid-row: 2; grid-column: 1; transition-delay: 0.05s; }
+    #shopify-section-{{ section.id }} .why-col--right .why-feature:nth-child(1) { grid-row: 2; grid-column: 2; transition-delay: 0.15s; }
+    #shopify-section-{{ section.id }} .why-col--left .why-feature:nth-child(2) { grid-row: 3; grid-column: 1; transition-delay: 0.25s; }
+    #shopify-section-{{ section.id }} .why-col--right .why-feature:nth-child(2) { grid-row: 3; grid-column: 2; transition-delay: 0.35s; }
+    #shopify-section-{{ section.id }} .why-col--left .why-feature:nth-child(3) { grid-row: 4; grid-column: 1; transition-delay: 0.45s; }
+    #shopify-section-{{ section.id }} .why-col--right .why-feature:nth-child(3) { grid-row: 4; grid-column: 2; transition-delay: 0.55s; }
+    #shopify-section-{{ section.id }} .why-feature-icon { width: 48px; height: 48px; margin-bottom: 14px; }
+    #shopify-section-{{ section.id }} .why-feature-icon svg { width: 24px; height: 24px; }
+    #shopify-section-{{ section.id }} .why-feature-number { font-size: 14px; margin-bottom: 10px; }
+    #shopify-section-{{ section.id }} .why-feature-label { font-size: 12px; letter-spacing: 0.14em; margin-bottom: 10px; }
+    #shopify-section-{{ section.id }} .why-feature-body { font-size: 13.5px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #shopify-section-{{ section.id }} .why-feature,
+    #shopify-section-{{ section.id }} .why-hero-img { opacity: 1; transform: none; transition: none; }
+    #shopify-section-{{ section.id }} .why-underline { opacity: 1; }
+    #shopify-section-{{ section.id }} .why-underline path { stroke-dashoffset: 0; transition: none; }
+  }
+{% endstyle %}
+
+{%- liquid
+  assign feature_blocks = section.blocks
+  assign total = feature_blocks.size
+  assign half = total | divided_by: 2
+  assign remainder = total | modulo: 2
+  if total > 0 and remainder != 0
+    assign half = half | plus: 1
+  endif
+-%}
+
+<section class="why" aria-labelledby="why-headline-{{ section.id }}">
+  <div class="why-headline-wrap">
+    <h2 id="why-headline-{{ section.id }}" class="why-headline">{{ section.settings.headline | default: 'Why SpiceX is Different' | escape }}</h2>
+    {%- comment -%} Hand-drawn-style SVG underline with optional cyan printer-mark accent {%- endcomment -%}
+    <svg class="why-underline" viewBox="0 0 280 16" aria-hidden="true" preserveAspectRatio="none" data-why-underline>
+      <path class="is-main" d="M 6 6 Q 50 3, 90 5.5 T 175 5 Q 220 7, 274 5"/>
+      {%- if section.settings.show_accent_underline -%}
+        <path class="is-accent" d="M 28 13 Q 80 11, 140 12.5 T 252 12"/>
+      {%- endif -%}
+    </svg>
+  </div>
+
+  <div class="why-grid">
+    {%- comment -%} ===== Left column ===== {%- endcomment -%}
+    <div class="why-col why-col--left">
+      {%- for block in feature_blocks -%}
+        {%- if forloop.index0 < half -%}
+          {%- assign num = forloop.index | prepend: '0' -%}
+          {%- assign icon_col = block.settings.icon_color | default: section.settings.accent_color | default: '#0099d6' -%}
+          <div class="why-feature" data-why-feature {{ block.shopify_attributes }}>
+            <span class="why-feature-number" aria-hidden="true">{{ num }}</span>
+            <span class="why-feature-icon" aria-hidden="true" style="--icon-color: {{ icon_col }};">
+              {%- assign icon = block.settings.icon | default: 'leaf' -%}
+              {%- case icon -%}
+                {%- when 'leaf' -%}
+                  <svg viewBox="0 0 28 28"><path d="M5 23 C 5 12, 12 5, 23 5 C 23 16, 16 23, 5 23 Z"/><path d="M5 23 L 16 12"/></svg>
+                {%- when 'sprout' -%}
+                  <svg viewBox="0 0 28 28"><path d="M14 24 V 14"/><path d="M14 14 C 14 10, 10 7, 5 7 C 5 12, 9 14, 14 14 Z"/><path d="M14 14 C 14 10, 18 7, 23 7 C 23 12, 19 14, 14 14 Z"/></svg>
+                {%- when 'shield' -%}
+                  <svg viewBox="0 0 28 28"><path d="M14 3 L 5 6.5 V 14 C 5 19.5, 9.5 24, 14 25 C 18.5 24, 23 19.5, 23 14 V 6.5 Z"/><path d="M10.5 14 L 13 16.5 L 18 11.5"/></svg>
+                {%- when 'hand' -%}
+                  <svg viewBox="0 0 28 28"><path d="M9 14 V 7 a 1.8 1.8 0 0 1 3.6 0 V 12"/><path d="M12.6 12 V 5 a 1.8 1.8 0 0 1 3.6 0 V 12"/><path d="M16.2 12 V 7 a 1.8 1.8 0 0 1 3.6 0 V 14"/><path d="M19.8 12 V 9 a 1.8 1.8 0 0 1 3.6 0 V 18 a 7 7 0 0 1 -14 0 V 14"/></svg>
+                {%- when 'no' -%}
+                  <svg viewBox="0 0 28 28"><circle cx="14" cy="14" r="10"/><line x1="7" y1="21" x2="21" y2="7"/></svg>
+                {%- when 'beaker' -%}
+                  <svg viewBox="0 0 28 28"><path d="M10 4 H 18"/><path d="M11 4 V 12 L 6 22 a 1 1 0 0 0 1 1.5 H 21 a 1 1 0 0 0 1 -1.5 L 17 12 V 4"/><line x1="6" y1="22" x2="22" y2="6"/></svg>
+                {%- when 'label' -%}
+                  <svg viewBox="0 0 28 28"><path d="M4 10 L 4 21 L 16 21 L 25 14 L 16 7 L 4 7 Z"/><circle cx="9" cy="14" r="1.2" fill="currentColor"/></svg>
+                {%- when 'star' -%}
+                  <svg viewBox="0 0 28 28"><path d="M14 4 L 16.5 10.5 L 24 11 L 18.5 16 L 20 24 L 14 20 L 8 24 L 9.5 16 L 4 11 L 11.5 10.5 Z"/></svg>
+                {%- when 'jar' -%}
+                  <svg viewBox="0 0 28 28"><rect x="9" y="3" width="10" height="2.5"/><path d="M8 7 H 20 V 24 H 8 Z" stroke-linejoin="round"/><line x1="10.5" y1="12" x2="17.5" y2="12"/><line x1="10.5" y1="15" x2="17.5" y2="15"/></svg>
+                {%- when 'mortar' -%}
+                  <svg viewBox="0 0 28 28"><path d="M4 13 H 24 L 20.5 23 H 7.5 Z"/><path d="M14 13 V 5"/><circle cx="14" cy="4" r="1.8"/></svg>
+                {%- when 'check' -%}
+                  <svg viewBox="0 0 28 28"><circle cx="14" cy="14" r="10"/><path d="M9 14.5 L 12.5 18 L 19 11"/></svg>
+                {%- when 'heart' -%}
+                  <svg viewBox="0 0 28 28"><path d="M14 22 L 5.5 13.5 a 4.5 4.5 0 0 1 6.5 -6 L 14 9 L 16 7.5 a 4.5 4.5 0 0 1 6.5 6 Z"/></svg>
+                {%- when 'usa' -%}
+                  <svg viewBox="0 0 28 28"><line x1="5" y1="3" x2="5" y2="25"/><path d="M5 5 H 23 V 14 H 5"/><line x1="5" y1="8" x2="18" y2="8"/><line x1="5" y1="11" x2="18" y2="11"/></svg>
+                {%- when 'globe' -%}
+                  <svg viewBox="0 0 28 28"><circle cx="14" cy="14" r="10"/><ellipse cx="14" cy="14" rx="4" ry="10"/><line x1="4" y1="14" x2="24" y2="14"/></svg>
+                {%- when 'sparkle' -%}
+                  <svg viewBox="0 0 28 28"><path d="M14 4 V 10 M 14 18 V 24 M 4 14 H 10 M 18 14 H 24 M 7 7 L 11 11 M 17 17 L 21 21 M 7 21 L 11 17 M 17 11 L 21 7"/></svg>
+                {%- else -%}
+                  <svg viewBox="0 0 28 28"><circle cx="14" cy="14" r="10"/></svg>
+              {%- endcase -%}
+            </span>
+            <h3 class="why-feature-label">{{ block.settings.label | escape }}</h3>
+            <p class="why-feature-body">{{ block.settings.body | escape }}</p>
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+
+    {%- comment -%} ===== Center: product image ===== {%- endcomment -%}
+    <div class="why-hero">
+      {%- if section.settings.hero_image != blank -%}
+        <img class="why-hero-img" data-why-img
+          src="{{ section.settings.hero_image | image_url: width: 960 }}"
+          srcset="{{ section.settings.hero_image | image_url: width: 480 }} 480w, {{ section.settings.hero_image | image_url: width: 720 }} 720w, {{ section.settings.hero_image | image_url: width: 960 }} 960w, {{ section.settings.hero_image | image_url: width: 1280 }} 1280w"
+          sizes="(max-width: 700px) 320px, (max-width: 1100px) 420px, 560px"
+          alt="{{ section.settings.hero_image.alt | default: section.settings.headline | escape }}"
+          loading="lazy">
+      {%- else -%}
+        <div class="why-hero-placeholder">[Product hero image · Daily Blend on cutting board, lifestyle composition]</div>
+      {%- endif -%}
+    </div>
+
+    {%- comment -%} ===== Right column ===== {%- endcomment -%}
+    <div class="why-col why-col--right">
+      {%- for block in feature_blocks -%}
+        {%- if forloop.index0 >= half -%}
+          {%- assign num = forloop.index | prepend: '0' -%}
+          {%- assign icon_col = block.settings.icon_color | default: section.settings.accent_color | default: '#0099d6' -%}
+          <div class="why-feature" data-why-feature {{ block.shopify_attributes }}>
+            <span class="why-feature-number" aria-hidden="true">{{ num }}</span>
+            <span class="why-feature-icon" aria-hidden="true" style="--icon-color: {{ icon_col }};">
+              {%- assign icon = block.settings.icon | default: 'leaf' -%}
+              {%- case icon -%}
+                {%- when 'leaf' -%}
+                  <svg viewBox="0 0 28 28"><path d="M5 23 C 5 12, 12 5, 23 5 C 23 16, 16 23, 5 23 Z"/><path d="M5 23 L 16 12"/></svg>
+                {%- when 'sprout' -%}
+                  <svg viewBox="0 0 28 28"><path d="M14 24 V 14"/><path d="M14 14 C 14 10, 10 7, 5 7 C 5 12, 9 14, 14 14 Z"/><path d="M14 14 C 14 10, 18 7, 23 7 C 23 12, 19 14, 14 14 Z"/></svg>
+                {%- when 'shield' -%}
+                  <svg viewBox="0 0 28 28"><path d="M14 3 L 5 6.5 V 14 C 5 19.5, 9.5 24, 14 25 C 18.5 24, 23 19.5, 23 14 V 6.5 Z"/><path d="M10.5 14 L 13 16.5 L 18 11.5"/></svg>
+                {%- when 'hand' -%}
+                  <svg viewBox="0 0 28 28"><path d="M9 14 V 7 a 1.8 1.8 0 0 1 3.6 0 V 12"/><path d="M12.6 12 V 5 a 1.8 1.8 0 0 1 3.6 0 V 12"/><path d="M16.2 12 V 7 a 1.8 1.8 0 0 1 3.6 0 V 14"/><path d="M19.8 12 V 9 a 1.8 1.8 0 0 1 3.6 0 V 18 a 7 7 0 0 1 -14 0 V 14"/></svg>
+                {%- when 'no' -%}
+                  <svg viewBox="0 0 28 28"><circle cx="14" cy="14" r="10"/><line x1="7" y1="21" x2="21" y2="7"/></svg>
+                {%- when 'beaker' -%}
+                  <svg viewBox="0 0 28 28"><path d="M10 4 H 18"/><path d="M11 4 V 12 L 6 22 a 1 1 0 0 0 1 1.5 H 21 a 1 1 0 0 0 1 -1.5 L 17 12 V 4"/><line x1="6" y1="22" x2="22" y2="6"/></svg>
+                {%- when 'label' -%}
+                  <svg viewBox="0 0 28 28"><path d="M4 10 L 4 21 L 16 21 L 25 14 L 16 7 L 4 7 Z"/><circle cx="9" cy="14" r="1.2" fill="currentColor"/></svg>
+                {%- when 'star' -%}
+                  <svg viewBox="0 0 28 28"><path d="M14 4 L 16.5 10.5 L 24 11 L 18.5 16 L 20 24 L 14 20 L 8 24 L 9.5 16 L 4 11 L 11.5 10.5 Z"/></svg>
+                {%- when 'jar' -%}
+                  <svg viewBox="0 0 28 28"><rect x="9" y="3" width="10" height="2.5"/><path d="M8 7 H 20 V 24 H 8 Z" stroke-linejoin="round"/><line x1="10.5" y1="12" x2="17.5" y2="12"/><line x1="10.5" y1="15" x2="17.5" y2="15"/></svg>
+                {%- when 'mortar' -%}
+                  <svg viewBox="0 0 28 28"><path d="M4 13 H 24 L 20.5 23 H 7.5 Z"/><path d="M14 13 V 5"/><circle cx="14" cy="4" r="1.8"/></svg>
+                {%- when 'check' -%}
+                  <svg viewBox="0 0 28 28"><circle cx="14" cy="14" r="10"/><path d="M9 14.5 L 12.5 18 L 19 11"/></svg>
+                {%- when 'heart' -%}
+                  <svg viewBox="0 0 28 28"><path d="M14 22 L 5.5 13.5 a 4.5 4.5 0 0 1 6.5 -6 L 14 9 L 16 7.5 a 4.5 4.5 0 0 1 6.5 6 Z"/></svg>
+                {%- when 'usa' -%}
+                  <svg viewBox="0 0 28 28"><line x1="5" y1="3" x2="5" y2="25"/><path d="M5 5 H 23 V 14 H 5"/><line x1="5" y1="8" x2="18" y2="8"/><line x1="5" y1="11" x2="18" y2="11"/></svg>
+                {%- when 'globe' -%}
+                  <svg viewBox="0 0 28 28"><circle cx="14" cy="14" r="10"/><ellipse cx="14" cy="14" rx="4" ry="10"/><line x1="4" y1="14" x2="24" y2="14"/></svg>
+                {%- when 'sparkle' -%}
+                  <svg viewBox="0 0 28 28"><path d="M14 4 V 10 M 14 18 V 24 M 4 14 H 10 M 18 14 H 24 M 7 7 L 11 11 M 17 17 L 21 21 M 7 21 L 11 17 M 17 11 L 21 7"/></svg>
+                {%- else -%}
+                  <svg viewBox="0 0 28 28"><circle cx="14" cy="14" r="10"/></svg>
+              {%- endcase -%}
+            </span>
+            <h3 class="why-feature-label">{{ block.settings.label | escape }}</h3>
+            <p class="why-feature-body">{{ block.settings.body | escape }}</p>
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+<script>
+  (function() {
+    var section = document.getElementById('shopify-section-{{ section.id }}');
+    if (!section) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (!('IntersectionObserver' in window)) {
+      section.querySelectorAll('[data-why-feature], [data-why-underline], [data-why-img]').forEach(function(el) { el.classList.add('is-in'); });
+      return;
+    }
+    var io = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-in');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+    section.querySelectorAll('[data-why-feature], [data-why-underline], [data-why-img]').forEach(function(el) { io.observe(el); });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Why we're different",
+  "class": "spx-why-section",
+  "max_blocks": 6,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Header"
+    },
+    {
+      "type": "text",
+      "id": "headline",
+      "label": "Headline",
+      "default": "Why SpiceX is Different"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_accent_underline",
+      "label": "Show subtle cyan accent line (printer's mark)",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Center product image"
+    },
+    {
+      "type": "image_picker",
+      "id": "hero_image",
+      "label": "Hero product image",
+      "info": "Lifestyle shot · bottle on cutting board with a small wooden spoon of seasoning. Asymmetric, naturally lit. Image becomes the gravitational center of the section."
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background",
+      "default": "#f7f3ec"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent (underline only)",
+      "default": "#0099d6"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Benefit",
+      "settings": [
+        {
+          "type": "color",
+          "id": "icon_color",
+          "label": "Icon color",
+          "default": "#0099d6",
+          "info": "Used for the icon stroke and the subtle halo behind it."
+        },
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "default": "leaf",
+          "options": [
+            { "value": "leaf", "label": "Leaf" },
+            { "value": "sprout", "label": "Sprout (non-GMO)" },
+            { "value": "shield", "label": "Shield" },
+            { "value": "hand", "label": "Hand" },
+            { "value": "no", "label": "No circle" },
+            { "value": "beaker", "label": "Beaker crossed out" },
+            { "value": "label", "label": "Label tag" },
+            { "value": "star", "label": "Star" },
+            { "value": "jar", "label": "Jar" },
+            { "value": "mortar", "label": "Mortar & pestle" },
+            { "value": "check", "label": "Checkmark" },
+            { "value": "heart", "label": "Heart (geometric)" },
+            { "value": "usa", "label": "USA flag" },
+            { "value": "globe", "label": "Globe" },
+            { "value": "sparkle", "label": "Sparkle" }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Heading (will display uppercase)",
+          "default": "REAL INGREDIENTS"
+        },
+        {
+          "type": "textarea",
+          "id": "body",
+          "label": "Body",
+          "default": "Every spice is listed by name. No mystery 'spices,' no natural flavors, nothing we can't pronounce."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Why we're different",
+      "category": "Social proof",
+      "blocks": [
+        { "type": "feature", "settings": { "icon": "leaf", "label": "REAL INGREDIENTS", "body": "Every spice and herb is listed by name on the back of the jar. No mystery \"spices,\" no natural flavors, no anything we can't pronounce." } },
+        { "type": "feature", "settings": { "icon": "beaker", "label": "NO SYNTHETIC FILLERS", "body": "No silicon dioxide. No calcium silicate. No anti-caking agents. The only binder we ever use is non-GMO cornstarch." } },
+        { "type": "feature", "settings": { "icon": "sprout", "label": "NON-GMO", "body": "Every ingredient sourced from non-GMO suppliers. Every blend. Every jar. Every time." } },
+        { "type": "feature", "settings": { "icon": "mortar", "label": "MADE IN SMALL BATCHES", "body": "Hand-blended in Denver in batches small enough that we know what's in every jar. Big enough to ship to your kitchen this week." } },
+        { "type": "feature", "settings": { "icon": "check", "label": "NO MSG. NO GUMS. NO JUNK.", "body": "No monosodium glutamate. No xanthan gum. No carrageenan. None of the additives that make grocery store blends taste flat." } },
+        { "type": "feature", "settings": { "icon": "heart", "label": "30-DAY MONEY BACK GUARANTEE", "body": "Love it or get your money back within 30 days." } }
+      ]
+    }
+  ]
+}
+{% endschema %}

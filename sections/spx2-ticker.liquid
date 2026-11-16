@@ -1,0 +1,32 @@
+<style>
+.s2-ticker__track{gap:0;animation:s2-tick 40s linear infinite;will-change:transform}
+.s2-ticker__set{display:flex;align-items:center;gap:36px;padding-right:36px;flex:0 0 auto}
+.s2-ticker__item a{color:inherit;text-decoration:underline;text-underline-offset:4px;text-decoration-thickness:1.5px}
+.s2-ticker__item a:hover{color:var(--s2-flame-dk)}
+@keyframes s2-tick{from{transform:translateX(0)}to{transform:translateX(calc(-100% / 8))}}
+@media(prefers-reduced-motion:reduce){
+  .s2-ticker__track{animation:none}
+  .s2-ticker__set{flex-wrap:wrap;justify-content:center;gap:12px 24px;padding:0}
+  .s2-ticker__set[aria-hidden]{display:none}
+}
+</style>
+{%- comment -%} Eight copies of the list, moved by exactly one copy, so the loop never shows a gap on any screen width. {%- endcomment -%}
+<div class="s2-ticker">
+  <div class="s2-ticker__track">
+    {%- for i in (1..8) -%}
+      <div class="s2-ticker__set"{% if i > 1 %} aria-hidden="true"{% endif %}>
+        {%- for block in section.blocks -%}
+          <span class="s2-ticker__item"{% if i == 1 %} {{ block.shopify_attributes }}{% endif %}>{%- if block.settings.link != blank -%}<a href="{{ block.settings.link }}"{% if i > 1 %} tabindex="-1"{% endif %}>{{ block.settings.text }}</a>{%- else -%}{{ block.settings.text }}{%- endif -%}</span>
+        {%- endfor -%}
+      </div>
+    {%- endfor -%}
+  </div>
+</div>
+{% schema %}
+{
+  "name": "S2 Benefit ticker",
+  "max_blocks": 8,
+  "blocks": [{ "type": "item", "name": "Benefit", "settings": [{ "type": "text", "id": "text", "label": "Text", "default": "Free shipping on 2 or more jars" }, { "type": "url", "id": "link", "label": "Link (optional)" }] }],
+  "presets": [{ "name": "S2 Benefit ticker" }]
+}
+{% endschema %}

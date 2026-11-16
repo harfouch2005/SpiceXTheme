@@ -1,0 +1,144 @@
+{
+  "sections": {
+    "builder": {
+      "type": "spx2-builder",
+      "blocks": {
+        "f-daily": {
+          "type": "product",
+          "settings": {
+            "product": "daily-blend",
+            "bg": "#4D5057",
+            "fg": "#FFFFFF",
+            "tagline": "Salt, pepper, garlic. Goes on everything.",
+            "heat": "No heat",
+            "badge": "Best seller"
+          }
+        },
+        "f-taco": {
+          "type": "product",
+          "settings": {
+            "product": "taco-blast",
+            "bg": "#D4302C",
+            "fg": "#FFFFFF",
+            "tagline": "Taco night without the packet.",
+            "heat": "Mild heat",
+            "badge": ""
+          }
+        },
+        "f-sriracha": {
+          "type": "product",
+          "settings": {
+            "product": "sweet-sriracha",
+            "bg": "#F47A3F",
+            "fg": "#1F0F05",
+            "tagline": "Wing sauce flavor without the sauce.",
+            "heat": "Medium heat",
+            "badge": ""
+          }
+        },
+        "f-hive": {
+          "type": "product",
+          "settings": {
+            "product": "golden-hive",
+            "bg": "#F7B32B",
+            "fg": "#1F1503",
+            "tagline": "Honey BBQ without the bottle.",
+            "heat": "No heat",
+            "badge": ""
+          }
+        },
+        "f-bella": {
+          "type": "product",
+          "settings": {
+            "product": "bella-blend",
+            "bg": "#2F6B34",
+            "fg": "#FFFFFF",
+            "tagline": "Pasta night flavor on anything.",
+            "heat": "No heat",
+            "badge": ""
+          }
+        },
+        "f-cajun": {
+          "type": "product",
+          "settings": {
+            "product": "oh-cajun",
+            "bg": "#8C2F26",
+            "fg": "#FFFFFF",
+            "tagline": "Blackened everything.",
+            "heat": "Medium heat",
+            "badge": ""
+          }
+        }
+      },
+      "block_order": [
+        "f-daily",
+        "f-taco",
+        "f-sriracha",
+        "f-hive",
+        "f-bella",
+        "f-cajun"
+      ],
+      "settings": {
+        "heading": "A different dinner every night.",
+        "heading_accent": "Cheaper by the jar.",
+        "subheading": "Pick any flavors. The more jars you add, the more you save, and 2 or more ship free.",
+        "all_label": "Add one of each, save $12.95",
+        "bar_label": "Your box total",
+        "add_label": "Add",
+        "soldout_label": "Sold out",
+        "checkout_label": "Checkout",
+        "cart_label": "View cart",
+        "recap_heading": "Your box",
+        "disclaimer": "Pack savings come off automatically at checkout. 2 or more jars ship free in the U.S.",
+        "tier_3": "5.00",
+        "tier_4": "6.00",
+        "tier_5": "7.00",
+        "tier_6": "12.95",
+        "single_ship": "4.99"
+      }
+    },
+    "guarantee": {
+      "type": "spx-sa-guarantee",
+      "blocks": {
+        "t1": {
+          "type": "trust",
+          "settings": {
+            "icon": "check",
+            "title": "30-day money back guarantee",
+            "body": "Love it or get your money back within 30 days."
+          }
+        },
+        "t2": {
+          "type": "trust",
+          "settings": {
+            "icon": "truck",
+            "title": "Free U.S. Shipping on 2+ jars",
+            "body": "Single jars ship $4.99. Most orders arrive in 3–5 business days."
+          }
+        },
+        "t3": {
+          "type": "trust",
+          "settings": {
+            "icon": "leaf",
+            "title": "Real Ingredients, Every Jar",
+            "body": "No fillers, no MSG, no silicon dioxide. Ever."
+          }
+        }
+      },
+      "block_order": [
+        "t1",
+        "t2",
+        "t3"
+      ],
+      "settings": {
+        "bg_color": "#FFF4E3",
+        "card_bg": "#ffffff",
+        "accent_color": "#e8a823"
+      }
+    }
+  },
+  "order": [
+    "builder",
+    "guarantee"
+  ]
+}

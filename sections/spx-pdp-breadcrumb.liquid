@@ -1,0 +1,59 @@
+{%- comment -%}
+  SpiceX PDP · Breadcrumb (Home / Shop / Product)
+{%- endcomment -%}
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+
+{% style %}
+  #shopify-section-{{ section.id }} {
+    background: {{ section.settings.bg_color | default: '#f7f3ec' }};
+    font-family: var(--spx-font-body);
+    box-sizing: border-box;
+  }
+  #shopify-section-{{ section.id }} .bc {
+    max-width: 1480px;
+    margin: 0 auto;
+    padding: 24px clamp(20px, 4vw, 56px);
+  }
+  #shopify-section-{{ section.id }} .bc-list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    font-size: 11.5px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #6b6b6b;
+  }
+  #shopify-section-{{ section.id }} .bc-list a {
+    color: inherit;
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+  #shopify-section-{{ section.id }} .bc-list a:hover { color: #0a0a0a; text-decoration: underline; text-underline-offset: 3px; }
+  #shopify-section-{{ section.id }} .bc-sep { color: #c8c8c8; }
+  #shopify-section-{{ section.id }} .bc-current { color: #0a0a0a; font-weight: 600; }
+{% endstyle %}
+
+<nav class="bc" aria-label="Breadcrumb">
+  <ol class="bc-list">
+    <li><a href="/">Home</a></li>
+    <li class="bc-sep">/</li>
+    <li><a href="{{ section.settings.shop_url | default: '/collections/all' }}">{{ section.settings.shop_label | default: 'Shop' | escape }}</a></li>
+    <li class="bc-sep">/</li>
+    <li class="bc-current">{{ product.title | escape }}</li>
+  </ol>
+</nav>
+
+{% schema %}
+{
+  "name": "PDP · Breadcrumb",
+  "settings": [
+    { "type": "text", "id": "shop_label", "label": "Middle label", "default": "Shop" },
+    { "type": "url", "id": "shop_url", "label": "Middle link", "info": "Defaults to /collections/all" },
+    { "type": "color", "id": "bg_color", "label": "Background", "default": "#f7f3ec" }
+  ],
+  "presets": [{ "name": "PDP · Breadcrumb", "category": "Product" }]
+}
+{% endschema %}

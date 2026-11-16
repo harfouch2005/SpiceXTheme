@@ -1,0 +1,788 @@
+{
+  "sections": {
+    "s2-hero": {
+      "type": "spx2-hero",
+      "settings": {
+        "rating": "4.9 from 132 reviews",
+        "heading": "Crave what",
+        "heading_accent": "you cook.",
+        "subheading": "Six finished flavors, from taco to honey BBQ. Coat the chicken, steak and vegetables you already cook and dinner tastes like takeout.",
+        "button_label": "Build your box",
+        "button_link": "shopify://pages/build-your-bundle",
+        "link_label": "Shop all six",
+        "link_url": "shopify://pages/shop-all",
+        "image": "shopify://shop_images/spx-shot-lineup-hero.jpg"
+      }
+    },
+    "s2-ticker": {
+      "type": "spx2-ticker",
+      "blocks": {
+        "t1": {
+          "type": "item",
+          "settings": {
+            "text": "Free shipping on 2 or more jars"
+          }
+        },
+        "t2": {
+          "type": "item",
+          "settings": {
+            "text": "No MSG, no fillers"
+          }
+        },
+        "t3": {
+          "type": "item",
+          "settings": {
+            "text": "120+ servings in every jar"
+          }
+        },
+        "t4": {
+          "type": "item",
+          "settings": {
+            "text": "4.9 stars from 132 reviews"
+          }
+        },
+        "t5": {
+          "type": "item",
+          "settings": {
+            "text": "All six flavors, $12.95 off, ships free",
+            "link": "shopify://products/bundle-save"
+          }
+        },
+        "t0": {
+          "type": "item",
+          "settings": {
+            "text": "The recipe is already in the jar"
+          }
+        }
+      },
+      "block_order": [
+        "t0",
+        "t1",
+        "t2",
+        "t3",
+        "t4",
+        "t5"
+      ],
+      "settings": {}
+    },
+    "s2-packs": {
+      "type": "spx2-packs",
+      "blocks": {
+        "p1": {
+          "type": "pack",
+          "settings": {
+            "title": "The Full Six",
+            "blurb": "A different dinner every night. $12.95 less than buying them one by one.",
+            "products": [
+              "daily-blend",
+              "taco-blast",
+              "sweet-sriracha",
+              "golden-hive",
+              "bella-blend",
+              "oh-cajun"
+            ],
+            "cart_product": "bundle-save",
+            "note": "Ships free",
+            "button_label": "Add all six"
+          }
+        },
+        "p2": {
+          "type": "pack",
+          "settings": {
+            "title": "Weeknight Trio",
+            "blurb": "Steak, tacos, and pasta. Three nights handled.",
+            "products": [
+              "daily-blend",
+              "taco-blast",
+              "bella-blend"
+            ],
+            "note": "Save $5 on any 3 jars",
+            "button_label": "Add the trio"
+          }
+        },
+        "p3": {
+          "type": "pack",
+          "settings": {
+            "title": "Sweet Heat Trio",
+            "blurb": "Wings, ribs, and shrimp. The weekend set.",
+            "products": [
+              "sweet-sriracha",
+              "golden-hive",
+              "oh-cajun"
+            ],
+            "note": "Save $5 on any 3 jars",
+            "button_label": "Add the trio"
+          }
+        },
+        "p0": {
+          "type": "pack",
+          "settings": {
+            "title": "Build your own box",
+            "blurb": "Pick any jars you want. Save $5 on 3, $6 on 4, $7 on 5 and $12.95 on 6.",
+            "products": [
+              "taco-blast",
+              "daily-blend",
+              "golden-hive",
+              "bella-blend",
+              "oh-cajun",
+              "sweet-sriracha"
+            ],
+            "note": "2 or more jars ship free",
+            "button_label": "Build your box",
+            "link": "shopify://pages/build-your-bundle",
+            "badge": "Save up to $12.95",
+            "featured": true,
+            "pick": true
+          }
+        }
+      },
+      "block_order": [
+        "p0",
+        "p1",
+        "p2",
+        "p3"
+      ],
+      "settings": {
+        "heading": "New here? Let us make it easy.",
+        "subheading": "Build your own box, or pick a set and add it in one tap.",
+        "more_label": "",
+        "more_link": "shopify://pages/build-your-bundle",
+        "busy_label": "Adding",
+        "fail_label": "Try again"
+      }
+    },
+    "s2-stats": {
+      "type": "spx2-stats",
+      "blocks": {
+        "n1": {
+          "type": "stat",
+          "settings": {
+            "number": "4.9",
+            "label": "Average rating"
+          }
+        },
+        "n2": {
+          "type": "stat",
+          "settings": {
+            "number": "132",
+            "label": "Verified reviews"
+          }
+        },
+        "n3": {
+          "type": "stat",
+          "settings": {
+            "number": "120+",
+            "label": "Servings in every jar"
+          }
+        },
+        "n4": {
+          "type": "stat",
+          "settings": {
+            "number": "30 days",
+            "label": "Money back guarantee"
+          }
+        }
+      },
+      "block_order": [
+        "n1",
+        "n2",
+        "n3",
+        "n4"
+      ],
+      "settings": {}
+    },
+    "s2-flavors": {
+      "type": "spx2-flavors",
+      "blocks": {
+        "f1": {
+          "type": "flavor",
+          "settings": {
+            "product": "daily-blend",
+            "descriptor": "Salt, Pepper & Garlic",
+            "tagline": "Simple and versatile for a flavorful punch.",
+            "bg": "#4D5057",
+            "fg": "#FFFFFF"
+          }
+        },
+        "f2": {
+          "type": "flavor",
+          "settings": {
+            "product": "taco-blast",
+            "descriptor": "Mild Taco Seasoning",
+            "tagline": "Bold and robust, Mexican-inspired flavor.",
+            "bg": "#D4302C",
+            "fg": "#FFFFFF"
+          }
+        },
+        "f3": {
+          "type": "flavor",
+          "settings": {
+            "product": "sweet-sriracha",
+            "descriptor": "Honey Sriracha Seasoning",
+            "tagline": "A perfect blend of sweet and heat.",
+            "bg": "#F47A3F",
+            "fg": "#1F0F05"
+          }
+        },
+        "f4": {
+          "type": "flavor",
+          "settings": {
+            "product": "golden-hive",
+            "descriptor": "Honey BBQ Seasoning",
+            "tagline": "Sweet and smoky with a whole lot of tang.",
+            "bg": "#F7B32B",
+            "fg": "#1F1503"
+          }
+        },
+        "f5": {
+          "type": "flavor",
+          "settings": {
+            "product": "bella-blend",
+            "descriptor": "Italian Seasoning",
+            "tagline": "Savory and earthy with a hint of garlic.",
+            "bg": "#2F6B34",
+            "fg": "#FFFFFF"
+          }
+        },
+        "f6": {
+          "type": "flavor",
+          "settings": {
+            "product": "oh-cajun",
+            "descriptor": "Cajun Seasoning",
+            "tagline": "Deeply smoky and savory with a touch of heat.",
+            "bg": "#8C2F26",
+            "fg": "#FFFFFF"
+          }
+        }
+      },
+      "block_order": [
+        "f1",
+        "f2",
+        "f3",
+        "f4",
+        "f5",
+        "f6"
+      ],
+      "settings": {
+        "heading": "You will forget you are eating healthy.",
+        "subheading": "Add one, or build a box of all six and save $12.95.",
+        "add_label": "Add",
+        "soldout_label": "Sold out"
+      }
+    },
+    "s2-signup": {
+      "type": "spx2-signup",
+      "settings": {
+        "heading": "Get new recipes first.",
+        "subheading": "New recipes, and first notice when a blend drops.",
+        "placeholder": "Email address",
+        "button_label": "Sign me up",
+        "success": "You are on the list."
+      }
+    },
+    "s2-sticky": {
+      "type": "spx2-sticky",
+      "settings": {
+        "note": "Save up to $12.95",
+        "button_label": "Build your box",
+        "button_link": "shopify://pages/build-your-bundle"
+      }
+    },
+    "faq": {
+      "type": "spx-faq",
+      "blocks": {
+        "q1": {
+          "type": "question",
+          "settings": {
+            "question": "Will this actually make my chicken taste good?",
+            "answer": "<p>That is the whole job. Coat your food evenly before you cook. Six flavors, so the same chicken can be tacos on Monday and honey BBQ on Thursday.</p>"
+          }
+        },
+        "q2": {
+          "type": "question",
+          "settings": {
+            "question": "Does it add calories or sugar?",
+            "answer": "<p>Very little. A serving is 1/4 teaspoon. Golden Hive and Sweet Sriracha get their sweetness from sugar and honey granules, and Taco Blast and Oh' Cajun have a small amount of cane sugar. Daily Blend and Bella Blend have none. The full nutrition panel is on every product page.</p>"
+          }
+        },
+        "q3": {
+          "type": "question",
+          "settings": {
+            "question": "Which one do I start with?",
+            "answer": "<p>Daily Blend if you want one jar for everything. The Full Six if you want a different dinner every night. It is $12.95 cheaper than buying them one by one.</p>"
+          }
+        },
+        "q4": {
+          "type": "question",
+          "settings": {
+            "question": "How does shipping work?",
+            "answer": "<p>Free shipping on any order with 2 or more jars, and bundles always ship free. Single jar orders ship for a flat $4.99.</p>"
+          }
+        },
+        "q5": {
+          "type": "question",
+          "settings": {
+            "question": "What if I don't love it?",
+            "answer": "<p>Every SpiceX order comes with a 30-day money back guarantee. If you are not happy with it, email us within 30 days.</p>"
+          }
+        },
+        "q6": {
+          "type": "question",
+          "settings": {
+            "question": "Do you ship outside the US?",
+            "answer": "<p>Right now we ship within the US only. Sign up for our newsletter and we'll let you know the moment we expand internationally.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "q1",
+        "q2",
+        "q3",
+        "q4",
+        "q5",
+        "q6"
+      ],
+      "settings": {
+        "eyebrow": "Got Questions?",
+        "headline": "Questions, answered.",
+        "subhead": "Taste, ingredients, shipping, and returns.",
+        "cta_title": "Still curious?",
+        "cta_sub": "We answer every email personally.",
+        "cta_text": "Email Us",
+        "cta_url": "mailto:marketing@spicexseasoning.com",
+        "bg_color": "#FFF4E3",
+        "accent_color": "#e8a823"
+      }
+    },
+    "s2-guide": {
+      "type": "spx2-guide",
+      "blocks": {
+        "g1": {
+          "type": "dish",
+          "settings": {
+            "dish": "Steak",
+            "product": "daily-blend",
+            "image": "shopify://shop_images/spx-recipe-ny-strip-hero.jpg",
+            "bg": "#4D5057"
+          }
+        },
+        "g2": {
+          "type": "dish",
+          "settings": {
+            "dish": "Tacos",
+            "product": "taco-blast",
+            "bg": "#D4302C",
+            "image": "shopify://shop_images/spx-dish-tacos.jpg"
+          }
+        },
+        "g3": {
+          "type": "dish",
+          "settings": {
+            "dish": "Lettuce wraps",
+            "product": "sweet-sriracha",
+            "image": "shopify://shop_images/spx-recipe-korean-beef-wraps-hero.jpg",
+            "bg": "#F47A3F"
+          }
+        },
+        "g4": {
+          "type": "dish",
+          "settings": {
+            "dish": "Ribs",
+            "product": "golden-hive",
+            "image": "shopify://shop_images/spx-recipe-pork-ribs-hero.jpg",
+            "bg": "#F7B32B"
+          }
+        },
+        "g5": {
+          "type": "dish",
+          "settings": {
+            "dish": "Pasta",
+            "product": "bella-blend",
+            "image": "shopify://shop_images/spx-recipe-beef-ragu-hero.jpg",
+            "bg": "#2F6B34"
+          }
+        },
+        "g6": {
+          "type": "dish",
+          "settings": {
+            "dish": "Shrimp",
+            "product": "oh-cajun",
+            "image": "shopify://shop_images/spx-recipe-shrimp-wedge-hero.jpg",
+            "bg": "#8C2F26"
+          }
+        }
+      },
+      "block_order": [
+        "g1",
+        "g2",
+        "g3",
+        "g4",
+        "g5",
+        "g6"
+      ],
+      "settings": {
+        "heading": "What are you cooking tonight?",
+        "subheading": "Pick the dinner. We will hand you the jar.",
+        "use_prefix": "Use"
+      }
+    },
+    "s2-steps": {
+      "type": "spx2-steps",
+      "blocks": {
+        "s1": {
+          "type": "step",
+          "settings": {
+            "title": "Coat it well.",
+            "text": "Season generously and evenly. Chicken, steak, shrimp, eggs, vegetables, whatever is already in your fridge."
+          }
+        },
+        "s2": {
+          "type": "step",
+          "settings": {
+            "title": "Cook it how you already cook.",
+            "text": "Air fryer, skillet, grill, oven. No recipe required."
+          }
+        },
+        "s3": {
+          "type": "step",
+          "settings": {
+            "title": "Look forward to it.",
+            "text": "Dinner tastes like you ordered it, and you made it at home."
+          }
+        }
+      },
+      "block_order": [
+        "s1",
+        "s2",
+        "s3"
+      ],
+      "settings": {
+        "heading": "Okay, so how does it work?",
+        "subheading": "You season your food. That part you know. This just makes it taste like you ordered it.",
+        "image": "shopify://shop_images/spx-recipe-ny-strip-daily-blend.jpg",
+        "button_label": "Build your box",
+        "button_link": "shopify://pages/build-your-bundle"
+      }
+    },
+    "s2-wall": {
+      "type": "spx2-people",
+      "blocks": {
+        "p_daily_blend": {
+          "type": "person",
+          "settings": {
+            "product": "daily-blend",
+            "image": "shopify://shop_images/spx-model-studio-daily-blend.png",
+            "kicker": "Salt, Pepper & Garlic",
+            "bg": "#4D5057"
+          }
+        },
+        "p_taco_blast": {
+          "type": "person",
+          "settings": {
+            "product": "taco-blast",
+            "image": "shopify://shop_images/spx-model-studio-taco-blast.png",
+            "kicker": "Mild Taco Seasoning",
+            "bg": "#D4302C"
+          }
+        },
+        "p_sweet_sriracha": {
+          "type": "person",
+          "settings": {
+            "product": "sweet-sriracha",
+            "image": "shopify://shop_images/spx-model-studio-sweet-sriracha.png",
+            "kicker": "Honey Sriracha Seasoning",
+            "bg": "#F47A3F"
+          }
+        },
+        "p_golden_hive": {
+          "type": "person",
+          "settings": {
+            "product": "golden-hive",
+            "image": "shopify://shop_images/spx-model-studio-golden-hive.png",
+            "kicker": "Honey BBQ Seasoning",
+            "bg": "#F7B32B"
+          }
+        },
+        "p_bella_blend": {
+          "type": "person",
+          "settings": {
+            "product": "bella-blend",
+            "image": "shopify://shop_images/spx-model-studio-bella-blend.png",
+            "kicker": "Italian Seasoning",
+            "bg": "#2F6B34"
+          }
+        },
+        "p_oh_cajun": {
+          "type": "person",
+          "settings": {
+            "product": "oh-cajun",
+            "image": "shopify://shop_images/spx-model-studio-oh-cajun.png",
+            "kicker": "Cajun Seasoning",
+            "bg": "#8C2F26"
+          }
+        }
+      },
+      "block_order": [
+        "p_daily_blend",
+        "p_golden_hive",
+        "p_taco_blast",
+        "p_bella_blend",
+        "p_sweet_sriracha",
+        "p_oh_cajun"
+      ],
+      "settings": {
+        "layout": "wall",
+        "heading": "Pick your flavor.",
+        "subheading": "Six blends, each made for a different kind of dinner.",
+        "prev_label": "Previous photos",
+        "next_label": "More photos"
+      }
+    },
+    "s2-people": {
+      "type": "spx2-people",
+      "blocks": {
+        "p_taco_blast": {
+          "type": "person",
+          "settings": {
+            "product": "taco-blast",
+            "image": "shopify://shop_images/spx-model-life-taco-blast.png",
+            "kicker": "Taco night",
+            "bg": "#D4302C"
+          }
+        },
+        "p_golden_hive": {
+          "type": "person",
+          "settings": {
+            "product": "golden-hive",
+            "image": "shopify://shop_images/spx-model-life-golden-hive.png",
+            "kicker": "Backyard cookout",
+            "bg": "#F7B32B"
+          }
+        },
+        "p_bella_blend": {
+          "type": "person",
+          "settings": {
+            "product": "bella-blend",
+            "image": "shopify://shop_images/spx-model-life-bella-blend.png",
+            "kicker": "Pasta night",
+            "bg": "#2F6B34"
+          }
+        },
+        "p_daily_blend": {
+          "type": "person",
+          "settings": {
+            "product": "daily-blend",
+            "image": "shopify://shop_images/spx-model-life-daily-blend.png",
+            "kicker": "Meal prep",
+            "bg": "#4D5057"
+          }
+        },
+        "p_sweet_sriracha": {
+          "type": "person",
+          "settings": {
+            "product": "sweet-sriracha",
+            "image": "shopify://shop_images/spx-model-life-sweet-sriracha.png",
+            "kicker": "Stir-fry night",
+            "bg": "#F47A3F"
+          }
+        },
+        "p_oh_cajun": {
+          "type": "person",
+          "settings": {
+            "product": "oh-cajun",
+            "image": "shopify://shop_images/spx-model-life-oh-cajun.png",
+            "kicker": "Skillet dinner",
+            "bg": "#8C2F26"
+          }
+        }
+      },
+      "block_order": [
+        "p_taco_blast",
+        "p_golden_hive",
+        "p_bella_blend",
+        "p_daily_blend",
+        "p_sweet_sriracha",
+        "p_oh_cajun"
+      ],
+      "settings": {
+        "layout": "cards",
+        "heading": "What dinner looks like with SpiceX.",
+        "subheading": "Six blends for the dinners you already make.",
+        "prev_label": "Previous photos",
+        "next_label": "More photos"
+      }
+    },
+    "s2-paths": {
+      "type": "spx2-paths",
+      "settings": {
+        "heading": "Built for how you cook.",
+        "subheading": "Pick the one that sounds like your week."
+      },
+      "blocks": {
+        "a": {
+          "type": "path",
+          "settings": {
+            "image": "shopify://shop_images/spx-hero-meal-prep.jpg",
+            "title": "Meal prep",
+            "text": "One cook day, a different flavor in every container.",
+            "link_label": "See the meal prep plan",
+            "link": "/pages/meal-prep"
+          }
+        },
+        "b": {
+          "type": "path",
+          "settings": {
+            "image": "shopify://shop_images/spx-hero-weeknight.jpg",
+            "title": "Weeknight dinners",
+            "text": "No recipe needed. Coat it and cook.",
+            "link_label": "See easy dinners",
+            "link": "/pages/weeknight-dinners"
+          }
+        },
+        "c": {
+          "type": "path",
+          "settings": {
+            "image": "shopify://shop_images/spx-hero-flavor.jpg",
+            "title": "Bored of bland",
+            "text": "Six flavors for the chicken and rice you already make.",
+            "link_label": "See the flavors",
+            "link": "/pages/more-flavor"
+          }
+        }
+      },
+      "block_order": [
+        "a",
+        "b",
+        "c"
+      ]
+    },
+    "s2-usp": {
+      "type": "spx2-usp",
+      "settings": {
+        "eyebrow": "Why SpiceX",
+        "heading": "The recipe is already in the jar.",
+        "subheading": "Every blend is a finished flavor. Coat what you are already cooking and dinner is seasoned.",
+        "button_label": "",
+        "button_link": ""
+      },
+      "blocks": {
+        "u1": {
+          "type": "point",
+          "settings": {
+            "big": "1 jar",
+            "title": "A full flavor, already balanced",
+            "text": "From three ingredients in Daily Blend to fifteen in Golden Hive, each blend is measured for you. Coat your food evenly and cook."
+          }
+        },
+        "u2": {
+          "type": "point",
+          "settings": {
+            "big": "6 flavors",
+            "title": "The dinners you order out",
+            "text": "Taco, honey BBQ, honey sriracha, Cajun, Italian, and a salt, pepper and garlic for everything else."
+          }
+        },
+        "u3": {
+          "type": "point",
+          "settings": {
+            "big": "Any night",
+            "title": "The same chicken, a new dinner",
+            "text": "Change the jar and the chicken, steak or vegetables you cook every week taste like something new."
+          }
+        }
+      },
+      "block_order": [
+        "u1",
+        "u2",
+        "u3"
+      ]
+    },
+    "s2-press": {
+      "type": "spx2-press",
+      "settings": {
+        "label": ""
+      },
+      "blocks": {
+        "o1": {
+          "type": "logo",
+          "settings": {
+            "name": "Food Network",
+            "image": "shopify://shop_images/spx-press-foodnetwork.png",
+            "size": 58,
+            "white": false
+          }
+        },
+        "o2": {
+          "type": "logo",
+          "settings": {
+            "name": "Forbes",
+            "image": "shopify://shop_images/spx-press-forbes.png",
+            "size": 30,
+            "white": false
+          }
+        },
+        "o3": {
+          "type": "logo",
+          "settings": {
+            "name": "Good Morning America",
+            "image": "shopify://shop_images/spx-press-gma.png",
+            "size": 50,
+            "white": false
+          }
+        },
+        "o4": {
+          "type": "logo",
+          "settings": {
+            "name": "Men's Health",
+            "image": "shopify://shop_images/spx-press-menshealth.png",
+            "size": 27,
+            "white": false
+          }
+        },
+        "o5": {
+          "type": "logo",
+          "settings": {
+            "name": "GQ",
+            "image": "shopify://shop_images/spx-press-gq.png",
+            "size": 40,
+            "white": false
+          }
+        },
+        "o6": {
+          "type": "logo",
+          "settings": {
+            "name": "Sporked",
+            "image": "shopify://shop_images/spx-press-sporked.png",
+            "size": 36,
+            "white": false
+          }
+        }
+      },
+      "block_order": [
+        "o1",
+        "o2",
+        "o3",
+        "o4",
+        "o5",
+        "o6"
+      ]
+    }
+  },
+  "order": [
+    "s2-hero",
+    "s2-press",
+    "s2-ticker",
+    "s2-packs",
+    "s2-usp",
+    "s2-steps",
+    "s2-paths",
+    "s2-people",
+    "s2-wall",
+    "s2-stats",
+    "s2-flavors",
+    "s2-guide",
+    "s2-signup",
+    "faq",
+    "s2-sticky"
+  ]
+}

@@ -1,0 +1,290 @@
+{
+  "sections": {
+    "main": {
+      "type": "spx2-pdp",
+      "settings": {
+        "bg": "#F7B32B",
+        "fg": "#1F1503",
+        "hero_image": "shopify://shop_images/spx-shot-golden-hive-a.jpg",
+        "shop_label": "Shop",
+        "shop_link": "shopify://pages/shop-all",
+        "summary": "Honey BBQ without the bottle. Sweet, smoky, and built for chicken thighs in the air fryer.",
+        "attrs": "Sweetened with brown sugar and honey granules. No heat.",
+        "label_link": "See the nutrition panel",
+        "button_label": "Add to cart",
+        "soldout_label": "Sold out",
+        "ship_note": "2 or more jars ship free.",
+        "box_title": "Build a box and save",
+        "box_text": "3 jars save $5. All six save $12.95.",
+        "box_link": "shopify://pages/build-your-bundle",
+        "prev_label": "Previous photo",
+        "next_label": "Next photo",
+        "image_2": "shopify://shop_images/spx-shot-golden-hive-b.jpg",
+        "show_gallery": false,
+        "image_3": "shopify://shop_images/spx-shot-golden-hive-e.jpg",
+        "image_4": "shopify://shop_images/spx-shot-golden-hive-f.jpg",
+        "image_5": "shopify://shop_images/spx-shot-golden-hive-g.jpg",
+        "image_6": "shopify://shop_images/spx-real-golden-hive.jpg"
+      }
+    },
+    "label": {
+      "type": "spx2-label",
+      "settings": {
+        "bg": "#F7B32B",
+        "fg": "#1F1503",
+        "heading": "[product] is best on",
+        "keys": "Ribs\nChicken thighs\nWings\nPulled pork\nSweet potato fries",
+        "facts": "<p><b>Heat:</b> none.</p><p><b>Make it tonight:</b> chicken thighs in the air fryer with Golden Hive, a little salt, and a little honey.</p>",
+        "num_1": "142",
+        "num_1_label": "Servings per jar",
+        "num_2": "15",
+        "num_2_label": "Ingredients, all listed",
+        "nut_alt": "Nutrition facts panel",
+        "ing_label": "Ingredients:",
+        "ingredients": "Brown sugar, sea salt, honey granules, smoked paprika, tomato powder, cane sugar, granulated garlic, vinegar powder, natural hickory smoke flavor, onion powder, chipotle pepper, black pepper, cornstarch, molasses granules, mustard powder.",
+        "note": "No MSG. No silicon dioxide. Net wt 5 oz (142g)",
+        "nut_image": "shopify://shop_images/spx-nutrition-golden-hive.png"
+      }
+    },
+    "recipes": {
+      "type": "spx-pdp-recipes",
+      "settings": {
+        "bg_color": "#FFFFFF"
+      }
+    },
+    "more": {
+      "type": "spx2-flavors",
+      "blocks": {
+        "f1": {
+          "type": "flavor",
+          "settings": {
+            "product": "daily-blend",
+            "descriptor": "Salt, Pepper & Garlic",
+            "tagline": "Simple and versatile for a flavorful punch.",
+            "bg": "#4D5057",
+            "fg": "#FFFFFF"
+          }
+        },
+        "f2": {
+          "type": "flavor",
+          "settings": {
+            "product": "taco-blast",
+            "descriptor": "Mild Taco Seasoning",
+            "tagline": "Bold and robust, Mexican-inspired flavor.",
+            "bg": "#D4302C",
+            "fg": "#FFFFFF"
+          }
+        },
+        "f3": {
+          "type": "flavor",
+          "settings": {
+            "product": "sweet-sriracha",
+            "descriptor": "Honey Sriracha Seasoning",
+            "tagline": "A perfect blend of sweet and heat.",
+            "bg": "#F47A3F",
+            "fg": "#1F0F05"
+          }
+        },
+        "f4": {
+          "type": "flavor",
+          "settings": {
+            "product": "golden-hive",
+            "descriptor": "Honey BBQ Seasoning",
+            "tagline": "Sweet and smoky with a whole lot of tang.",
+            "bg": "#F7B32B",
+            "fg": "#1F1503"
+          }
+        },
+        "f5": {
+          "type": "flavor",
+          "settings": {
+            "product": "bella-blend",
+            "descriptor": "Italian Seasoning",
+            "tagline": "Savory and earthy with a hint of garlic.",
+            "bg": "#2F6B34",
+            "fg": "#FFFFFF"
+          }
+        },
+        "f6": {
+          "type": "flavor",
+          "settings": {
+            "product": "oh-cajun",
+            "descriptor": "Cajun Seasoning",
+            "tagline": "Deeply smoky and savory with a touch of heat.",
+            "bg": "#8C2F26",
+            "fg": "#FFFFFF"
+          }
+        }
+      },
+      "block_order": [
+        "f1",
+        "f2",
+        "f3",
+        "f4",
+        "f5",
+        "f6"
+      ],
+      "settings": {
+        "heading": "Try another flavor",
+        "subheading": "",
+        "add_label": "Add",
+        "soldout_label": "Sold out"
+      }
+    },
+    "reviews": {
+      "type": "spx-pdp-reviews",
+      "settings": {
+        "eyebrow": "Reviews",
+        "headline": "What cooks are saying.",
+        "stats": "<p>Straight from the people cooking with it.</p>",
+        "bg_color": "#FFF4E3"
+      }
+    },
+    "sticky": {
+      "type": "spx-pdp-sticky",
+      "settings": {
+        "accent_color": "#d4a017"
+      }
+    },
+    "ingredients": {
+      "type": "spx2-ingredients",
+      "blocks": {
+        "n1": {
+          "type": "ingredient",
+          "settings": {
+            "image": "shopify://shop_images/spx-ing-brown-sugar.png",
+            "name": "Brown sugar"
+          }
+        },
+        "n2": {
+          "type": "ingredient",
+          "settings": {
+            "image": "shopify://shop_images/spx-ing-sea-salt.png",
+            "name": "Sea salt"
+          }
+        },
+        "n3": {
+          "type": "ingredient",
+          "settings": {
+            "image": "shopify://shop_images/spx-ing-honey-granules.png",
+            "name": "Honey granules"
+          }
+        },
+        "n4": {
+          "type": "ingredient",
+          "settings": {
+            "image": "shopify://shop_images/spx-ing-smoked-paprika.png",
+            "name": "Smoked paprika"
+          }
+        },
+        "n5": {
+          "type": "ingredient",
+          "settings": {
+            "image": "shopify://shop_images/spx-ing-tomato-powder.png",
+            "name": "Tomato powder"
+          }
+        },
+        "n6": {
+          "type": "ingredient",
+          "settings": {
+            "image": "shopify://shop_images/spx-ing-cane-sugar.png",
+            "name": "Cane sugar"
+          }
+        },
+        "n7": {
+          "type": "ingredient",
+          "settings": {
+            "image": "shopify://shop_images/spx-ing-granulated-garlic.png",
+            "name": "Granulated garlic"
+          }
+        },
+        "n8": {
+          "type": "ingredient",
+          "settings": {
+            "image": "shopify://shop_images/spx-ing-vinegar-powder.png",
+            "name": "Vinegar powder"
+          }
+        },
+        "n9": {
+          "type": "ingredient",
+          "settings": {
+            "image": "shopify://shop_images/spx-ing-hickory-smoke.png",
+            "name": "Hickory smoke flavor"
+          }
+        },
+        "n10": {
+          "type": "ingredient",
+          "settings": {
+            "image": "shopify://shop_images/spx-ing-onion-powder.png",
+            "name": "Onion powder"
+          }
+        },
+        "n11": {
+          "type": "ingredient",
+          "settings": {
+            "image": "shopify://shop_images/spx-ing-chipotle-pepper.png",
+            "name": "Chipotle pepper"
+          }
+        },
+        "n12": {
+          "type": "ingredient",
+          "settings": {
+            "image": "shopify://shop_images/spx-ing-black-pepper.png",
+            "name": "Black pepper"
+          }
+        },
+        "n13": {
+          "type": "ingredient",
+          "settings": {
+            "image": "shopify://shop_images/spx-ing-cornstarch.png",
+            "name": "Cornstarch"
+          }
+        },
+        "n14": {
+          "type": "ingredient",
+          "settings": {
+            "image": "shopify://shop_images/spx-ing-molasses-granules.png",
+            "name": "Molasses granules"
+          }
+        },
+        "n15": {
+          "type": "ingredient",
+          "settings": {
+            "image": "shopify://shop_images/spx-ing-mustard-powder.png",
+            "name": "Mustard powder"
+          }
+        }
+      },
+      "block_order": [
+        "n1",
+        "n2",
+        "n3",
+        "n4",
+        "n5",
+        "n6",
+        "n7",
+        "n8",
+        "n9",
+        "n10",
+        "n11",
+        "n12",
+        "n13",
+        "n14",
+        "n15"
+      ],
+      "settings": {
+        "heading": "Made from things you recognize.",
+        "subheading": ""
+      }
+    }
+  },
+  "order": [
+    "main",
+    "ingredients",
+    "label",
+    "recipes",
+    "more",
+    "reviews",
+    "sticky"
+  ]
+}

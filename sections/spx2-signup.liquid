@@ -1,0 +1,28 @@
+<section class="s2-signup">
+  <h2 class="s2-h">{{ section.settings.heading }}</h2>
+  {%- if section.settings.subheading != blank -%}<p class="s2-sub">{{ section.settings.subheading }}</p>{%- endif -%}
+  {%- form 'customer', id: 's2-signup-form' -%}
+    <input type="hidden" name="contact[tags]" value="newsletter">
+    {%- if form.posted_successfully? -%}
+      <p class="s2-signup__ok" role="status">{{ section.settings.success }}</p>
+    {%- else -%}
+      <label class="visually-hidden" for="s2-signup-email">{{ section.settings.placeholder }}</label>
+      <input id="s2-signup-email" type="email" name="contact[email]" autocomplete="email" required placeholder="{{ section.settings.placeholder | escape }}">
+      <button type="submit" class="s2-btn">{{ section.settings.button_label }}</button>
+    {%- endif -%}
+    {%- if form.errors -%}<p class="s2-signup__err" role="alert">{{ form.errors | default_errors }}</p>{%- endif -%}
+  {%- endform -%}
+</section>
+{% schema %}
+{
+  "name": "S2 Email signup",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Get the good stuff first." },
+    { "type": "text", "id": "subheading", "label": "Subheading", "default": "New recipes, new blends, and the occasional deal. No spam." },
+    { "type": "text", "id": "placeholder", "label": "Email field label", "default": "Email address" },
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "Sign me up" },
+    { "type": "text", "id": "success", "label": "Success message", "default": "You're in. Check your inbox." }
+  ],
+  "presets": [{ "name": "S2 Email signup" }]
+}
+{% endschema %}

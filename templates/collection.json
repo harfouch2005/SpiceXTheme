@@ -1,0 +1,286 @@
+{
+  "sections": {
+    "header": {
+      "type": "spx-sa-header",
+      "settings": {
+        "eyebrow": "Shop All",
+        "headline": "Six blends. One spice rack.",
+        "subhead": "Built to make every meal taste better. Start with one, or get all six.",
+        "bg_color": "#FFF4E3"
+      }
+    },
+    "bundle-banner": {
+      "type": "spx-sa-bundle-banner",
+      "settings": {
+        "product": "bundle-save",
+        "eyebrow": "Best Value \u00b7 Save $12.95",
+        "headline": "The Complete Bundle.",
+        "description": "All six SpiceX blends. One easy order. Save $12.95 vs buying separately.",
+        "regular_price": "$77.94",
+        "price_override": "",
+        "savings_text": "You save $12.95",
+        "cta_text": "Get the Bundle",
+        "secondary_text": "Or pick your favorites below \u2193",
+        "bg_color": "#0a0a0a",
+        "accent_color": "#f5b316",
+        "image": "shopify://shop_images/spx-shot-lineup-banner.jpg"
+      }
+    },
+    "grid": {
+      "type": "spx-sa-grid",
+      "blocks": {
+        "p1": {
+          "type": "product_card",
+          "settings": {
+            "product": "daily-blend",
+            "accent_color": "#0099d6",
+            "accent_soft": "#e6f4fb",
+            "category": "DAILY SEASONING",
+            "use_case": "Best on chicken, eggs, roasted vegetables. The one you use without thinking."
+          }
+        },
+        "p2": {
+          "type": "product_card",
+          "settings": {
+            "product": "bella-blend",
+            "accent_color": "#5a7c44",
+            "accent_soft": "#eaf0e2",
+            "category": "ITALIAN SEASONING",
+            "use_case": "Pasta, garlic bread, roasted potatoes. Nonna's drawer in one jar."
+          }
+        },
+        "p3": {
+          "type": "product_card",
+          "settings": {
+            "product": "taco-blast",
+            "accent_color": "#c2402e",
+            "accent_soft": "#fdebe9",
+            "category": "MILD TACO SEASONING",
+            "use_case": "Taco Tuesday, breakfast burritos, elote nights."
+          }
+        },
+        "p4": {
+          "type": "product_card",
+          "settings": {
+            "product": "golden-hive",
+            "accent_color": "#d4a017",
+            "accent_soft": "#fcf3d8",
+            "category": "HONEY BBQ SEASONING",
+            "use_case": "Ribs, pulled pork, sweet potato fries. Pitmaster flavor, no smoker required."
+          }
+        },
+        "p5": {
+          "type": "product_card",
+          "settings": {
+            "product": "sweet-sriracha",
+            "accent_color": "#e07b3e",
+            "accent_soft": "#fde9d9",
+            "category": "HONEY SRIRACHA SEASONING",
+            "use_case": "Wings, salmon, popcorn, fried rice. Sweet hook, spicy follow-through."
+          }
+        },
+        "p6": {
+          "type": "product_card",
+          "settings": {
+            "product": "oh-cajun",
+            "accent_color": "#8b3a1f",
+            "accent_soft": "#f3e3dc",
+            "category": "CAJUN SEASONING",
+            "use_case": "Shrimp, blackened fish, dirty rice. Louisiana on a Tuesday."
+          }
+        }
+      },
+      "block_order": [
+        "p1",
+        "p2",
+        "p3",
+        "p4",
+        "p5",
+        "p6"
+      ],
+      "settings": {
+        "eyebrow": "The Lineup",
+        "headline": "Pick your blend.",
+        "bg_color": "#FFF4E3"
+      }
+    },
+    "editorial": {
+      "type": "spx-sa-editorial",
+      "settings": {
+        "text": "Hand-blended in the USA.",
+        "bg_color": "#FFF4E3"
+      }
+    },
+    "pairings": {
+      "type": "spx-sa-pairings",
+      "blocks": {
+        "pair1": {
+          "type": "pair",
+          "settings": {
+            "label": "The Starter",
+            "name": "Daily Blend + Bella Blend",
+            "description": "Two blends that cover 80% of weeknight cooking. Universal flavor, weeknight pasta.",
+            "product_1": "daily-blend",
+            "accent_1": "#0099d6",
+            "product_2": "bella-blend",
+            "accent_2": "#5a7c44"
+          }
+        },
+        "pair2": {
+          "type": "pair",
+          "settings": {
+            "label": "Wing Night",
+            "name": "Taco Blast + Sweet Sriracha",
+            "description": "Tacos, wings, breakfast burritos, salmon. Heat and sweetness in one order.",
+            "product_1": "taco-blast",
+            "accent_1": "#c2402e",
+            "product_2": "sweet-sriracha",
+            "accent_2": "#e07b3e"
+          }
+        },
+        "pair3": {
+          "type": "pair",
+          "settings": {
+            "label": "Backyard BBQ",
+            "name": "Golden Hive + Oh' Cajun",
+            "description": "Ribs, blackened fish, dirty rice, pulled pork. Built for the weekend cookout.",
+            "product_1": "golden-hive",
+            "accent_1": "#d4a017",
+            "product_2": "oh-cajun",
+            "accent_2": "#8b3a1f"
+          }
+        }
+      },
+      "block_order": [
+        "pair1",
+        "pair2",
+        "pair3"
+      ],
+      "settings": {
+        "eyebrow": "Pairs Well",
+        "headline": "Pairs that cook well together.",
+        "bg_color": "#FFF4E3"
+      }
+    },
+    "bundle-closer": {
+      "type": "spx-sa-bundle-closer",
+      "settings": {
+        "product": "bundle-save",
+        "eyebrow": "Still Deciding?",
+        "headline": "Skip the choice. Get all six.",
+        "subhead": "The bundle saves $12.95 versus buying jars individually. Ships in one box.",
+        "cta_text": "Get the Bundle",
+        "meta": "30-day money back guarantee \u00b7 Free shipping included",
+        "bg_color": "#FFF4E3",
+        "accent_color": "#f5b316"
+      }
+    },
+    "faq": {
+      "type": "spx-sa-faq",
+      "blocks": {
+        "q1": {
+          "type": "question",
+          "settings": {
+            "question": "Which blend should I start with?",
+            "answer": "<p>Most cooks start with <strong>Daily Blend</strong>, it covers chicken, eggs, vegetables, potatoes, and basically every weeknight dinner. If you cook Italian regularly, <strong>Bella Blend</strong> is a strong second pick. If you want to try the full lineup, the bundle saves you $12.95.</p>"
+          }
+        },
+        "q2": {
+          "type": "question",
+          "settings": {
+            "question": "How long does a jar last?",
+            "answer": "<p>Most jars are 5 oz with 142 servings on the label. Daily Blend is 6 oz with 168, and Bella Blend is 2 oz with 120. Keep them sealed in a cool, dry place.</p>"
+          }
+        },
+        "q3": {
+          "type": "question",
+          "settings": {
+            "question": "What's actually in the bundle?",
+            "answer": "<p>All six SpiceX blends: Daily Blend, Bella Blend, Taco Blast, Golden Hive, Sweet Sriracha, and Oh' Cajun. Ships in one box. <strong>$64.99 total</strong>, versus $77.94 if you bought them separately.</p>"
+          }
+        },
+        "q4": {
+          "type": "question",
+          "settings": {
+            "question": "What if I don't like one?",
+            "answer": "<p>Every SpiceX order comes with a 30-day money back guarantee. If you are not happy with it, email us within 30 days.</p>"
+          }
+        },
+        "q5": {
+          "type": "question",
+          "settings": {
+            "question": "Is it spicy?",
+            "answer": "<p><strong>Daily Blend</strong>, <strong>Bella Blend</strong> and <strong>Golden Hive</strong> have no heat. <strong>Sweet Sriracha</strong> and <strong>Taco Blast</strong> are mild to medium. <strong>Oh' Cajun</strong> is medium. Each product page lists the heat.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "q1",
+        "q2",
+        "q3",
+        "q4",
+        "q5"
+      ],
+      "settings": {
+        "eyebrow": "Before You Buy",
+        "headline": "Common questions.",
+        "sub": "Five of the most asked, before someone clicks add-to-cart.",
+        "card_eyebrow": "Still Need Help?",
+        "card_body": "We answer every email personally, usually within a few hours.",
+        "card_cta": "Email us",
+        "card_url": "/pages/contact",
+        "bg_color": "#FFF4E3",
+        "accent_color": "#0099d6"
+      }
+    },
+    "guarantee": {
+      "type": "spx-sa-guarantee",
+      "blocks": {
+        "t1": {
+          "type": "trust",
+          "settings": {
+            "icon": "check",
+            "title": "30-day money back guarantee",
+            "body": "Love it or get your money back within 30 days."
+          }
+        },
+        "t2": {
+          "type": "trust",
+          "settings": {
+            "icon": "truck",
+            "title": "Free U.S. Shipping on 2+ jars",
+            "body": "Single jars ship $4.99. Most orders arrive in 3\u20135 business days."
+          }
+        },
+        "t3": {
+          "type": "trust",
+          "settings": {
+            "icon": "leaf",
+            "title": "Real Ingredients, Every Jar",
+            "body": "No fillers, no MSG, no silicon dioxide. Ever."
+          }
+        }
+      },
+      "block_order": [
+        "t1",
+        "t2",
+        "t3"
+      ],
+      "settings": {
+        "bg_color": "#FFF4E3",
+        "card_bg": "#ffffff",
+        "accent_color": "#0099d6"
+      }
+    }
+  },
+  "order": [
+    "header",
+    "bundle-banner",
+    "grid",
+    "editorial",
+    "pairings",
+    "bundle-closer",
+    "faq",
+    "guarantee"
+  ]
+}

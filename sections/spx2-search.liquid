@@ -1,0 +1,69 @@
+<style>
+.s2-srch__form{display:flex;gap:10px;max-width:620px;margin:0 auto 34px;padding:0 20px}
+.s2-srch__form input[type=search]{flex:1;min-width:0;min-height:52px;padding:0 20px;border-radius:var(--s2-pill);border:2px solid var(--s2-line);background:#fff;font:400 17px/1 var(--spx-font-body);color:var(--s2-ink);letter-spacing:0}
+.s2-srch__form input[type=search]:focus{outline:3px solid var(--s2-ink);outline-offset:2px}
+.s2-srch__grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;max-width:1220px;margin:0 auto;padding:0 14px}
+.s2-srch__card{display:flex;flex-direction:column;background:#fff;border:1px solid var(--s2-line);border-radius:var(--s2-r);overflow:hidden;text-decoration:none;color:var(--s2-ink)}
+.s2-srch__pic{aspect-ratio:1/1;background:var(--s2-sand);display:grid;place-items:center;overflow:hidden}
+.s2-srch__pic img{width:100%;height:100%;object-fit:cover;display:block}
+.s2-srch__pic--jar img{width:auto;height:82%;object-fit:contain}
+.s2-srch__body{padding:14px 16px 16px;display:flex;flex-direction:column;gap:5px}
+.s2-srch__kind{font:700 12px/1.1 var(--spx-font-body);letter-spacing:.07em;text-transform:uppercase;color:var(--s2-flame-dk)}
+.s2-srch__name{font:800 19px/1.12 var(--s2-display);letter-spacing:-.01em}
+.s2-srch__price{font:600 15px/1.2 var(--spx-font-body);color:var(--s2-muted)}
+.s2-srch__pager{text-align:center;margin:30px 0 0;font:600 15px/1 var(--spx-font-body)}
+.s2-srch__pager a{color:var(--s2-ink);margin:0 6px}
+@media(min-width:800px){.s2-srch__grid{grid-template-columns:repeat(4,1fr);gap:14px;padding:0 20px}}
+</style>
+<section class="s2-sec s2-srch">
+  <div class="s2-head">
+    <h1 class="s2-h">
+      {%- if search.performed -%}
+        {%- if search.results_count == 0 -%}{{ section.settings.empty_heading }}{%- else -%}{{ search.results_count }} {% if search.results_count == 1 %}{{ section.settings.result_one }}{% else %}{{ section.settings.result_many }}{% endif %} "{{ search.terms | escape }}"{%- endif -%}
+      {%- else -%}{{ section.settings.heading }}{%- endif -%}
+    </h1>
+    {%- if search.performed and search.results_count == 0 -%}<p class="s2-sub">{{ section.settings.empty_text }}</p>{%- endif -%}
+  </div>
+  <form class="s2-srch__form" action="{{ routes.search_url }}" method="get" role="search">
+    <input type="search" name="q" value="{{ search.terms | escape }}" placeholder="{{ section.settings.placeholder | escape }}" aria-label="{{ section.settings.placeholder | escape }}">
+    <button type="submit" class="s2-btn">{{ section.settings.button_label }}</button>
+  </form>
+  {%- if search.performed and search.results_count > 0 -%}
+    {%- paginate search.results by 24 -%}
+      <div class="s2-srch__grid">
+        {%- for item in search.results -%}
+          <a class="s2-srch__card" href="{{ item.url }}">
+            {%- case item.object_type -%}
+              {%- when 'product' -%}
+                <span class="s2-srch__pic s2-srch__pic--jar">{%- if item.featured_image -%}{{ item.featured_image | image_url: width: 600 | image_tag: loading: 'lazy', alt: item.title, widths: '300, 450, 600', sizes: '(min-width: 800px) 280px, 46vw' }}{%- endif -%}</span>
+                <span class="s2-srch__body"><span class="s2-srch__kind">{{ section.settings.product_label }}</span><span class="s2-srch__name">{{ item.title }}</span><span class="s2-srch__price">{{ item.price | money }}</span></span>
+              {%- when 'article' -%}
+                <span class="s2-srch__pic">{%- if item.image -%}{{ item.image | image_url: width: 600 | image_tag: loading: 'lazy', alt: item.title, widths: '300, 450, 600', sizes: '(min-width: 800px) 280px, 46vw' }}{%- endif -%}</span>
+                <span class="s2-srch__body"><span class="s2-srch__kind">{{ section.settings.recipe_label }}</span><span class="s2-srch__name">{{ item.title }}</span></span>
+              {%- else -%}
+                <span class="s2-srch__body"><span class="s2-srch__kind">{{ section.settings.page_label }}</span><span class="s2-srch__name">{{ item.title }}</span></span>
+            {%- endcase -%}
+          </a>
+        {%- endfor -%}
+      </div>
+      {%- if paginate.pages > 1 -%}<div class="s2-srch__pager">{{ paginate | default_pagination }}</div>{%- endif -%}
+    {%- endpaginate -%}
+  {%- endif -%}
+</section>
+{% schema %}
+{
+  "name": "S2 Search",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading before a search", "default": "Search SpiceX" },
+    { "type": "text", "id": "result_one", "label": "Text after the count, one result", "default": "result for" },
+    { "type": "text", "id": "result_many", "label": "Text after the count, several results", "default": "results for" },
+    { "type": "text", "id": "empty_heading", "label": "Heading when nothing is found", "default": "Nothing matched that search." },
+    { "type": "text", "id": "empty_text", "label": "Text when nothing is found", "default": "Try a blend name like Taco Blast, or a dish like chicken." },
+    { "type": "text", "id": "placeholder", "label": "Search box text", "default": "Search blends and recipes" },
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "Search" },
+    { "type": "text", "id": "product_label", "label": "Label on products", "default": "Seasoning" },
+    { "type": "text", "id": "recipe_label", "label": "Label on recipes", "default": "Recipe" },
+    { "type": "text", "id": "page_label", "label": "Label on pages", "default": "Page" }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,105 @@
+{%- comment -%}
+  SpiceX PDP · Loox reviews carousel container
+{%- endcomment -%}
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+
+{% style %}
+  #shopify-section-{{ section.id }} {
+    background: {{ section.settings.bg_color | default: '#f7f3ec' }};
+    color: #0a0a0a;
+    font-family: var(--spx-font-body);
+    box-sizing: border-box;
+  }
+  #shopify-section-{{ section.id }} .pdp-rv {
+    max-width: 1480px;
+    margin: 0 auto;
+    padding: 80px clamp(20px, 4vw, 56px);
+  }
+  #shopify-section-{{ section.id }} .pdp-rv-head {
+    text-align: center;
+    margin: 0 0 40px;
+  }
+  #shopify-section-{{ section.id }} .pdp-rv-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #6b6b6b;
+    margin: 0 0 14px;
+    line-height: 1;
+  }
+  #shopify-section-{{ section.id }} .pdp-rv-eyebrow::before,
+  #shopify-section-{{ section.id }} .pdp-rv-eyebrow::after { content: ''; width: 20px; height: 1px; background: #6b6b6b; }
+  #shopify-section-{{ section.id }} .pdp-rv-title {
+    font-family: var(--spx-font-display);
+    font-weight: 500;
+    font-size: clamp(28px, 3vw, 40px);
+    letter-spacing: -0.025em;
+    color: #0a0a0a;
+    margin: 0 0 12px;
+    font-variation-settings: "WONK" 0, "SOFT" 30, "opsz" 144;
+  }
+  #shopify-section-{{ section.id }} .pdp-rv-stats {
+    font-size: 14px;
+    color: #6b6b6b;
+    margin: 0;
+  }
+  #shopify-section-{{ section.id }} .pdp-rv-stats strong { color: #0a0a0a; font-weight: 700; }
+  #shopify-section-{{ section.id }} .pdp-rv-container { margin: 0 auto; }
+  /* Loox container · let Loox handle internal styling, just ensure proper layout */
+  #shopify-section-{{ section.id }} .pdp-rv-empty {
+    padding: 40px;
+    text-align: center;
+    color: #999;
+    font-size: 13px;
+    border: 1px dashed #ccc;
+    border-radius: 8px;
+  }
+  @media (max-width: 700px) {
+    #shopify-section-{{ section.id }} .pdp-rv { padding: 56px 20px; }
+  }
+{% endstyle %}
+
+<section class="pdp-rv" id="pdp-reviews">
+  <header class="pdp-rv-head">
+    {%- if section.settings.eyebrow != blank -%}<p class="pdp-rv-eyebrow">{{ section.settings.eyebrow | escape }}</p>{%- endif -%}
+    <h2 class="pdp-rv-title">{{ section.settings.headline | default: 'Cooks weighed in.' | escape }}</h2>
+    {%- if section.settings.stats != blank -%}<p class="pdp-rv-stats">{{ section.settings.stats }}</p>{%- endif -%}
+  </header>
+  <div class="pdp-rv-container">
+    {%- comment -%} Render Loox app blocks if added, OR a default Loox container {%- endcomment -%}
+    {%- assign has_app = false -%}
+    {%- for block in section.blocks -%}
+      {%- if block.type == '@app' -%}{%- assign has_app = true -%}{%- endif -%}
+    {%- endfor -%}
+    {%- if has_app -%}
+      {%- for block in section.blocks -%}
+        {%- if block.type == '@app' -%}
+          <div {{ block.shopify_attributes }}>{% render block %}</div>
+        {%- endif -%}
+      {%- endfor -%}
+    {%- else -%}
+      <div id="looxReviews" data-style="card" data-product-id="{{ product.id }}"></div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "PDP · Reviews",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Reviews" },
+    { "type": "text", "id": "headline", "label": "Headline", "default": "347 cooks weighed in." },
+    { "type": "richtext", "id": "stats", "label": "Stats line", "default": "<p><strong>4.9 average</strong> · <strong>95% would recommend</strong></p>" },
+    { "type": "color", "id": "bg_color", "label": "Background", "default": "#f7f3ec" }
+  ],
+  "blocks": [
+    { "type": "@app" }
+  ],
+  "presets": [{ "name": "PDP · Reviews", "category": "Product" }]
+}
+{% endschema %}

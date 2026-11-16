@@ -1,0 +1,53 @@
+<style>
+/* same gap under the hero as above it */
+.s2-press{background:var(--s2-ink);overflow:hidden;padding:18px 0;margin-top:14px}
+.s2-press__label{margin:0 0 12px;text-align:center;font:700 11px/1 var(--spx-font-body);letter-spacing:.14em;text-transform:uppercase;color:var(--s2-gold)}
+.s2-press__track{display:flex;width:max-content;animation:s2-press 38s linear infinite;will-change:transform}
+.s2-press__set{display:flex;align-items:center;gap:56px;padding-right:56px;flex:0 0 auto}
+.s2-press__set{height:46px}
+.s2-press__item{display:inline-flex;align-items:center;height:calc(var(--h,40px) * .74);white-space:nowrap;font:800 24px/1 var(--s2-display);letter-spacing:-.01em;color:#FFF4E3;text-transform:none}
+.s2-press__item img{display:block;height:100%;width:auto;max-width:none}
+.s2-press__item--white img{filter:brightness(0) invert(1)}
+@keyframes s2-press{from{transform:translateX(0)}to{transform:translateX(calc(-100% / 8))}}
+@media(min-width:800px){.s2-press{padding:22px 0;margin-top:18px}.s2-press__set{gap:84px;padding-right:84px}.s2-press__set{height:60px}.s2-press__item{height:var(--h,40px);font-size:30px}}
+@media(prefers-reduced-motion:reduce){
+  .s2-press__track{animation:none;width:auto;justify-content:center}
+  .s2-press__set{flex-wrap:wrap;justify-content:center;gap:14px 32px;padding:0 20px}
+  .s2-press__set[aria-hidden]{display:none}
+}
+</style>
+{%- comment -%} Press logo scroll. Eight copies moved by exactly one copy, so it loops with no gap. Only list outlets that have actually featured SpiceX. {%- endcomment -%}
+{%- if section.blocks.size > 0 -%}
+<div class="s2-press">
+  {%- if section.settings.label != blank -%}<p class="s2-press__label">{{ section.settings.label }}</p>{%- endif -%}
+  <div class="s2-press__track">
+    {%- for i in (1..8) -%}
+      <div class="s2-press__set"{% if i > 1 %} aria-hidden="true"{% endif %}>
+        {%- for block in section.blocks -%}
+          <span class="s2-press__item{% if block.settings.white %} s2-press__item--white{% endif %}" style="--h:{{ block.settings.size | default: 40 }}px"{% if i == 1 %} {{ block.shopify_attributes }}{% endif %}>
+            {%- if block.settings.image != blank -%}
+              {{ block.settings.image | image_url: height: 160 | image_tag: loading: 'eager', alt: block.settings.name }}
+            {%- else -%}{{ block.settings.name }}{%- endif -%}
+          </span>
+        {%- endfor -%}
+      </div>
+    {%- endfor -%}
+  </div>
+</div>
+{%- endif -%}
+{% schema %}
+{
+  "name": "S2 Press logo scroll",
+  "settings": [
+    { "type": "text", "id": "label", "label": "Small label above the logos (optional)" }
+  ],
+  "max_blocks": 12,
+  "blocks": [{ "type": "logo", "name": "Outlet", "settings": [
+    { "type": "text", "id": "name", "label": "Outlet name (shown if no logo file is set)", "default": "Outlet" },
+    { "type": "image_picker", "id": "image", "label": "Logo file (transparent PNG or SVG)" },
+    { "type": "range", "id": "size", "label": "Logo height on desktop", "min": 20, "max": 70, "step": 1, "unit": "px", "default": 40, "info": "Wide wordmarks need a smaller height than round or stacked logos to look the same size." },
+    { "type": "checkbox", "id": "white", "label": "Turn the logo white", "default": false }
+  ]}],
+  "presets": [{ "name": "S2 Press logo scroll" }]
+}
+{% endschema %}

@@ -1,0 +1,175 @@
+{%- comment -%}
+  SpiceX recipe article · cookbook-style layout
+  - Hero image from tag "img:<asset filename>" (fallback article.image)
+  - Meta chips from tags: prep:, cook:, total:, serves:, level:, heat:, cal:, protein:
+  - Shop CTA from tag "product:<handle>"
+  - More recipes grid at bottom
+{%- endcomment -%}
+
+{%- liquid
+  assign img_asset = ''
+  assign prep_t = ''
+  assign cook_t = ''
+  assign total_t = ''
+  assign serves_t = ''
+  assign level_t = ''
+  assign heat_t = ''
+  assign cal_t = ''
+  assign protein_t = ''
+  assign blend_t = ''
+  assign product_h = ''
+  for tag in article.tags
+    if tag contains 'img:'
+      assign img_asset = tag | remove: 'img:'
+    elsif tag contains 'prep:'
+      assign prep_t = tag | remove: 'prep:'
+    elsif tag contains 'cook:'
+      assign cook_t = tag | remove: 'cook:'
+    elsif tag contains 'total:'
+      assign total_t = tag | remove: 'total:'
+    elsif tag contains 'serves:'
+      assign serves_t = tag | remove: 'serves:'
+    elsif tag contains 'level:'
+      assign level_t = tag | remove: 'level:'
+    elsif tag contains 'heat:'
+      assign heat_t = tag | remove: 'heat:'
+    elsif tag contains 'cal:'
+      assign cal_t = tag | remove: 'cal:'
+    elsif tag contains 'protein:'
+      assign protein_t = tag | remove: 'protein:'
+    elsif tag contains 'blend:'
+      assign blend_t = tag | remove: 'blend:'
+    elsif tag contains 'product:'
+      assign product_h = tag | remove: 'product:'
+    endif
+  endfor
+  assign cta_product = all_products[product_h]
+-%}
+
+{% style %}
+  .spx-art { background: #faf7f1; font-family: var(--spx-font-body, 'DM Sans', sans-serif); color: #0a0a0a; }
+  .spx-art *, .spx-art *::before, .spx-art *::after { box-sizing: border-box; }
+  .spx-art__wrap { max-width: 860px; margin: 0 auto; padding: clamp(24px, 4vw, 52px) clamp(16px, 3vw, 40px) 70px; }
+  .spx-art__back { display: inline-flex; align-items: center; gap: 8px; font-size: 12.5px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #b0691e; text-decoration: none; margin-bottom: 20px; }
+  .spx-art__back:hover { text-decoration: underline; }
+  .spx-art__chip { display: inline-block; font-size: 11px; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: #fff; background: #e07b3e; border-radius: 100px; padding: 7px 14px; margin: 0 0 14px; }
+  .spx-art__title { font-family: var(--spx-font-display); font-size: clamp(32px, 5vw, 54px); font-weight: 800; letter-spacing: -0.02em; line-height: 1.04; margin: 0 0 14px; }
+  .spx-art__excerpt { font-size: clamp(15.5px, 1.5vw, 18px); line-height: 1.55; color: #5c5c5c; font-style: italic; font-family: var(--spx-font-display); margin: 0 0 24px; }
+  .spx-art__hero { width: 100%; border-radius: 18px; display: block; margin: 0 0 22px; box-shadow: 0 24px 50px -22px rgba(10,10,10,0.35); }
+  .spx-art__facts { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; background: #fff; border: 1px solid #eee5d5; border-radius: 14px; padding: 16px; margin-bottom: 12px; }
+  .spx-art__fact { text-align: center; }
+  .spx-art__fact small { display: block; font-size: 10px; font-weight: 800; letter-spacing: 0.16em; text-transform: uppercase; color: #9a9384; margin-bottom: 4px; }
+  .spx-art__fact strong { font-family: var(--spx-font-display); font-size: 16.5px; font-weight: 800; }
+  .spx-art__badges { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 26px; }
+  .spx-art__badges span { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; background: #f5efe2; color: #4a4a4a; border-radius: 100px; padding: 7px 13px; }
+  .spx-art__body { font-size: 16px; line-height: 1.65; }
+  .spx-art__body h2 { font-family: var(--spx-font-display); font-size: clamp(22px, 2.6vw, 30px); font-weight: 800; letter-spacing: -0.015em; margin: 36px 0 14px; padding-bottom: 10px; border-bottom: 2px solid #e8a823; }
+  .spx-art__body ul { padding: 0 0 0 2px; margin: 0 0 10px; list-style: none; }
+  .spx-art__body ul li { position: relative; padding: 7px 0 7px 26px; border-bottom: 1px dashed #eadfca; }
+  .spx-art__body ul li::before { content: ''; position: absolute; left: 4px; top: 15px; width: 8px; height: 8px; border-radius: 50%; background: #e8a823; }
+  .spx-art__body ol { counter-reset: spxstep; list-style: none; padding: 0; margin: 0 0 10px; }
+  .spx-art__body ol li { counter-increment: spxstep; position: relative; padding: 12px 0 12px 46px; border-bottom: 1px dashed #eadfca; }
+  .spx-art__body ol li::before { content: counter(spxstep); position: absolute; left: 0; top: 12px; width: 30px; height: 30px; border-radius: 50%; background: #c2402e; color: #fff; font-weight: 800; font-size: 14px; display: flex; align-items: center; justify-content: center; }
+  .spx-art__body blockquote { margin: 28px 0; padding: 20px 24px; background: #fdf3e3; border-left: 4px solid #e8a823; border-radius: 0 14px 14px 0; font-style: italic; color: #5c4a2a; }
+  .spx-art__body blockquote p { margin: 0; }
+  .spx-art__body strong { font-weight: 700; }
+  .spx-art__nutrition { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 26px 0 8px; }
+  .spx-art__nutri { background: #0a0a0a; color: #fff; border-radius: 14px; padding: 16px; text-align: center; }
+  .spx-art__nutri small { display: block; font-size: 10px; font-weight: 800; letter-spacing: 0.16em; text-transform: uppercase; color: #a8a396; margin-bottom: 4px; }
+  .spx-art__nutri strong { font-family: var(--spx-font-display); font-size: 22px; font-weight: 800; }
+  .spx-art__cta { display: grid; grid-template-columns: 110px 1fr auto; gap: 18px; align-items: center; background: #0a0a0a; color: #fff; border-radius: 18px; padding: 20px; margin: 34px 0 8px; }
+  .spx-art__cta-img { width: 110px; height: 110px; object-fit: contain; border-radius: 12px; background: #171717; }
+  .spx-art__cta-eyebrow { font-size: 10.5px; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase; color: #e8a823; margin: 0 0 6px; }
+  .spx-art__cta-title { font-family: var(--spx-font-display); font-size: 21px; font-weight: 800; margin: 0 0 4px; }
+  .spx-art__cta-price { font-size: 13.5px; color: #b5b0a6; }
+  .spx-art__cta-btn { background: #e8a823; color: #0a0a0a; border-radius: 100px; padding: 15px 24px; font-size: 13px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none; white-space: nowrap; }
+  .spx-art__cta-btn:hover { filter: brightness(1.06); }
+  .spx-art__more { max-width: 1180px; margin: 0 auto; padding: 0 clamp(16px, 3vw, 40px) 70px; }
+  .spx-art__more-title { font-family: var(--spx-font-display); font-size: clamp(22px, 3vw, 32px); font-weight: 800; margin: 0 0 18px; }
+  .spx-art__more-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  .spx-art__more-card { display: block; background: #fff; border: 1px solid #eee5d5; border-radius: 16px; overflow: hidden; text-decoration: none; color: #0a0a0a; transition: transform 0.25s ease, box-shadow 0.25s ease; }
+  .spx-art__more-card:hover { transform: translateY(-3px); box-shadow: 0 18px 40px -18px rgba(10,10,10,0.25); }
+  .spx-art__more-card img { width: 100%; aspect-ratio: 4/3; object-fit: cover; display: block; background: #f0e9da; }
+  .spx-art__more-card h3 { font-family: var(--spx-font-display); font-size: 17px; font-weight: 800; padding: 14px 16px 18px; margin: 0; }
+  @media (max-width: 760px) {
+    .spx-art__facts { grid-template-columns: repeat(3, 1fr); row-gap: 14px; }
+    .spx-art__cta { grid-template-columns: 84px 1fr; }
+    .spx-art__cta-img { width: 84px; height: 84px; }
+    .spx-art__cta-btn { grid-column: 1 / -1; text-align: center; }
+    .spx-art__more-grid { grid-template-columns: 1fr; }
+    .spx-art__nutrition { grid-template-columns: repeat(3, 1fr); }
+  }
+{% endstyle %}
+
+<article class="spx-art">
+  <div class="spx-art__wrap">
+    <a class="spx-art__back" href="{{ blog.url }}">← All recipes</a>
+    {%- if blend_t != blank -%}<div><span class="spx-art__chip">Made with {{ blend_t }}</span></div>{%- endif -%}
+    <h1 class="spx-art__title">{{ article.title }}</h1>
+    {%- if article.excerpt != blank -%}<p class="spx-art__excerpt">{{ article.excerpt | strip_html }}</p>{%- endif -%}
+    {%- if img_asset != blank -%}
+      <img class="spx-art__hero" src="{{ img_asset | asset_url }}" alt="{{ article.title | escape }}" loading="eager" fetchpriority="high">
+    {%- elsif article.image -%}
+      <img class="spx-art__hero" src="{{ article.image | image_url: width: 1400 }}" alt="{{ article.title | escape }}" loading="eager" fetchpriority="high">
+    {%- endif -%}
+    {%- if prep_t != blank or cook_t != blank or total_t != blank -%}
+    <div class="spx-art__facts">
+      {%- if prep_t != blank -%}<div class="spx-art__fact"><small>Prep</small><strong>{{ prep_t }}</strong></div>{%- endif -%}
+      {%- if cook_t != blank -%}<div class="spx-art__fact"><small>Cook</small><strong>{{ cook_t }}</strong></div>{%- endif -%}
+      {%- if total_t != blank -%}<div class="spx-art__fact"><small>Total</small><strong>{{ total_t }}</strong></div>{%- endif -%}
+      {%- if serves_t != blank -%}<div class="spx-art__fact"><small>Serves</small><strong>{{ serves_t }}</strong></div>{%- endif -%}
+      {%- if level_t != blank -%}<div class="spx-art__fact"><small>Level</small><strong>{{ level_t }}</strong></div>{%- endif -%}
+    </div>
+    {%- endif -%}
+    <div class="spx-art__badges">
+      {%- if heat_t != blank -%}<span>🌶 {{ heat_t }} heat</span>{%- endif -%}
+      <span>High-protein</span>
+      <span>Real-ingredient seasoning</span>
+    </div>
+    <div class="spx-art__body">{{ article.content }}</div>
+    {%- if cal_t != blank or protein_t != blank -%}
+    <div class="spx-art__nutrition">
+      {%- if cal_t != blank -%}<div class="spx-art__nutri"><small>Calories</small><strong>{{ cal_t }}</strong></div>{%- endif -%}
+      {%- if protein_t != blank -%}<div class="spx-art__nutri"><small>Protein</small><strong>{{ protein_t }}</strong></div>{%- endif -%}
+      {%- if serves_t != blank -%}<div class="spx-art__nutri"><small>Servings</small><strong>{{ serves_t }}</strong></div>{%- endif -%}
+    </div>
+    {%- endif -%}
+    {%- if cta_product != blank -%}
+    <div class="spx-art__cta">
+      {%- if cta_product.featured_image -%}<img class="spx-art__cta-img" src="{{ cta_product.featured_image | image_url: width: 220 }}" alt="{{ cta_product.title | escape }}">{%- endif -%}
+      <div>
+        <p class="spx-art__cta-eyebrow">Featured seasoning</p>
+        <h2 class="spx-art__cta-title">{{ cta_product.title }}</h2>
+        <span class="spx-art__cta-price">{{ cta_product.price | money }} · Free shipping on 2+ jars</span>
+      </div>
+      <a class="spx-art__cta-btn" href="{{ cta_product.url }}">Shop the jar →</a>
+    </div>
+    {%- endif -%}
+  </div>
+  <div class="spx-art__more">
+    <h2 class="spx-art__more-title">More from the Cookbook</h2>
+    <div class="spx-art__more-grid">
+      {%- assign shown = 0 -%}
+      {%- for a in blog.articles -%}
+        {%- if a.id != article.id and shown < 3 -%}
+          {%- assign shown = shown | plus: 1 -%}
+          {%- assign a_img = '' -%}
+          {%- for tag in a.tags -%}
+            {%- if tag contains 'img:' -%}{%- assign a_img = tag | remove: 'img:' -%}{%- endif -%}
+          {%- endfor -%}
+          <a class="spx-art__more-card" href="{{ a.url }}">
+            {%- if a_img != blank -%}<img src="{{ a_img | asset_url }}" alt="{{ a.title | escape }}" loading="lazy">{%- elsif a.image -%}<img src="{{ a.image | image_url: width: 700 }}" alt="{{ a.title | escape }}" loading="lazy">{%- endif -%}
+            <h3>{{ a.title }}</h3>
+          </a>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</article>
+
+{% schema %}
+{
+  "name": "SpiceX recipe article",
+  "settings": []
+}
+{% endschema %}

@@ -1,0 +1,762 @@
+{%- comment -%}
+  SpiceX Bundle + Save · asymmetric hard-sell for the full bundle
+  - Left: large bundle product image with a rotating savings sticker
+  - Right: editorial copy, included-blend chips, dramatic pricing, primary CTA, trust strip
+  - AJAX Add to Cart wired to existing cart event system
+  - All CSS scoped under #shopify-section-{{ section.id }}
+{%- endcomment -%}
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap">
+
+{% style %}
+  #shopify-section-{{ section.id }} {
+    --b-bg: {{ section.settings.bg_color | default: '#0a0a0a' }};
+    --b-card-bg: {{ section.settings.card_bg | default: '#141414' }};
+    --b-ink: {{ section.settings.text_color | default: '#ffffff' }};
+    --b-ink-mute: {{ section.settings.muted_color | default: 'rgba(255, 255, 255, 0.62)' }};
+    --b-line: rgba(255, 255, 255, 0.10);
+    --b-gold: {{ section.settings.accent_color | default: '#e8a823' }};
+    --b-red: {{ section.settings.savings_color | default: '#c2402e' }};
+    --b-display: var(--spx-font-display);
+    --b-body: var(--spx-font-body);
+    --b-ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+    background: var(--b-bg);
+    color: var(--b-ink);
+    font-family: var(--b-body);
+    box-sizing: border-box;
+    position: relative;
+    overflow: hidden;
+  }
+  #shopify-section-{{ section.id }} *,
+  #shopify-section-{{ section.id }} *::before,
+  #shopify-section-{{ section.id }} *::after { box-sizing: border-box; }
+
+  /* Soft gold radial in the background */
+  #shopify-section-{{ section.id }}::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 80% 50% at 20% 50%, color-mix(in srgb, var(--b-gold) 14%, transparent), transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  #shopify-section-{{ section.id }} .bdl {
+    position: relative;
+    z-index: 1;
+    max-width: 1480px;
+    margin: 0 auto;
+    padding: clamp(72px, 9vw, 128px) clamp(20px, 4vw, 56px);
+  }
+
+  /* ===== Layout ===== */
+  #shopify-section-{{ section.id }} .bdl-grid {
+    display: grid;
+    grid-template-columns: 1.05fr 1fr;
+    gap: clamp(32px, 5vw, 80px);
+    align-items: center;
+  }
+
+  /* ===== IMAGE SIDE ===== */
+  #shopify-section-{{ section.id }} .bdl-media {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    background: color-mix(in srgb, var(--b-gold) 8%, transparent);
+    border-radius: 18px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  #shopify-section-{{ section.id }} .bdl-media::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center, color-mix(in srgb, var(--b-gold) 18%, transparent), transparent 65%);
+  }
+  #shopify-section-{{ section.id }} .bdl-img {
+    position: relative;
+    z-index: 1;
+    max-width: 90%;
+    max-height: 90%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    display: block;
+    filter: drop-shadow(0 40px 60px rgba(0, 0, 0, 0.45));
+  }
+  #shopify-section-{{ section.id }} .bdl-img-placeholder {
+    position: relative;
+    z-index: 1;
+    color: var(--b-ink-mute);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    text-align: center;
+    padding: 32px;
+  }
+
+  /* Floating savings sticker */
+  #shopify-section-{{ section.id }} .bdl-sticker {
+    position: absolute;
+    top: clamp(20px, 3vw, 36px);
+    right: clamp(20px, 3vw, 36px);
+    z-index: 3;
+    width: clamp(96px, 11vw, 132px);
+    height: clamp(96px, 11vw, 132px);
+    background: var(--b-red);
+    color: #ffffff;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    transform: rotate(-12deg);
+    box-shadow: 0 14px 32px rgba(0, 0, 0, 0.35), 0 0 0 6px color-mix(in srgb, var(--b-red) 22%, transparent);
+    animation: bdl-wobble 6s var(--b-ease) infinite;
+  }
+  #shopify-section-{{ section.id }} .bdl-sticker-eyebrow {
+    font-family: var(--b-body);
+    font-size: 9.5px;
+    font-weight: 800;
+    letter-spacing: 0.20em;
+    text-transform: uppercase;
+    opacity: 0.92;
+    line-height: 1;
+    margin-bottom: 5px;
+  }
+  #shopify-section-{{ section.id }} .bdl-sticker-main {
+    font-family: var(--b-display);
+    font-weight: 700;
+    font-size: clamp(18px, 1.8vw, 22px);
+    letter-spacing: -0.01em;
+    line-height: 1;
+    font-variation-settings: "WONK" 0, "SOFT" 30;
+  }
+  @keyframes bdl-wobble {
+    0%, 100% { transform: rotate(-12deg) translateY(0); }
+    50% { transform: rotate(-10deg) translateY(-4px); }
+  }
+
+  /* ===== CONTENT SIDE ===== */
+  #shopify-section-{{ section.id }} .bdl-content { max-width: 580px; }
+
+  #shopify-section-{{ section.id }} .bdl-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    font-family: var(--b-body);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--b-gold);
+    margin: 0 0 22px;
+    line-height: 1;
+  }
+  #shopify-section-{{ section.id }} .bdl-eyebrow::before {
+    content: '';
+    width: 32px;
+    height: 1.5px;
+    background: var(--b-gold);
+  }
+
+  #shopify-section-{{ section.id }} .bdl-headline {
+    font-family: var(--b-display);
+    font-weight: 500;
+    font-size: clamp(36px, 4.8vw, 64px);
+    line-height: 0.98;
+    letter-spacing: -0.03em;
+    color: var(--b-ink);
+    margin: 0 0 18px;
+    font-variation-settings: "WONK" 0, "SOFT" 30, "opsz" 144;
+  }
+  #shopify-section-{{ section.id }} .bdl-headline em {
+    font-style: italic;
+    color: var(--b-gold);
+    font-variation-settings: "WONK" 0, "SOFT" 50, "opsz" 144;
+  }
+
+  #shopify-section-{{ section.id }} .bdl-sub {
+    font-family: var(--b-body);
+    font-size: clamp(15px, 1.4vw, 17px);
+    line-height: 1.5;
+    color: var(--b-ink-mute);
+    margin: 0 0 32px;
+    max-width: 480px;
+  }
+
+  /* ===== Included chips ===== */
+  #shopify-section-{{ section.id }} .bdl-included-label {
+    font-family: var(--b-body);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--b-ink-mute);
+    margin: 0 0 14px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  #shopify-section-{{ section.id }} .bdl-included-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--b-line);
+  }
+  #shopify-section-{{ section.id }} .bdl-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0 0 36px;
+  }
+  #shopify-section-{{ section.id }} .bdl-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid var(--b-line);
+    border-radius: 100px;
+    font-family: var(--b-body);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--b-ink);
+    line-height: 1;
+  }
+  #shopify-section-{{ section.id }} .bdl-chip-mark {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--chip-color, var(--b-gold));
+    flex: 0 0 auto;
+  }
+
+  /* ===== Pricing ===== */
+  #shopify-section-{{ section.id }} .bdl-price-row {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin: 0 0 28px;
+    padding-top: 28px;
+    border-top: 1px solid var(--b-line);
+  }
+  #shopify-section-{{ section.id }} .bdl-regular {
+    font-family: var(--b-body);
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--b-ink-mute);
+    text-decoration: line-through;
+    text-decoration-thickness: 1.5px;
+    text-decoration-color: var(--b-red);
+  }
+  #shopify-section-{{ section.id }} .bdl-current {
+    font-family: var(--b-display);
+    font-weight: 700;
+    font-size: clamp(40px, 4.5vw, 56px);
+    color: var(--b-gold);
+    line-height: 1;
+    letter-spacing: -0.03em;
+    font-variation-settings: "WONK" 0, "SOFT" 30, "opsz" 144;
+  }
+  #shopify-section-{{ section.id }} .bdl-savings-pill {
+    background: var(--b-red);
+    color: #ffffff;
+    padding: 7px 12px;
+    border-radius: 6px;
+    font-family: var(--b-body);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    line-height: 1;
+    align-self: center;
+  }
+
+  /* ===== CTA ===== */
+  #shopify-section-{{ section.id }} .bdl-cta-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  #shopify-section-{{ section.id }} .bdl-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background: var(--b-gold);
+    color: #0a0a0a;
+    border: 0;
+    padding: 20px 32px;
+    border-radius: 6px;
+    font-family: var(--b-body);
+    font-size: 14px;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    line-height: 1;
+    transition: transform 0.2s var(--b-ease), filter 0.2s ease;
+    box-shadow: 0 20px 40px -16px color-mix(in srgb, var(--b-gold) 60%, transparent);
+    position: relative;
+    min-width: 240px;
+  }
+  #shopify-section-{{ section.id }} .bdl-cta:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.06);
+  }
+  #shopify-section-{{ section.id }} .bdl-cta:disabled { opacity: 0.6; cursor: wait; }
+  #shopify-section-{{ section.id }} .bdl-cta svg { width: 16px; height: 16px; }
+  #shopify-section-{{ section.id }} .bdl-cta-default,
+  #shopify-section-{{ section.id }} .bdl-cta-loading,
+  #shopify-section-{{ section.id }} .bdl-cta-added {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+  }
+  #shopify-section-{{ section.id }} .bdl-cta-loading,
+  #shopify-section-{{ section.id }} .bdl-cta-added { display: none; }
+  #shopify-section-{{ section.id }} .bdl-cta.is-loading .bdl-cta-default { display: none; }
+  #shopify-section-{{ section.id }} .bdl-cta.is-loading .bdl-cta-loading { display: inline-flex; }
+  #shopify-section-{{ section.id }} .bdl-cta.is-added .bdl-cta-default { display: none; }
+  #shopify-section-{{ section.id }} .bdl-cta.is-added .bdl-cta-added { display: inline-flex; }
+  #shopify-section-{{ section.id }} .bdl-spin {
+    width: 14px; height: 14px;
+    border: 2px solid rgba(0, 0, 0, 0.25);
+    border-top-color: #0a0a0a;
+    border-radius: 50%;
+    animation: bdl-spin 0.7s linear infinite;
+  }
+  @keyframes bdl-spin { to { transform: rotate(360deg); } }
+
+  /* Trust items */
+  #shopify-section-{{ section.id }} .bdl-trust {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+  }
+  #shopify-section-{{ section.id }} .bdl-trust-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--b-body);
+    font-size: 12px;
+    color: var(--b-ink-mute);
+  }
+  #shopify-section-{{ section.id }} .bdl-trust-item svg {
+    width: 14px; height: 14px;
+    color: var(--b-gold);
+    flex: 0 0 auto;
+  }
+
+  /* ===== Entrance ===== */
+  #shopify-section-{{ section.id }} .bdl-media,
+  #shopify-section-{{ section.id }} .bdl-content {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.8s var(--b-ease), transform 0.8s var(--b-ease);
+  }
+  #shopify-section-{{ section.id }} .bdl-media.is-in,
+  #shopify-section-{{ section.id }} .bdl-content.is-in {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  #shopify-section-{{ section.id }} .bdl-content { transition-delay: 0.15s; }
+
+  /* ===== Tablet ===== */
+  @media (max-width: 1024px) {
+    #shopify-section-{{ section.id }} .bdl-grid { gap: 40px; }
+    #shopify-section-{{ section.id }} .bdl-headline { font-size: clamp(32px, 4.8vw, 48px); }
+  }
+
+  /* ===== Mobile ===== */
+  @media (max-width: 720px) {
+    #shopify-section-{{ section.id }} .bdl-grid {
+      grid-template-columns: 1fr;
+      gap: 32px;
+    }
+    #shopify-section-{{ section.id }} .bdl-media { aspect-ratio: 4/5; max-height: 420px; }
+    #shopify-section-{{ section.id }} .bdl-sticker { top: 14px; right: 14px; width: 88px; height: 88px; }
+    #shopify-section-{{ section.id }} .bdl-content { max-width: 100%; }
+    #shopify-section-{{ section.id }} .bdl-headline { font-size: 36px; }
+    #shopify-section-{{ section.id }} .bdl-current { font-size: 40px; }
+    #shopify-section-{{ section.id }} .bdl-cta { width: 100%; min-width: 0; padding: 18px 22px; }
+    #shopify-section-{{ section.id }} .bdl-chips { gap: 6px; }
+    #shopify-section-{{ section.id }} .bdl-chip { font-size: 11.5px; padding: 7px 11px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #shopify-section-{{ section.id }} .bdl-media,
+    #shopify-section-{{ section.id }} .bdl-content { opacity: 1; transform: none; transition: none; }
+    #shopify-section-{{ section.id }} .bdl-sticker { animation: none; }
+  }
+{% endstyle %}
+
+<section class="bdl" aria-labelledby="bdl-headline-{{ section.id }}">
+  {%- liquid
+    assign product = section.settings.product
+    assign card_image = section.settings.image
+    if card_image == blank and product != blank
+      assign card_image = product.featured_image
+    endif
+    assign current_price = section.settings.price_override
+    if current_price == blank and product != blank
+      assign current_price = product.price | money
+    endif
+    assign variant_id = product.selected_or_first_available_variant.id
+    assign product_url = product.url | default: '#'
+  -%}
+
+  <div class="bdl">
+    <div class="bdl-grid">
+      {%- comment -%} ===== Image side ===== {%- endcomment -%}
+      <div class="bdl-media" data-bdl-anim>
+        <a href="{{ product_url }}" style="display:contents;">
+          {%- if card_image != blank -%}
+            <img class="bdl-img"
+              src="{{ card_image | image_url: width: 1000 }}"
+              srcset="{{ card_image | image_url: width: 600 }} 600w, {{ card_image | image_url: width: 900 }} 900w, {{ card_image | image_url: width: 1200 }} 1200w"
+              sizes="(max-width: 720px) 100vw, 50vw"
+              alt="{{ section.settings.headline | default: 'The Bundle' | escape }}"
+              loading="lazy">
+          {%- else -%}
+            <div class="bdl-img-placeholder">Connect the bundle product or upload an image</div>
+          {%- endif -%}
+        </a>
+        {%- if section.settings.show_sticker and section.settings.sticker_main != blank -%}
+          <div class="bdl-sticker" aria-hidden="true">
+            {%- if section.settings.sticker_eyebrow != blank -%}
+              <span class="bdl-sticker-eyebrow">{{ section.settings.sticker_eyebrow | escape }}</span>
+            {%- endif -%}
+            <span class="bdl-sticker-main">{{ section.settings.sticker_main | escape }}</span>
+          </div>
+        {%- endif -%}
+      </div>
+
+      {%- comment -%} ===== Content side ===== {%- endcomment -%}
+      <div class="bdl-content" data-bdl-anim>
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="bdl-eyebrow">{{ section.settings.eyebrow | escape }}</p>
+        {%- endif -%}
+        <h2 id="bdl-headline-{{ section.id }}" class="bdl-headline">{{ section.settings.headline | default: 'All Six Blends. <em>One Honest Price.</em>' }}</h2>
+        {%- if section.settings.sub != blank -%}
+          <p class="bdl-sub">{{ section.settings.sub | escape }}</p>
+        {%- endif -%}
+
+        {%- if section.blocks.size > 0 -%}
+          <p class="bdl-included-label">{{ section.settings.included_label | default: 'Included in your bundle' | escape }}</p>
+          <div class="bdl-chips">
+            {%- for block in section.blocks -%}
+              <span class="bdl-chip" style="--chip-color: {{ block.settings.chip_color | default: '#e8a823' }};" {{ block.shopify_attributes }}>
+                <span class="bdl-chip-mark" aria-hidden="true"></span>
+                <span>{{ block.settings.name | escape }}</span>
+              </span>
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+
+        <div class="bdl-price-row">
+          {%- if section.settings.regular_price != blank -%}
+            <span class="bdl-regular">{{ section.settings.regular_price | escape }}</span>
+          {%- endif -%}
+          <span class="bdl-current">{{ current_price | default: '$64.99' }}</span>
+          {%- if section.settings.savings_text != blank -%}
+            <span class="bdl-savings-pill">{{ section.settings.savings_text | escape }}</span>
+          {%- endif -%}
+        </div>
+
+        <div class="bdl-cta-wrap">
+          <button type="button" class="bdl-cta" data-bdl-add data-variant-id="{{ variant_id }}" {% if variant_id == blank %}disabled aria-disabled="true"{% endif %}>
+            <span class="bdl-cta-default">
+              {{ section.settings.cta_text | default: 'Get the Bundle' | escape }}
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+            </span>
+            <span class="bdl-cta-loading"><span class="bdl-spin" aria-hidden="true"></span>Adding to cart…</span>
+            <span class="bdl-cta-added">Added to cart <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg></span>
+          </button>
+
+          {%- if section.settings.trust_1 != blank or section.settings.trust_2 != blank or section.settings.trust_3 != blank -%}
+            <ul class="bdl-trust">
+              {%- if section.settings.trust_1 != blank -%}
+                <li class="bdl-trust-item">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg>
+                  {{ section.settings.trust_1 | escape }}
+                </li>
+              {%- endif -%}
+              {%- if section.settings.trust_2 != blank -%}
+                <li class="bdl-trust-item">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg>
+                  {{ section.settings.trust_2 | escape }}
+                </li>
+              {%- endif -%}
+              {%- if section.settings.trust_3 != blank -%}
+                <li class="bdl-trust-item">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg>
+                  {{ section.settings.trust_3 | escape }}
+                </li>
+              {%- endif -%}
+            </ul>
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  (function() {
+    var section = document.getElementById('shopify-section-{{ section.id }}');
+    if (!section) return;
+
+    // AJAX Add to Cart
+    var addBtn = section.querySelector('[data-bdl-add]');
+    if (addBtn) {
+      addBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        var variantId = addBtn.getAttribute('data-variant-id');
+        if (!variantId || addBtn.disabled) return;
+
+        addBtn.classList.add('is-loading');
+        addBtn.classList.remove('is-added');
+        addBtn.disabled = true;
+
+        fetch('/cart/add.js', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify({ id: variantId, quantity: 1 })
+        })
+          .then(function(r) { if (!r.ok) throw new Error('Add failed'); return r.json(); })
+          .then(function() { return fetch('/cart.js', { headers: { 'Accept': 'application/json' } }); })
+          .then(function(r) { return r.json(); })
+          .then(function(cart) {
+            window.dispatchEvent(new CustomEvent('cart:updated', { detail: cart }));
+            if (window.theme && window.theme.cart && typeof window.theme.cart.open === 'function') {
+              window.theme.cart.open();
+            }
+            addBtn.classList.remove('is-loading');
+            addBtn.classList.add('is-added');
+            setTimeout(function() { addBtn.classList.remove('is-added'); addBtn.disabled = false; }, 1800);
+          })
+          .catch(function(err) {
+            console.error('SpiceX bundle add to cart:', err);
+            addBtn.classList.remove('is-loading');
+            addBtn.disabled = false;
+          });
+      });
+    }
+
+    // Entrance animations
+    if (!('IntersectionObserver' in window)) {
+      section.querySelectorAll('[data-bdl-anim]').forEach(function(el) { el.classList.add('is-in'); });
+      return;
+    }
+    var io = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-in');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+    section.querySelectorAll('[data-bdl-anim]').forEach(function(el) { io.observe(el); });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Bundle + Save",
+  "class": "spx-bundle-section",
+  "max_blocks": 12,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Product"
+    },
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Bundle product",
+      "info": "Connect the bundle product. Variant ID + price are pulled from it."
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image override (optional)"
+    },
+    {
+      "type": "header",
+      "content": "Header"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "The Bundle"
+    },
+    {
+      "type": "html",
+      "id": "headline",
+      "label": "Headline (use <em> for italic accent)",
+      "default": "All Six Blends. <em>One Honest Price.</em>"
+    },
+    {
+      "type": "textarea",
+      "id": "sub",
+      "label": "Subhead",
+      "default": "Every SpiceX blend · Daily, Bella, Taco Blast, Sweet Sriracha, Golden Hive, Oh' Cajun · hand-blended, clean-label, ready to upgrade every meal you make."
+    },
+    {
+      "type": "text",
+      "id": "included_label",
+      "label": "Included label",
+      "default": "Included in your bundle"
+    },
+    {
+      "type": "header",
+      "content": "Pricing"
+    },
+    {
+      "type": "text",
+      "id": "regular_price",
+      "label": "Regular price (strikethrough)",
+      "default": "$77.94",
+      "info": "Shown with strikethrough. The current price is pulled from the product (or use override below)."
+    },
+    {
+      "type": "text",
+      "id": "price_override",
+      "label": "Bundle price override (optional)",
+      "info": "Leave blank to use the product's price."
+    },
+    {
+      "type": "text",
+      "id": "savings_text",
+      "label": "Savings pill",
+      "default": "Save $12.95"
+    },
+    {
+      "type": "header",
+      "content": "Floating sticker"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_sticker",
+      "label": "Show savings sticker on image",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "sticker_eyebrow",
+      "label": "Sticker top text",
+      "default": "Best Value"
+    },
+    {
+      "type": "text",
+      "id": "sticker_main",
+      "label": "Sticker main text",
+      "default": "Save $12.95"
+    },
+    {
+      "type": "header",
+      "content": "CTA"
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "Button text",
+      "default": "Get the Bundle"
+    },
+    {
+      "type": "header",
+      "content": "Trust strip"
+    },
+    {
+      "type": "text",
+      "id": "trust_1",
+      "label": "Trust item 1",
+      "default": "Free shipping on 2+ jars"
+    },
+    {
+      "type": "text",
+      "id": "trust_2",
+      "label": "Trust item 2",
+      "default": "30-day money-back guarantee"
+    },
+    {
+      "type": "text",
+      "id": "trust_3",
+      "label": "Trust item 3",
+      "default": "Hand-blended in the USA"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Section background",
+      "default": "#0a0a0a"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "muted_color",
+      "label": "Muted text",
+      "default": "#9c9c9c"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Gold accent (CTA + headline)",
+      "default": "#e8a823"
+    },
+    {
+      "type": "color",
+      "id": "savings_color",
+      "label": "Savings color (sticker + pill)",
+      "default": "#c2402e"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "included",
+      "name": "Included blend",
+      "settings": [
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Blend name",
+          "default": "Daily Blend"
+        },
+        {
+          "type": "color",
+          "id": "chip_color",
+          "label": "Chip color",
+          "default": "#e8a823"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Bundle + Save",
+      "category": "Promo"
+    }
+  ]
+}
+{% endschema %}

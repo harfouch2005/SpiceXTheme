@@ -1,0 +1,140 @@
+{%- comment -%}
+  Shop All · money back guarantee strip (3 cells, icon + heading + sub)
+{%- endcomment -%}
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+
+{% style %}
+  #shopify-section-{{ section.id }} {
+    background: {{ section.settings.bg_color | default: '#f7f3ec' }};
+    color: #0a0a0a;
+    font-family: var(--spx-font-body);
+    box-sizing: border-box;
+  }
+  #shopify-section-{{ section.id }} *,
+  #shopify-section-{{ section.id }} *::before,
+  #shopify-section-{{ section.id }} *::after { box-sizing: border-box; }
+  #shopify-section-{{ section.id }} .sa-tr-outer {
+    max-width: 1480px;
+    margin: 0 auto;
+    padding: 56px clamp(20px, 4vw, 56px);
+  }
+  #shopify-section-{{ section.id }} .sa-tr {
+    background: {{ section.settings.card_bg | default: '#ffffff' }};
+    border-radius: 14px;
+    box-shadow: 0 10px 30px -16px rgba(0, 0, 0, 0.12);
+    padding: 32px clamp(20px, 4vw, 48px);
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+    align-items: start;
+  }
+  #shopify-section-{{ section.id }} .sa-tr-item {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+  }
+  #shopify-section-{{ section.id }} .sa-tr-icon {
+    flex: 0 0 auto;
+    width: 28px;
+    height: 28px;
+    color: {{ section.settings.accent_color | default: '#0099d6' }};
+    margin-top: 2px;
+  }
+  #shopify-section-{{ section.id }} .sa-tr-icon svg {
+    width: 100%;
+    height: 100%;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  #shopify-section-{{ section.id }} .sa-tr-body { flex: 1; }
+  #shopify-section-{{ section.id }} .sa-tr-title {
+    font-family: var(--spx-font-body);
+    font-size: 14px;
+    font-weight: 700;
+    color: #0a0a0a;
+    margin: 0 0 6px;
+    line-height: 1.3;
+    letter-spacing: -0.005em;
+  }
+  #shopify-section-{{ section.id }} .sa-tr-sub {
+    font-family: var(--spx-font-body);
+    font-size: 12.5px;
+    color: #555;
+    line-height: 1.5;
+    margin: 0;
+  }
+  @media (max-width: 900px) {
+    #shopify-section-{{ section.id }} .sa-tr {
+      grid-template-columns: 1fr;
+      gap: 24px;
+      padding: 28px;
+    }
+  }
+{% endstyle %}
+
+<section class="sa-tr-outer">
+  <div class="sa-tr">
+    {%- for block in section.blocks -%}
+      <div class="sa-tr-item" {{ block.shopify_attributes }}>
+        <span class="sa-tr-icon" aria-hidden="true">
+          {%- assign ic = block.settings.icon | default: 'check' -%}
+          {%- case ic -%}
+            {%- when 'check' -%}
+              <svg viewBox="0 0 28 28"><circle cx="14" cy="14" r="11"/><path d="M9 14.5 L 12.5 18 L 19 11"/></svg>
+            {%- when 'truck' -%}
+              <svg viewBox="0 0 28 28"><rect x="2" y="9" width="14" height="11" rx="1"/><path d="M16 12 H 22 L 26 16 V 20 H 16"/><circle cx="8" cy="22" r="2"/><circle cx="21" cy="22" r="2"/></svg>
+            {%- when 'leaf' -%}
+              <svg viewBox="0 0 28 28"><path d="M5 23 C 5 12, 12 5, 23 5 C 23 16, 16 23, 5 23 Z"/><path d="M5 23 L 16 12"/></svg>
+            {%- when 'shield' -%}
+              <svg viewBox="0 0 28 28"><path d="M14 3 L 5 6.5 V 14 C 5 19.5, 9.5 24, 14 25 C 18.5 24, 23 19.5, 23 14 V 6.5 Z"/><path d="M10.5 14 L 13 16.5 L 18 11.5"/></svg>
+            {%- when 'usa' -%}
+              <svg viewBox="0 0 28 28"><line x1="5" y1="3" x2="5" y2="25"/><path d="M5 5 H 23 V 14 H 5"/><line x1="5" y1="8" x2="18" y2="8"/><line x1="5" y1="11" x2="18" y2="11"/></svg>
+            {%- when 'heart' -%}
+              <svg viewBox="0 0 28 28"><path d="M14 22 L 5.5 13.5 a 4.5 4.5 0 0 1 6.5 -6 L 14 9 L 16 7.5 a 4.5 4.5 0 0 1 6.5 6 Z"/></svg>
+            {%- else -%}
+              <svg viewBox="0 0 28 28"><circle cx="14" cy="14" r="10"/></svg>
+          {%- endcase -%}
+        </span>
+        <div class="sa-tr-body">
+          <h3 class="sa-tr-title">{{ block.settings.title | escape }}</h3>
+          <p class="sa-tr-sub">{{ block.settings.body | escape }}</p>
+        </div>
+      </div>
+    {%- endfor -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Shop All · Guarantee",
+  "max_blocks": 4,
+  "settings": [
+    { "type": "color", "id": "bg_color", "label": "Section background", "default": "#f7f3ec" },
+    { "type": "color", "id": "card_bg", "label": "Card background", "default": "#ffffff" },
+    { "type": "color", "id": "accent_color", "label": "Icon color", "default": "#0099d6" }
+  ],
+  "blocks": [
+    {
+      "type": "trust",
+      "name": "Trust item",
+      "settings": [
+        { "type": "select", "id": "icon", "label": "Icon", "default": "check", "options": [
+          { "value": "check", "label": "Check" },
+          { "value": "truck", "label": "Truck" },
+          { "value": "leaf", "label": "Leaf" },
+          { "value": "shield", "label": "Shield" },
+          { "value": "usa", "label": "USA" },
+          { "value": "heart", "label": "Heart" }
+        ]},
+        { "type": "text", "id": "title", "label": "Title", "default": "30-day money back guarantee" },
+        { "type": "textarea", "id": "body", "label": "Body", "default": "Love it or get your money back within 30 days." }
+      ]
+    }
+  ],
+  "presets": [{ "name": "Shop All · Guarantee", "category": "Shop All" }]
+}
+{% endschema %}

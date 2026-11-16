@@ -1,0 +1,39 @@
+<section class="s2-hero" data-s2-hero>
+  <div class="s2-hero__wrap">
+    <div class="s2-hero__copy">
+      {%- if section.settings.rating != blank -%}
+        <p class="s2-hero__rating"><span class="s2-stars" aria-hidden="true">★★★★★</span>{{ section.settings.rating }}</p>
+      {%- endif -%}
+      <h1 class="s2-hero__title">{{ section.settings.heading }}{% if section.settings.heading_accent != blank %}<span>{{ section.settings.heading_accent }}</span>{% endif %}</h1>
+      {%- if section.settings.subheading != blank -%}<p class="s2-hero__sub">{{ section.settings.subheading }}</p>{%- endif -%}
+      <div class="s2-hero__cta">
+        {%- if section.settings.button_label != blank -%}<a class="s2-btn" href="{{ section.settings.button_link }}">{{ section.settings.button_label }}</a>{%- endif -%}
+        {%- if section.settings.link_label != blank -%}<a class="s2-link" href="{{ section.settings.link_url }}">{{ section.settings.link_label }}</a>{%- endif -%}
+      </div>
+    </div>
+    <div class="s2-hero__media">
+      {%- if section.settings.image != blank -%}
+        {{ section.settings.image | image_url: width: 1600 | image_tag: loading: 'eager', fetchpriority: 'high', widths: '480, 750, 1100, 1600', sizes: '(min-width: 990px) 62vw, 100vw' }}
+      {%- else -%}
+        {{ 'lifestyle-1' | placeholder_svg_tag }}
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "S2 Hero",
+  "settings": [
+    { "type": "text", "id": "rating", "label": "Rating line", "default": "4.9 from 132 reviews" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Big flavor." },
+    { "type": "text", "id": "heading_accent", "label": "Heading, second line (colored)", "default": "Zero guesswork." },
+    { "type": "textarea", "id": "subheading", "label": "Subheading", "default": "Six seasoning blends that make a Tuesday dinner taste like you had a plan." },
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "Build your box" },
+    { "type": "url", "id": "button_link", "label": "Button link" },
+    { "type": "text", "id": "link_label", "label": "Text link label", "default": "Shop all six" },
+    { "type": "url", "id": "link_url", "label": "Text link" },
+    { "type": "image_picker", "id": "image", "label": "Image" }
+  ],
+  "presets": [{ "name": "S2 Hero" }]
+}
+{% endschema %}

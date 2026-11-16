@@ -1,0 +1,125 @@
+{%- comment -%}
+  SpiceX Bundle PDP · Why the Bundle? (3 cards)
+{%- endcomment -%}
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+
+{% style %}
+  #shopify-section-{{ section.id }} {
+    background: {{ section.settings.bg_color | default: '#f7f3ec' }};
+    color: #0a0a0a;
+    font-family: var(--spx-font-body);
+    box-sizing: border-box;
+  }
+  #shopify-section-{{ section.id }} *, #shopify-section-{{ section.id }} *::before, #shopify-section-{{ section.id }} *::after { box-sizing: border-box; }
+  #shopify-section-{{ section.id }} .bdl-w { max-width: 1080px; margin: 0 auto; padding: 80px clamp(20px, 4vw, 56px); }
+  #shopify-section-{{ section.id }} .bdl-w-head { text-align: center; margin: 0 0 48px; }
+  #shopify-section-{{ section.id }} .bdl-w-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #6b6b6b;
+    margin: 0 0 14px;
+    line-height: 1;
+  }
+  #shopify-section-{{ section.id }} .bdl-w-eyebrow::before,
+  #shopify-section-{{ section.id }} .bdl-w-eyebrow::after { content: ''; width: 20px; height: 1px; background: #6b6b6b; }
+  #shopify-section-{{ section.id }} .bdl-w-title {
+    font-family: var(--spx-font-display);
+    font-weight: 500;
+    font-size: clamp(28px, 3vw, 40px);
+    letter-spacing: -0.025em;
+    color: #0a0a0a;
+    margin: 0;
+    font-variation-settings: "WONK" 0, "SOFT" 30, "opsz" 144;
+  }
+  #shopify-section-{{ section.id }} .bdl-w-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+  }
+  #shopify-section-{{ section.id }} .bdl-w-card {
+    background: #ffffff;
+    border: 1px solid rgba(10, 10, 10, 0.08);
+    border-radius: 12px;
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  #shopify-section-{{ section.id }} .bdl-w-card-eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: {{ section.settings.accent_color | default: '#f5b316' }};
+    margin: 0;
+    line-height: 1;
+  }
+  #shopify-section-{{ section.id }} .bdl-w-card-title {
+    font-family: var(--spx-font-display);
+    font-weight: 500;
+    font-size: 22px;
+    letter-spacing: -0.018em;
+    color: #0a0a0a;
+    margin: 0;
+    line-height: 1.2;
+    font-variation-settings: "WONK" 0, "SOFT" 30;
+  }
+  #shopify-section-{{ section.id }} .bdl-w-card-body {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #555;
+    margin: 0;
+  }
+  @media (max-width: 900px) {
+    #shopify-section-{{ section.id }} .bdl-w { padding: 56px 20px; }
+    #shopify-section-{{ section.id }} .bdl-w-grid { grid-template-columns: 1fr; gap: 16px; }
+    #shopify-section-{{ section.id }} .bdl-w-card { padding: 24px; }
+  }
+{% endstyle %}
+
+<section class="bdl-w">
+  <header class="bdl-w-head">
+    {%- if section.settings.eyebrow != blank -%}<p class="bdl-w-eyebrow">{{ section.settings.eyebrow | escape }}</p>{%- endif -%}
+    <h2 class="bdl-w-title">{{ section.settings.headline | default: 'The smartest order on the site.' | escape }}</h2>
+  </header>
+  <div class="bdl-w-grid">
+    {%- for block in section.blocks -%}
+      <article class="bdl-w-card" {{ block.shopify_attributes }}>
+        {%- if block.settings.eyebrow != blank -%}<p class="bdl-w-card-eyebrow">{{ block.settings.eyebrow | escape }}</p>{%- endif -%}
+        <h3 class="bdl-w-card-title">{{ block.settings.title | escape }}</h3>
+        <p class="bdl-w-card-body">{{ block.settings.body | escape }}</p>
+      </article>
+    {%- endfor -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Bundle PDP · Why",
+  "max_blocks": 4,
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Why The Bundle" },
+    { "type": "text", "id": "headline", "label": "Headline", "default": "The smartest order on the site." },
+    { "type": "color", "id": "accent_color", "label": "Card eyebrow color", "default": "#f5b316" },
+    { "type": "color", "id": "bg_color", "label": "Background", "default": "#f7f3ec" }
+  ],
+  "blocks": [
+    {
+      "type": "card",
+      "name": "Card",
+      "settings": [
+        { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "The Lineup" },
+        { "type": "text", "id": "title", "label": "Title", "default": "Try all six. Find your favorites." },
+        { "type": "textarea", "id": "body", "label": "Body", "default": "You don't know which blend you'll reach for until you've cooked with all of them." }
+      ]
+    }
+  ],
+  "presets": [{ "name": "Bundle PDP · Why", "category": "Product" }]
+}
+{% endschema %}

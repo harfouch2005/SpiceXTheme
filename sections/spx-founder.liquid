@@ -1,0 +1,694 @@
+{%- comment -%}
+  SpiceX Founder Story · editorial spread for Karim, co-founder
+  - Photo on left (slight tilt, polaroid feel), story on right
+  - Pull quote, stats, Instagram link
+  - Closing tagline as a separate full-width element
+  - All CSS scoped under #shopify-section-{{ section.id }}
+{%- endcomment -%}
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+
+{% style %}
+  #shopify-section-{{ section.id }} {
+    --f-bg: {{ section.settings.bg_color | default: '#f7f3ec' }};
+    --f-ink: #0a0a0a;
+    --f-ink-mute: #555555;
+    --f-ink-dim: #999999;
+    --f-line: rgba(10, 10, 10, 0.10);
+    --f-accent: {{ section.settings.accent_color | default: '#e8a823' }};
+    --f-display: var(--spx-font-display);
+    --f-body: var(--spx-font-body);
+    --f-script: 'Caveat', cursive;
+    --f-ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+    background: var(--f-bg);
+    color: var(--f-ink);
+    font-family: var(--f-body);
+    box-sizing: border-box;
+    position: relative;
+    overflow: hidden;
+  }
+  #shopify-section-{{ section.id }} *,
+  #shopify-section-{{ section.id }} *::before,
+  #shopify-section-{{ section.id }} *::after { box-sizing: border-box; }
+
+  #shopify-section-{{ section.id }} .fnd {
+    max-width: 1480px;
+    margin: 0 auto;
+    padding: clamp(72px, 9vw, 128px) clamp(20px, 4vw, 56px);
+  }
+
+  /* ===== Top eyebrow ===== */
+  #shopify-section-{{ section.id }} .fnd-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    font-family: var(--f-body);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--f-ink-mute);
+    margin: 0 0 36px;
+    line-height: 1;
+  }
+  #shopify-section-{{ section.id }} .fnd-eyebrow::before {
+    content: '';
+    width: 32px;
+    height: 1px;
+    background: var(--f-ink-mute);
+  }
+  #shopify-section-{{ section.id }} .fnd-eyebrow::after {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--f-accent);
+  }
+
+  /* ===== Grid ===== */
+  #shopify-section-{{ section.id }} .fnd-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: clamp(40px, 6vw, 96px);
+    align-items: start;
+  }
+
+  /* ===== Photo side ===== */
+  #shopify-section-{{ section.id }} .fnd-photo-wrap {
+    position: relative;
+    padding: 14px 14px 56px;
+    background: #ffffff;
+    box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.22), 0 8px 16px -8px rgba(0, 0, 0, 0.10);
+    transform: rotate(-1.5deg);
+    transition: transform 0.5s var(--f-ease);
+    margin-top: 24px;
+    max-width: 520px;
+  }
+  @media (hover: hover) {
+    #shopify-section-{{ section.id }} .fnd-photo-wrap:hover {
+      transform: rotate(0deg);
+    }
+  }
+  #shopify-section-{{ section.id }} .fnd-photo {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    background: #ebe5d8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+  #shopify-section-{{ section.id }} .fnd-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  #shopify-section-{{ section.id }} .fnd-photo-placeholder {
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--f-ink-dim);
+    text-align: center;
+    padding: 32px;
+  }
+  /* Signature below photo (Caveat script) */
+  #shopify-section-{{ section.id }} .fnd-sig {
+    position: absolute;
+    bottom: 8px;
+    left: 22px;
+    font-family: var(--f-script);
+    font-weight: 600;
+    font-size: 30px;
+    color: var(--f-ink);
+    line-height: 1;
+    transform: rotate(-2deg);
+  }
+  #shopify-section-{{ section.id }} .fnd-sig-meta {
+    position: absolute;
+    bottom: 18px;
+    right: 22px;
+    font-family: var(--f-body);
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: 0.20em;
+    text-transform: uppercase;
+    color: var(--f-ink-dim);
+    line-height: 1;
+  }
+
+  /* ===== Content side ===== */
+  #shopify-section-{{ section.id }} .fnd-content {
+    max-width: 620px;
+  }
+
+  #shopify-section-{{ section.id }} .fnd-name {
+    font-family: var(--f-display);
+    font-weight: 500;
+    font-size: clamp(48px, 6vw, 88px);
+    line-height: 0.95;
+    letter-spacing: -0.035em;
+    color: var(--f-ink);
+    margin: 0 0 6px;
+    font-variation-settings: "WONK" 0, "SOFT" 30, "opsz" 144;
+  }
+  #shopify-section-{{ section.id }} .fnd-role {
+    font-family: var(--f-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(15px, 1.5vw, 18px);
+    color: var(--f-ink-mute);
+    margin: 0 0 32px;
+    line-height: 1;
+    font-variation-settings: "WONK" 0, "SOFT" 50;
+  }
+
+  /* Story paragraphs */
+  #shopify-section-{{ section.id }} .fnd-story {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    margin: 0 0 40px;
+  }
+  #shopify-section-{{ section.id }} .fnd-story p {
+    font-family: var(--f-body);
+    font-size: clamp(15px, 1.4vw, 17px);
+    line-height: 1.65;
+    color: var(--f-ink-mute);
+    margin: 0;
+  }
+  /* Drop cap on first paragraph */
+  #shopify-section-{{ section.id }} .fnd-story p:first-child::first-letter {
+    font-family: var(--f-display);
+    font-weight: 600;
+    font-size: 3.6em;
+    line-height: 0.85;
+    float: left;
+    margin: 4px 12px 0 0;
+    color: var(--f-ink);
+    font-variation-settings: "WONK" 0, "SOFT" 30, "opsz" 144;
+  }
+
+  /* Pull quote */
+  #shopify-section-{{ section.id }} .fnd-quote {
+    position: relative;
+    margin: 0 0 40px;
+    padding: 28px 0 28px 36px;
+    border-left: 3px solid var(--f-accent);
+  }
+  #shopify-section-{{ section.id }} .fnd-quote::before {
+    content: '"';
+    position: absolute;
+    top: -6px;
+    left: 16px;
+    font-family: var(--f-display);
+    font-weight: 600;
+    font-size: 64px;
+    line-height: 1;
+    color: var(--f-accent);
+    opacity: 0.65;
+  }
+  #shopify-section-{{ section.id }} .fnd-quote p {
+    font-family: var(--f-display);
+    font-style: italic;
+    font-weight: 500;
+    font-size: clamp(20px, 2.2vw, 26px);
+    line-height: 1.32;
+    letter-spacing: -0.015em;
+    color: var(--f-ink);
+    margin: 0 0 14px;
+    font-variation-settings: "WONK" 0, "SOFT" 50, "opsz" 144;
+  }
+  #shopify-section-{{ section.id }} .fnd-quote cite {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-style: normal;
+    font-family: var(--f-script);
+    font-weight: 600;
+    font-size: 22px;
+    color: var(--f-ink);
+  }
+  #shopify-section-{{ section.id }} .fnd-quote cite::before {
+    content: '';
+    width: 24px;
+    height: 1px;
+    background: var(--f-ink);
+  }
+
+  /* Stats row */
+  #shopify-section-{{ section.id }} .fnd-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin: 0 0 36px;
+    padding: 28px 0;
+    border-top: 1px solid var(--f-line);
+    border-bottom: 1px solid var(--f-line);
+  }
+  #shopify-section-{{ section.id }} .fnd-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  #shopify-section-{{ section.id }} .fnd-stat-value {
+    font-family: var(--f-display);
+    font-weight: 600;
+    font-size: clamp(32px, 3.6vw, 48px);
+    line-height: 1;
+    letter-spacing: -0.025em;
+    color: var(--f-ink);
+    font-variation-settings: "WONK" 0, "SOFT" 30, "opsz" 144;
+  }
+  #shopify-section-{{ section.id }} .fnd-stat-label {
+    font-family: var(--f-body);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--f-ink-mute);
+    line-height: 1.3;
+  }
+
+  /* Instagram link */
+  #shopify-section-{{ section.id }} .fnd-ig {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--f-body);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    color: var(--f-ink);
+    text-decoration: none;
+    padding: 12px 18px;
+    border: 1.5px solid var(--f-ink);
+    border-radius: 100px;
+    transition: background 0.25s ease, color 0.25s ease, transform 0.2s ease;
+    line-height: 1;
+  }
+  #shopify-section-{{ section.id }} .fnd-ig:hover {
+    background: var(--f-ink);
+    color: #ffffff;
+    transform: translateY(-1px);
+  }
+  #shopify-section-{{ section.id }} .fnd-ig svg { width: 16px; height: 16px; flex: 0 0 auto; }
+
+  /* ===== Closing tagline ===== */
+  #shopify-section-{{ section.id }} .fnd-closing {
+    margin: clamp(72px, 9vw, 128px) auto 0;
+    max-width: 720px;
+    text-align: center;
+  }
+  #shopify-section-{{ section.id }} .fnd-closing-line {
+    display: inline-block;
+    font-family: var(--f-display);
+    font-weight: 500;
+    font-size: clamp(28px, 3.6vw, 56px);
+    line-height: 1.1;
+    letter-spacing: -0.025em;
+    color: var(--f-ink);
+    margin: 0;
+    position: relative;
+    font-variation-settings: "WONK" 0, "SOFT" 30, "opsz" 144;
+  }
+  #shopify-section-{{ section.id }} .fnd-closing-line em {
+    font-style: italic;
+    color: var(--f-accent);
+    font-variation-settings: "WONK" 0, "SOFT" 50, "opsz" 144;
+  }
+  #shopify-section-{{ section.id }} .fnd-closing-mark {
+    margin: 24px auto 0;
+    display: block;
+    width: 280px;
+    max-width: 70%;
+    height: 16px;
+    overflow: visible;
+  }
+  #shopify-section-{{ section.id }} .fnd-closing-mark path {
+    fill: none;
+    stroke-linecap: round;
+    stroke-width: 2;
+  }
+  #shopify-section-{{ section.id }} .fnd-closing-mark .is-main { stroke: var(--f-ink); }
+  #shopify-section-{{ section.id }} .fnd-closing-mark .is-accent { stroke: var(--f-accent); }
+
+  /* ===== Entrance ===== */
+  #shopify-section-{{ section.id }} .fnd-photo-wrap,
+  #shopify-section-{{ section.id }} .fnd-content,
+  #shopify-section-{{ section.id }} .fnd-closing {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.8s var(--f-ease), transform 0.8s var(--f-ease);
+  }
+  #shopify-section-{{ section.id }} .fnd-photo-wrap.is-in,
+  #shopify-section-{{ section.id }} .fnd-content.is-in,
+  #shopify-section-{{ section.id }} .fnd-closing.is-in {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  #shopify-section-{{ section.id }} .fnd-photo-wrap.is-in { transform: rotate(-1.5deg) translateY(0); }
+  #shopify-section-{{ section.id }} .fnd-content { transition-delay: 0.15s; }
+  #shopify-section-{{ section.id }} .fnd-closing { transition-delay: 0.1s; }
+
+  /* ===== Tablet ===== */
+  @media (max-width: 1024px) {
+    #shopify-section-{{ section.id }} .fnd-grid { gap: 40px; }
+    #shopify-section-{{ section.id }} .fnd-name { font-size: clamp(40px, 6vw, 64px); }
+  }
+
+  /* ===== Mobile ===== */
+  @media (max-width: 720px) {
+    #shopify-section-{{ section.id }} .fnd-grid {
+      grid-template-columns: 1fr;
+      gap: 36px;
+    }
+    #shopify-section-{{ section.id }} .fnd-photo-wrap {
+      max-width: 320px;
+      margin: 0 auto;
+      padding: 10px 10px 48px;
+      transform: rotate(-1deg);
+    }
+    #shopify-section-{{ section.id }} .fnd-photo-wrap.is-in { transform: rotate(-1deg) translateY(0); }
+    #shopify-section-{{ section.id }} .fnd-content { max-width: 100%; }
+    #shopify-section-{{ section.id }} .fnd-name { font-size: 44px; }
+    #shopify-section-{{ section.id }} .fnd-story p { font-size: 15px; line-height: 1.6; }
+    #shopify-section-{{ section.id }} .fnd-story p:first-child::first-letter { font-size: 3.2em; margin-right: 10px; }
+    #shopify-section-{{ section.id }} .fnd-quote { padding-left: 22px; }
+    #shopify-section-{{ section.id }} .fnd-quote::before { font-size: 50px; left: 8px; }
+    #shopify-section-{{ section.id }} .fnd-quote p { font-size: 20px; }
+    #shopify-section-{{ section.id }} .fnd-stats { grid-template-columns: 1fr; gap: 20px; padding: 24px 0; }
+    #shopify-section-{{ section.id }} .fnd-stat-value { font-size: 32px; }
+    #shopify-section-{{ section.id }} .fnd-closing-line { font-size: 32px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #shopify-section-{{ section.id }} .fnd-photo-wrap,
+    #shopify-section-{{ section.id }} .fnd-content,
+    #shopify-section-{{ section.id }} .fnd-closing { opacity: 1; transform: rotate(-1.5deg); transition: none; }
+    #shopify-section-{{ section.id }} .fnd-content,
+    #shopify-section-{{ section.id }} .fnd-closing { transform: none; }
+  }
+{% endstyle %}
+
+<section class="fnd-section" aria-labelledby="fnd-name-{{ section.id }}">
+  <div class="fnd">
+    {%- if section.settings.eyebrow != blank -%}
+      <p class="fnd-eyebrow">{{ section.settings.eyebrow | escape }}</p>
+    {%- endif -%}
+
+    <div class="fnd-grid">
+      {%- comment -%} ===== Photo ===== {%- endcomment -%}
+      <div class="fnd-photo-wrap" data-fnd-anim>
+        <div class="fnd-photo">
+          {%- if section.settings.photo != blank -%}
+            <img
+              src="{{ section.settings.photo | image_url: width: 800 }}"
+              srcset="{{ section.settings.photo | image_url: width: 500 }} 500w, {{ section.settings.photo | image_url: width: 800 }} 800w, {{ section.settings.photo | image_url: width: 1100 }} 1100w"
+              sizes="(max-width: 720px) 320px, 480px"
+              alt="{{ section.settings.name | default: 'Karim' | escape }}, {{ section.settings.role | default: 'Co-founder' | escape }}"
+              loading="lazy">
+          {%- else -%}
+            <div class="fnd-photo-placeholder">Upload a portrait of {{ section.settings.name | default: 'the founder' | escape }}</div>
+          {%- endif -%}
+        </div>
+        {%- if section.settings.signature_text != blank -%}
+          <span class="fnd-sig" aria-hidden="true">{{ section.settings.signature_text | escape }}</span>
+        {%- endif -%}
+        {%- if section.settings.signature_meta != blank -%}
+          <span class="fnd-sig-meta" aria-hidden="true">{{ section.settings.signature_meta | escape }}</span>
+        {%- endif -%}
+      </div>
+
+      {%- comment -%} ===== Story content ===== {%- endcomment -%}
+      <div class="fnd-content" data-fnd-anim>
+        <h2 id="fnd-name-{{ section.id }}" class="fnd-name">{{ section.settings.name | default: 'Karim' | escape }}</h2>
+        {%- if section.settings.role != blank -%}
+          <p class="fnd-role">{{ section.settings.role | escape }}</p>
+        {%- endif -%}
+
+        <div class="fnd-story">
+          {%- if section.settings.story_1 != blank -%}<p>{{ section.settings.story_1 | escape }}</p>{%- endif -%}
+          {%- if section.settings.story_2 != blank -%}<p>{{ section.settings.story_2 | escape }}</p>{%- endif -%}
+          {%- if section.settings.story_3 != blank -%}<p>{{ section.settings.story_3 | escape }}</p>{%- endif -%}
+        </div>
+
+        {%- if section.settings.pull_quote != blank -%}
+          <blockquote class="fnd-quote">
+            <p>{{ section.settings.pull_quote | escape }}</p>
+            {%- if section.settings.pull_quote_attr != blank -%}
+              <cite>{{ section.settings.pull_quote_attr | escape }}</cite>
+            {%- endif -%}
+          </blockquote>
+        {%- endif -%}
+
+        {%- if section.settings.stat_1_value != blank or section.settings.stat_2_value != blank or section.settings.stat_3_value != blank -%}
+          <div class="fnd-stats">
+            {%- if section.settings.stat_1_value != blank -%}
+              <div class="fnd-stat">
+                <span class="fnd-stat-value">{{ section.settings.stat_1_value | escape }}</span>
+                <span class="fnd-stat-label">{{ section.settings.stat_1_label | escape }}</span>
+              </div>
+            {%- endif -%}
+            {%- if section.settings.stat_2_value != blank -%}
+              <div class="fnd-stat">
+                <span class="fnd-stat-value">{{ section.settings.stat_2_value | escape }}</span>
+                <span class="fnd-stat-label">{{ section.settings.stat_2_label | escape }}</span>
+              </div>
+            {%- endif -%}
+            {%- if section.settings.stat_3_value != blank -%}
+              <div class="fnd-stat">
+                <span class="fnd-stat-value">{{ section.settings.stat_3_value | escape }}</span>
+                <span class="fnd-stat-label">{{ section.settings.stat_3_label | escape }}</span>
+              </div>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+
+        {%- if section.settings.ig_url != blank or section.settings.ig_handle != blank -%}
+          <a href="{{ section.settings.ig_url | default: '#' }}" class="fnd-ig" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="3" y="3" width="18" height="18" rx="5"/>
+              <circle cx="12" cy="12" r="4"/>
+              <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/>
+            </svg>
+            {{ section.settings.ig_handle | default: '@ice.karimcooks' | escape }}
+          </a>
+        {%- endif -%}
+      </div>
+    </div>
+
+    {%- comment -%} ===== Closing tagline ===== {%- endcomment -%}
+    {%- if section.settings.closing_line != blank -%}
+      <div class="fnd-closing" data-fnd-anim>
+        <p class="fnd-closing-line">{{ section.settings.closing_line }}</p>
+        <svg class="fnd-closing-mark" viewBox="0 0 280 16" aria-hidden="true" preserveAspectRatio="none">
+          <path class="is-main" d="M 6 6 Q 50 3, 90 5.5 T 175 5 Q 220 7, 274 5"/>
+          <path class="is-accent" d="M 28 13 Q 80 11, 140 12.5 T 252 12"/>
+        </svg>
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+<script>
+  (function() {
+    var section = document.getElementById('shopify-section-{{ section.id }}');
+    if (!section) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (!('IntersectionObserver' in window)) {
+      section.querySelectorAll('[data-fnd-anim]').forEach(function(el) { el.classList.add('is-in'); });
+      return;
+    }
+    var io = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-in');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+    section.querySelectorAll('[data-fnd-anim]').forEach(function(el) { io.observe(el); });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Founder story",
+  "class": "spx-founder-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Header"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Meet the Founder"
+    },
+    {
+      "type": "text",
+      "id": "name",
+      "label": "Founder name",
+      "default": "Karim"
+    },
+    {
+      "type": "text",
+      "id": "role",
+      "label": "Role",
+      "default": "Co-founder, SpiceX"
+    },
+    {
+      "type": "header",
+      "content": "Portrait"
+    },
+    {
+      "type": "image_picker",
+      "id": "photo",
+      "label": "Photo of Karim"
+    },
+    {
+      "type": "text",
+      "id": "signature_text",
+      "label": "Photo signature (script, lower-left)",
+      "default": "Karim",
+      "info": "Caveat handwriting font. Leave blank to hide."
+    },
+    {
+      "type": "text",
+      "id": "signature_meta",
+      "label": "Photo meta (lower-right caption)",
+      "default": "Co-founder · 2024"
+    },
+    {
+      "type": "header",
+      "content": "Story"
+    },
+    {
+      "type": "textarea",
+      "id": "story_1",
+      "label": "Paragraph 1",
+      "default": "I started SpiceX because I was tired of choosing between food that tasted good and food that was actually good for me. After years of meal prepping for myself and millions of followers, one thing became obvious: boring food kills consistency. And consistency is the only thing that actually works."
+    },
+    {
+      "type": "textarea",
+      "id": "story_2",
+      "label": "Paragraph 2",
+      "default": "So I started experimenting. After more than 60 iterations of ingredients and trials, six blends emerged · each one designed to bring familiar, well-known flavors to clean, healthy cooking. No fillers. No MSG. No mystery additives. Just real spices, hand-blended."
+    },
+    {
+      "type": "textarea",
+      "id": "story_3",
+      "label": "Paragraph 3",
+      "default": "Health doesn't have to mean sacrifice. With the right flavors, eating well becomes the easiest part of your week · not the hardest."
+    },
+    {
+      "type": "header",
+      "content": "Pull quote"
+    },
+    {
+      "type": "textarea",
+      "id": "pull_quote",
+      "label": "Quote",
+      "default": "Boring food makes it hard to stay consistent. So I built flavors that never get old."
+    },
+    {
+      "type": "text",
+      "id": "pull_quote_attr",
+      "label": "Attribution (script)",
+      "default": "Karim"
+    },
+    {
+      "type": "header",
+      "content": "Stats"
+    },
+    {
+      "type": "text",
+      "id": "stat_1_value",
+      "label": "Stat 1 value",
+      "default": "3M+"
+    },
+    {
+      "type": "text",
+      "id": "stat_1_label",
+      "label": "Stat 1 label",
+      "default": "Followers on @ice.karimcooks"
+    },
+    {
+      "type": "text",
+      "id": "stat_2_value",
+      "label": "Stat 2 value",
+      "default": "60+"
+    },
+    {
+      "type": "text",
+      "id": "stat_2_label",
+      "label": "Stat 2 label",
+      "default": "Flavor iterations"
+    },
+    {
+      "type": "text",
+      "id": "stat_3_value",
+      "label": "Stat 3 value",
+      "default": "6"
+    },
+    {
+      "type": "text",
+      "id": "stat_3_label",
+      "label": "Stat 3 label",
+      "default": "Perfected blends"
+    },
+    {
+      "type": "header",
+      "content": "Instagram"
+    },
+    {
+      "type": "text",
+      "id": "ig_handle",
+      "label": "Handle",
+      "default": "Follow @ice.karimcooks"
+    },
+    {
+      "type": "url",
+      "id": "ig_url",
+      "label": "Link"
+    },
+    {
+      "type": "header",
+      "content": "Closing tagline"
+    },
+    {
+      "type": "html",
+      "id": "closing_line",
+      "label": "Closing line (use <em> for italic accent)",
+      "default": "Better Together. <em>Because of you.</em>"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background",
+      "default": "#f7f3ec"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent",
+      "default": "#e8a823"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Founder story",
+      "category": "Story"
+    }
+  ]
+}
+{% endschema %}

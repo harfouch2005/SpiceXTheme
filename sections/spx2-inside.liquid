@@ -1,0 +1,61 @@
+<section class="s2-sec s2-inside" data-s2-inside>
+  <div class="s2-head">
+    <h2 class="s2-h">{{ section.settings.heading }}</h2>
+    {%- if section.settings.subheading != blank -%}<p class="s2-sub">{{ section.settings.subheading }}</p>{%- endif -%}
+  </div>
+  <div class="s2-inside__tabs" role="tablist" aria-label="{{ section.settings.heading | escape }}">
+    {%- for block in section.blocks -%}
+      <button type="button" class="s2-inside__tab" role="tab" id="s2-tab-{{ block.id }}" aria-controls="s2-panel-{{ block.id }}" aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"{% unless forloop.first %} tabindex="-1"{% endunless %}>{{ block.settings.product.title | default: block.settings.label }}</button>
+    {%- endfor -%}
+  </div>
+  {%- for block in section.blocks -%}
+    <div class="s2-inside__panel" role="tabpanel" id="s2-panel-{{ block.id }}" aria-labelledby="s2-tab-{{ block.id }}"{% unless forloop.first %} hidden{% endunless %} {{ block.shopify_attributes }}>
+      <p class="s2-inside__list">{{ block.settings.ingredients }}</p>
+      <p class="s2-inside__meta">{{ block.settings.meta }}{% if block.settings.product != blank %} · <a href="{{ block.settings.product.url }}">{{ section.settings.link_label }}</a>{% endif %}</p>
+    </div>
+  {%- endfor -%}
+</section>
+<script>
+  (function(){
+    document.querySelectorAll('[data-s2-inside]').forEach(function(root){
+      if (root.dataset.s2Bound) return;
+      root.dataset.s2Bound = '1';
+      var tabs = Array.prototype.slice.call(root.querySelectorAll('[role="tab"]'));
+      function pick(tab, focus){
+        tabs.forEach(function(t){
+          var on = t === tab;
+          t.setAttribute('aria-selected', on ? 'true' : 'false');
+          t.tabIndex = on ? 0 : -1;
+          var panel = root.querySelector('#' + t.getAttribute('aria-controls'));
+          if (panel) panel.hidden = !on;
+        });
+        if (focus) tab.focus();
+      }
+      tabs.forEach(function(tab, i){
+        tab.addEventListener('click', function(){ pick(tab, false); });
+        tab.addEventListener('keydown', function(e){
+          if (e.key === 'ArrowRight') { e.preventDefault(); pick(tabs[(i + 1) % tabs.length], true); }
+          if (e.key === 'ArrowLeft') { e.preventDefault(); pick(tabs[(i - 1 + tabs.length) % tabs.length], true); }
+        });
+      });
+    });
+  })();
+</script>
+{% schema %}
+{
+  "name": "S2 What's inside",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Read the whole label. It won't take long." },
+    { "type": "text", "id": "subheading", "label": "Subheading", "default": "Every ingredient in every jar, right here." },
+    { "type": "text", "id": "link_label", "label": "Product link label", "default": "See the jar" }
+  ],
+  "max_blocks": 12,
+  "blocks": [{ "type": "blend", "name": "Blend", "settings": [
+    { "type": "product", "id": "product", "label": "Product" },
+    { "type": "text", "id": "label", "label": "Tab label (if no product)" },
+    { "type": "textarea", "id": "ingredients", "label": "Ingredients (from the label)" },
+    { "type": "text", "id": "meta", "label": "Small line", "default": "Net wt 5 oz (142g)" }
+  ]}],
+  "presets": [{ "name": "S2 What's inside" }]
+}
+{% endschema %}

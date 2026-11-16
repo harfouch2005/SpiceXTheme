@@ -1,0 +1,260 @@
+{%- comment -%}
+  Shop All · Bundle banner (dark, 60/40 split, image full-bleed left)
+{%- endcomment -%}
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+
+{% style %}
+  #shopify-section-{{ section.id }} {
+    background: {{ section.settings.bg_color | default: '#0a0a0a' }};
+    color: #ffffff;
+    font-family: var(--spx-font-body);
+    box-sizing: border-box;
+  }
+  #shopify-section-{{ section.id }} *,
+  #shopify-section-{{ section.id }} *::before,
+  #shopify-section-{{ section.id }} *::after { box-sizing: border-box; }
+  #shopify-section-{{ section.id }} .sa-bb {
+    display: grid;
+    grid-template-columns: 60% 40%;
+    min-height: clamp(480px, 26vw, 640px);
+  }
+  #shopify-section-{{ section.id }} .sa-bb-media {
+    position: relative;
+    background: #F1E2D4; /* matches the photo backdrop so the whole lineup shows with no crop */
+    overflow: hidden;
+    min-height: clamp(480px, 26vw, 640px);
+  }
+  #shopify-section-{{ section.id }} .sa-bb-media img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+  #shopify-section-{{ section.id }} .sa-bb-media-placeholder {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255,255,255,0.4);
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    text-align: center;
+    padding: 32px;
+  }
+  #shopify-section-{{ section.id }} .sa-bb-content {
+    padding: 56px clamp(20px, 4vw, 80px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 18px;
+    max-width: 520px;
+  }
+  #shopify-section-{{ section.id }} .sa-bb-eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: {{ section.settings.accent_color | default: '#f5b316' }};
+    margin: 0;
+    line-height: 1;
+  }
+  #shopify-section-{{ section.id }} .sa-bb-headline {
+    font-family: var(--spx-font-display);
+    font-weight: 500;
+    font-size: 44px;
+    line-height: 1;
+    letter-spacing: -0.025em;
+    color: #ffffff;
+    margin: 0;
+    font-variation-settings: "WONK" 0, "SOFT" 30, "opsz" 144;
+  }
+  #shopify-section-{{ section.id }} .sa-bb-desc {
+    font-size: 15px;
+    color: rgba(255,255,255,0.75);
+    line-height: 1.55;
+    margin: 0;
+    max-width: 380px;
+  }
+  #shopify-section-{{ section.id }} .sa-bb-price-row {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-top: 8px;
+  }
+  #shopify-section-{{ section.id }} .sa-bb-price {
+    font-family: var(--spx-font-display);
+    font-weight: 600;
+    font-size: 36px;
+    color: #ffffff;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    font-variation-settings: "WONK" 0, "SOFT" 30;
+  }
+  #shopify-section-{{ section.id }} .sa-bb-regular {
+    font-size: 18px;
+    color: rgba(255,255,255,0.5);
+    text-decoration: line-through;
+  }
+  #shopify-section-{{ section.id }} .sa-bb-savings {
+    font-size: 13px;
+    color: {{ section.settings.accent_color | default: '#f5b316' }};
+    font-weight: 600;
+    margin: 0;
+  }
+  #shopify-section-{{ section.id }} .sa-bb-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: #ffffff;
+    color: #0a0a0a;
+    border: 0;
+    padding: 17px 28px;
+    border-radius: 100px;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    line-height: 1;
+    text-decoration: none;
+    transition: transform 0.2s ease, filter 0.2s ease;
+    align-self: flex-start;
+    margin-top: 6px;
+  }
+  #shopify-section-{{ section.id }} .sa-bb-cta:hover { transform: translateY(-1px); filter: brightness(1.05); }
+  #shopify-section-{{ section.id }} .sa-bb-cta:disabled { opacity: 0.6; cursor: wait; }
+  #shopify-section-{{ section.id }} .sa-bb-cta svg { width: 14px; height: 14px; }
+  #shopify-section-{{ section.id }} .sa-bb-cta-default,
+  #shopify-section-{{ section.id }} .sa-bb-cta-loading,
+  #shopify-section-{{ section.id }} .sa-bb-cta-added { display: inline-flex; align-items: center; gap: 8px; }
+  #shopify-section-{{ section.id }} .sa-bb-cta-loading,
+  #shopify-section-{{ section.id }} .sa-bb-cta-added { display: none; }
+  #shopify-section-{{ section.id }} .sa-bb-cta.is-loading .sa-bb-cta-default { display: none; }
+  #shopify-section-{{ section.id }} .sa-bb-cta.is-loading .sa-bb-cta-loading { display: inline-flex; }
+  #shopify-section-{{ section.id }} .sa-bb-cta.is-added .sa-bb-cta-default { display: none; }
+  #shopify-section-{{ section.id }} .sa-bb-cta.is-added .sa-bb-cta-added { display: inline-flex; }
+  #shopify-section-{{ section.id }} .sa-bb-spin { width: 12px; height: 12px; border: 2px solid rgba(0,0,0,0.25); border-top-color: #0a0a0a; border-radius: 50%; animation: sa-bb-spin 0.7s linear infinite; }
+  @keyframes sa-bb-spin { to { transform: rotate(360deg); } }
+  #shopify-section-{{ section.id }} .sa-bb-secondary {
+    font-family: var(--spx-font-display);
+    font-style: italic;
+    font-size: 13px;
+    color: rgba(255,255,255,0.55);
+    margin: 6px 0 0;
+  }
+  @media (max-width: 900px) {
+    #shopify-section-{{ section.id }} .sa-bb { grid-template-columns: 1fr; min-height: 0; }
+    #shopify-section-{{ section.id }} .sa-bb-media {
+      min-height: 0;
+      aspect-ratio: 2048 / 935;
+      background: #F1E2D4;
+    }
+    #shopify-section-{{ section.id }} .sa-bb-media img {
+      object-fit: contain;
+      padding: 0;
+    }
+    #shopify-section-{{ section.id }} .sa-bb-content { padding: 40px 20px; }
+    #shopify-section-{{ section.id }} .sa-bb-headline { font-size: 32px; }
+    #shopify-section-{{ section.id }} .sa-bb-cta { width: 100%; align-self: stretch; }
+  }
+{% endstyle %}
+
+{%- liquid
+  assign product = section.settings.product
+  assign img = section.settings.image
+  if img == blank and product != blank
+    assign img = product.featured_image
+  endif
+  assign current_price = section.settings.price_override
+  if current_price == blank and product != blank
+    assign current_price = product.price | money
+  endif
+  assign variant_id = product.selected_or_first_available_variant.id
+-%}
+
+<section class="sa-bb">
+  <div class="sa-bb-media">
+    {%- if img != blank -%}
+      <img src="{{ img | image_url: width: 1400 }}"
+        srcset="{{ img | image_url: width: 700 }} 700w, {{ img | image_url: width: 1000 }} 1000w, {{ img | image_url: width: 1400 }} 1400w"
+        sizes="(max-width: 900px) 100vw, 60vw"
+        alt="The Bundle"
+        loading="lazy">
+    {%- else -%}
+      <div class="sa-bb-media-placeholder">Upload the bundle hero image</div>
+    {%- endif -%}
+  </div>
+  <div class="sa-bb-content">
+    <p class="sa-bb-eyebrow">{{ section.settings.eyebrow | default: 'Best Value · Save $12.95' | escape }}</p>
+    <h2 class="sa-bb-headline">{{ section.settings.headline | default: 'The Complete Bundle.' | escape }}</h2>
+    <p class="sa-bb-desc">{{ section.settings.description | default: 'All six SpiceX blends. One easy order. Save $12.95 vs buying separately.' | escape }}</p>
+    <div class="sa-bb-price-row">
+      <span class="sa-bb-price">{{ current_price | default: '$64.99' }}</span>
+      {%- if section.settings.regular_price != blank -%}
+        <span class="sa-bb-regular">{{ section.settings.regular_price | escape }}</span>
+      {%- endif -%}
+    </div>
+    {%- if section.settings.savings_text != blank -%}
+      <p class="sa-bb-savings">{{ section.settings.savings_text | escape }}</p>
+    {%- endif -%}
+    <button type="button" class="sa-bb-cta" data-sa-bb-add data-variant-id="{{ variant_id }}" {% if variant_id == blank %}disabled aria-disabled="true"{% endif %}>
+      <span class="sa-bb-cta-default">{{ section.settings.cta_text | default: 'Get the Bundle' | escape }} <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg></span>
+      <span class="sa-bb-cta-loading"><span class="sa-bb-spin" aria-hidden="true"></span>Adding…</span>
+      <span class="sa-bb-cta-added">Added <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg></span>
+    </button>
+    {%- if section.settings.secondary_text != blank -%}
+      <p class="sa-bb-secondary">{{ section.settings.secondary_text | escape }}</p>
+    {%- endif -%}
+  </div>
+</section>
+
+<script>
+  (function() {
+    var section = document.getElementById('shopify-section-{{ section.id }}');
+    if (!section) return;
+    var btn = section.querySelector('[data-sa-bb-add]');
+    if (!btn) return;
+    btn.addEventListener('click', function() {
+      var variantId = btn.getAttribute('data-variant-id');
+      if (!variantId || btn.disabled) return;
+      btn.classList.add('is-loading'); btn.classList.remove('is-added'); btn.disabled = true;
+      fetch('/cart/add.js', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id: variantId, quantity: 1 }) })
+        .then(function(r) { if (!r.ok) throw new Error('add failed'); return r.json(); })
+        .then(function() { return fetch('/cart.js'); })
+        .then(function(r) { return r.json(); })
+        .then(function(cart) {
+          window.dispatchEvent(new CustomEvent('cart:updated', { detail: cart }));
+          btn.classList.remove('is-loading'); btn.classList.add('is-added');
+          setTimeout(function() { btn.classList.remove('is-added'); btn.disabled = false; }, 1800);
+        })
+        .catch(function(e) { console.error(e); btn.classList.remove('is-loading'); btn.disabled = false; });
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Shop All · Bundle banner",
+  "settings": [
+    { "type": "product", "id": "product", "label": "Bundle product" },
+    { "type": "image_picker", "id": "image", "label": "Hero image override" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Best Value · Save $12.95" },
+    { "type": "text", "id": "headline", "label": "Headline", "default": "The Complete Bundle." },
+    { "type": "textarea", "id": "description", "label": "Description", "default": "All six SpiceX blends. One easy order. Save $12.95 vs buying separately." },
+    { "type": "text", "id": "regular_price", "label": "Regular price (strikethrough)", "default": "$77.94" },
+    { "type": "text", "id": "price_override", "label": "Price override (optional)" },
+    { "type": "text", "id": "savings_text", "label": "Savings line", "default": "You save $12.95" },
+    { "type": "text", "id": "cta_text", "label": "CTA text", "default": "Get the Bundle" },
+    { "type": "text", "id": "secondary_text", "label": "Secondary line below CTA", "default": "Or pick your favorites below ↓" },
+    { "type": "color", "id": "bg_color", "label": "Background", "default": "#0a0a0a" },
+    { "type": "color", "id": "accent_color", "label": "Accent (gold)", "default": "#f5b316" }
+  ],
+  "presets": [{ "name": "Shop All · Bundle banner", "category": "Shop All" }]
+}
+{% endschema %}

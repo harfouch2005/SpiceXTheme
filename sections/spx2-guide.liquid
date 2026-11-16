@@ -1,0 +1,39 @@
+<section class="s2-sec s2-guide">
+  <div class="s2-head">
+    <h2 class="s2-h">{{ section.settings.heading }}</h2>
+    {%- if section.settings.subheading != blank -%}<p class="s2-sub">{{ section.settings.subheading }}</p>{%- endif -%}
+  </div>
+  <div class="s2-guide__grid">
+    {%- for block in section.blocks -%}
+      {%- assign p = block.settings.product -%}
+      {%- if p == blank -%}{%- continue -%}{%- endif -%}
+      <a class="s2-guide__tile" href="{{ p.url }}" style="--bg:{{ block.settings.bg }}" {{ block.shopify_attributes }}>
+        {%- if block.settings.image != blank -%}
+          {{ block.settings.image | image_url: width: 700 | image_tag: loading: 'lazy', class: 's2-guide__photo', widths: '300, 500, 700', sizes: '(min-width: 800px) 190px, 46vw', alt: '' }}
+        {%- else -%}
+          {%- render 'spx2-jar', p: p, alt: '', cls: 's2-guide__jar', size: 400 -%}
+        {%- endif -%}
+        <span class="s2-guide__dish">{{ block.settings.dish }}</span>
+        <span class="s2-guide__use">{{ section.settings.use_prefix }} {{ p.title }}</span>
+      </a>
+    {%- endfor -%}
+  </div>
+</section>
+{% schema %}
+{
+  "name": "S2 Cooking guide",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Start with what you're cooking." },
+    { "type": "text", "id": "subheading", "label": "Subheading" },
+    { "type": "text", "id": "use_prefix", "label": "Text before the blend name", "default": "Use" }
+  ],
+  "max_blocks": 8,
+  "blocks": [{ "type": "dish", "name": "Dish", "settings": [
+    { "type": "text", "id": "dish", "label": "Dish", "default": "Steak" },
+    { "type": "product", "id": "product", "label": "Blend" },
+    { "type": "image_picker", "id": "image", "label": "Photo (optional)" },
+    { "type": "color", "id": "bg", "label": "Tile color when there is no photo", "default": "#D4302C" }
+  ]}],
+  "presets": [{ "name": "S2 Cooking guide" }]
+}
+{% endschema %}

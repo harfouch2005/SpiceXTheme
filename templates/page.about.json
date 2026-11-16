@@ -1,0 +1,213 @@
+{
+  "sections": {
+    "founder": {
+      "type": "spx-founder",
+      "settings": {
+        "eyebrow": "Meet the Founder",
+        "name": "Karim",
+        "role": "Co-founder, SpiceX",
+        "photo": "shopify://shop_images/Screenshot_2026-04-27_at_7.01.23_PM.png",
+        "signature_text": "Karim",
+        "signature_meta": "Co-founder \u00b7 2024",
+        "story_1": "I started SpiceX because I was tired of choosing between food that tasted good and food that was actually good for me. After years of meal prepping for myself and millions of followers, one thing became obvious: boring food kills consistency. And consistency is the only thing that actually works.",
+        "story_2": "So I started experimenting. After a lot of trial and error, six blends emerged, each one designed to bring familiar, well-known flavors to clean, healthy cooking. No fillers. No MSG. No mystery additives. Just real spices, hand-blended.",
+        "story_3": "Health doesn't have to mean sacrifice. With the right flavors, eating well becomes the easiest part of your week, not the hardest.",
+        "pull_quote": "Boring food makes it hard to stay consistent. So I built flavors that never get old.",
+        "pull_quote_attr": "Karim",
+        "stat_1_value": "3M+",
+        "stat_1_label": "Followers on @ice.karimcooks",
+        "stat_2_value": "",
+        "stat_2_label": "",
+        "stat_3_value": "",
+        "stat_3_label": "",
+        "ig_handle": "Follow @ice.karimcooks",
+        "ig_url": "https://www.instagram.com/ice.karimcooks/",
+        "closing_line": "",
+        "bg_color": "#FFF4E3",
+        "accent_color": "#D23C14"
+      }
+    },
+    "stats": {
+      "type": "spx2-stats",
+      "blocks": {
+        "n1": {
+          "type": "stat",
+          "settings": {
+            "number": "4.9",
+            "label": "Average rating"
+          }
+        },
+        "n2": {
+          "type": "stat",
+          "settings": {
+            "number": "132",
+            "label": "Verified reviews"
+          }
+        },
+        "n3": {
+          "type": "stat",
+          "settings": {
+            "number": "120+",
+            "label": "Servings in every jar"
+          }
+        },
+        "n4": {
+          "type": "stat",
+          "settings": {
+            "number": "30 days",
+            "label": "Money back guarantee"
+          }
+        }
+      },
+      "block_order": [
+        "n1",
+        "n2",
+        "n3",
+        "n4"
+      ],
+      "settings": {}
+    },
+    "steps": {
+      "type": "spx2-steps",
+      "blocks": {
+        "s1": {
+          "type": "step",
+          "settings": {
+            "title": "Coat it well.",
+            "text": "Season generously and evenly. Chicken, steak, shrimp, eggs, vegetables, whatever is already in your fridge."
+          }
+        },
+        "s2": {
+          "type": "step",
+          "settings": {
+            "title": "Cook it how you already cook.",
+            "text": "Air fryer, skillet, grill, oven. No recipe required."
+          }
+        },
+        "s3": {
+          "type": "step",
+          "settings": {
+            "title": "Look forward to it.",
+            "text": "Six flavors, so Thursday tastes nothing like Monday."
+          }
+        }
+      },
+      "block_order": [
+        "s1",
+        "s2",
+        "s3"
+      ],
+      "settings": {
+        "heading": "Okay, so how does it work?",
+        "subheading": "You season your food. That part you know. This just makes it taste like you ordered it.",
+        "image": "shopify://shop_images/spx-recipe-ny-strip-daily-blend.jpg",
+        "button_label": "Build your box",
+        "button_link": "shopify://pages/build-your-bundle"
+      }
+    },
+    "flavors": {
+      "type": "spx2-flavors",
+      "blocks": {
+        "f1": {
+          "type": "flavor",
+          "settings": {
+            "product": "daily-blend",
+            "descriptor": "Salt, Pepper & Garlic",
+            "tagline": "Simple and versatile for a flavorful punch.",
+            "bg": "#4D5057",
+            "fg": "#FFFFFF"
+          }
+        },
+        "f2": {
+          "type": "flavor",
+          "settings": {
+            "product": "taco-blast",
+            "descriptor": "Mild Taco Seasoning",
+            "tagline": "Bold and robust, Mexican-inspired flavor.",
+            "bg": "#D4302C",
+            "fg": "#FFFFFF"
+          }
+        },
+        "f3": {
+          "type": "flavor",
+          "settings": {
+            "product": "sweet-sriracha",
+            "descriptor": "Honey Sriracha Seasoning",
+            "tagline": "A perfect blend of sweet and heat.",
+            "bg": "#F47A3F",
+            "fg": "#1F0F05"
+          }
+        },
+        "f4": {
+          "type": "flavor",
+          "settings": {
+            "product": "golden-hive",
+            "descriptor": "Honey BBQ Seasoning",
+            "tagline": "Sweet and smoky with a whole lot of tang.",
+            "bg": "#F7B32B",
+            "fg": "#1F1503"
+          }
+        },
+        "f5": {
+          "type": "flavor",
+          "settings": {
+            "product": "bella-blend",
+            "descriptor": "Italian Seasoning",
+            "tagline": "Savory and earthy with a hint of garlic.",
+            "bg": "#2F6B34",
+            "fg": "#FFFFFF"
+          }
+        },
+        "f6": {
+          "type": "flavor",
+          "settings": {
+            "product": "oh-cajun",
+            "descriptor": "Cajun Seasoning",
+            "tagline": "Deeply smoky and savory with a touch of heat.",
+            "bg": "#8C2F26",
+            "fg": "#FFFFFF"
+          }
+        }
+      },
+      "block_order": [
+        "f1",
+        "f2",
+        "f3",
+        "f4",
+        "f5",
+        "f6"
+      ],
+      "settings": {
+        "heading": "You will forget you are eating healthy.",
+        "subheading": "Add one, or build a box of all six and save $12.95.",
+        "add_label": "Add",
+        "soldout_label": "Sold out"
+      }
+    },
+    "signup": {
+      "type": "spx2-signup",
+      "settings": {
+        "heading": "Get new recipes first.",
+        "subheading": "New recipes, and first notice when a blend drops.",
+        "placeholder": "Email address",
+        "button_label": "Sign me up",
+        "success": "You are on the list."
+      }
+    },
+    "head": {
+      "type": "spx2-pagehead",
+      "settings": {
+        "heading": "About SpiceX",
+        "subheading": "Six seasonings for home cooks who want healthy dinners to taste like takeout."
+      }
+    }
+  },
+  "order": [
+    "head",
+    "founder",
+    "stats",
+    "steps",
+    "flavors",
+    "signup"
+  ]
+}

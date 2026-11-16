@@ -1,0 +1,194 @@
+{
+  "sections": {
+    "main": {
+      "type": "spx2-pdp",
+      "settings": {
+        "bg": "#4D5057",
+        "fg": "#FFFFFF",
+        "hero_image": "shopify://shop_images/spx-shot-daily-blend-a.png",
+        "shop_label": "Shop",
+        "shop_link": "shopify://pages/shop-all",
+        "summary": "The one that goes on everything. Salt, pepper, and garlic, so plain chicken stops tasting plain.",
+        "attrs": "Three ingredients. No MSG. No heat.",
+        "label_link": "See the nutrition panel",
+        "button_label": "Add to cart",
+        "soldout_label": "Sold out",
+        "ship_note": "2 or more jars ship free.",
+        "box_title": "Build a box and save",
+        "box_text": "3 jars save $5. All six save $12.95.",
+        "box_link": "shopify://pages/build-your-bundle",
+        "prev_label": "Previous photo",
+        "next_label": "Next photo",
+        "image_2": "shopify://shop_images/spx-shot-daily-blend-b.png",
+        "show_gallery": false,
+        "image_3": "shopify://shop_images/spx-shot-daily-blend-e.jpg",
+        "image_4": "shopify://shop_images/spx-shot-daily-blend-f.jpg",
+        "image_5": "shopify://shop_images/spx-shot-daily-blend-g.jpg",
+        "image_6": "shopify://shop_images/spx-real-daily-blend.jpg"
+      }
+    },
+    "label": {
+      "type": "spx2-label",
+      "settings": {
+        "bg": "#4D5057",
+        "fg": "#FFFFFF",
+        "heading": "[product] is best on",
+        "keys": "Steak\nChicken\nEggs\nPotatoes\nRoasted vegetables",
+        "facts": "<p><b>Heat:</b> none.</p><p><b>Why people start here:</b> it replaces the salt, the pepper, and the garlic powder with one jar, and it works on everything else you cook.</p>",
+        "num_1": "168",
+        "num_1_label": "Servings per jar",
+        "num_2": "3",
+        "num_2_label": "Ingredients, all listed",
+        "nut_alt": "Nutrition facts panel",
+        "ing_label": "Ingredients:",
+        "ingredients": "Sea salt, black pepper, granulated garlic.",
+        "note": "No MSG. No silicon dioxide. Net wt 6 oz (170g)",
+        "nut_image": "shopify://shop_images/spx-nutrition-daily-blend.png"
+      }
+    },
+    "recipes": {
+      "type": "spx-pdp-recipes",
+      "settings": {
+        "bg_color": "#FFFFFF"
+      }
+    },
+    "more": {
+      "type": "spx2-flavors",
+      "blocks": {
+        "f1": {
+          "type": "flavor",
+          "settings": {
+            "product": "daily-blend",
+            "descriptor": "Salt, Pepper & Garlic",
+            "tagline": "Simple and versatile for a flavorful punch.",
+            "bg": "#4D5057",
+            "fg": "#FFFFFF"
+          }
+        },
+        "f2": {
+          "type": "flavor",
+          "settings": {
+            "product": "taco-blast",
+            "descriptor": "Mild Taco Seasoning",
+            "tagline": "Bold and robust, Mexican-inspired flavor.",
+            "bg": "#D4302C",
+            "fg": "#FFFFFF"
+          }
+        },
+        "f3": {
+          "type": "flavor",
+          "settings": {
+            "product": "sweet-sriracha",
+            "descriptor": "Honey Sriracha Seasoning",
+            "tagline": "A perfect blend of sweet and heat.",
+            "bg": "#F47A3F",
+            "fg": "#1F0F05"
+          }
+        },
+        "f4": {
+          "type": "flavor",
+          "settings": {
+            "product": "golden-hive",
+            "descriptor": "Honey BBQ Seasoning",
+            "tagline": "Sweet and smoky with a whole lot of tang.",
+            "bg": "#F7B32B",
+            "fg": "#1F1503"
+          }
+        },
+        "f5": {
+          "type": "flavor",
+          "settings": {
+            "product": "bella-blend",
+            "descriptor": "Italian Seasoning",
+            "tagline": "Savory and earthy with a hint of garlic.",
+            "bg": "#2F6B34",
+            "fg": "#FFFFFF"
+          }
+        },
+        "f6": {
+          "type": "flavor",
+          "settings": {
+            "product": "oh-cajun",
+            "descriptor": "Cajun Seasoning",
+            "tagline": "Deeply smoky and savory with a touch of heat.",
+            "bg": "#8C2F26",
+            "fg": "#FFFFFF"
+          }
+        }
+      },
+      "block_order": [
+        "f1",
+        "f2",
+        "f3",
+        "f4",
+        "f5",
+        "f6"
+      ],
+      "settings": {
+        "heading": "Try another flavor",
+        "subheading": "",
+        "add_label": "Add",
+        "soldout_label": "Sold out"
+      }
+    },
+    "reviews": {
+      "type": "spx-pdp-reviews",
+      "settings": {
+        "eyebrow": "Reviews",
+        "headline": "What cooks are saying.",
+        "stats": "<p>Straight from the people cooking with it.</p>",
+        "bg_color": "#FFF4E3"
+      }
+    },
+    "sticky": {
+      "type": "spx-pdp-sticky",
+      "settings": {
+        "accent_color": "#0099d6"
+      }
+    },
+    "ingredients": {
+      "type": "spx2-ingredients",
+      "blocks": {
+        "n1": {
+          "type": "ingredient",
+          "settings": {
+            "image": "shopify://shop_images/spx-ing-sea-salt.png",
+            "name": "Sea salt"
+          }
+        },
+        "n2": {
+          "type": "ingredient",
+          "settings": {
+            "image": "shopify://shop_images/spx-ing-black-pepper.png",
+            "name": "Black pepper"
+          }
+        },
+        "n3": {
+          "type": "ingredient",
+          "settings": {
+            "image": "shopify://shop_images/spx-ing-granulated-garlic.png",
+            "name": "Granulated garlic"
+          }
+        }
+      },
+      "block_order": [
+        "n1",
+        "n2",
+        "n3"
+      ],
+      "settings": {
+        "heading": "Made from things you recognize.",
+        "subheading": ""
+      }
+    }
+  },
+  "order": [
+    "main",
+    "ingredients",
+    "label",
+    "recipes",
+    "more",
+    "reviews",
+    "sticky"
+  ]
+}

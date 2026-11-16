@@ -1,0 +1,258 @@
+{
+  "sections": {
+    "main": {
+      "type": "spx2-pdp",
+      "settings": {
+        "bg": "#F47A3F",
+        "fg": "#1F0F05",
+        "hero_image": "shopify://shop_images/spx-shot-sweet-sriracha-a.png",
+        "shop_label": "Shop",
+        "shop_link": "shopify://pages/shop-all",
+        "summary": "Wing sauce flavor without the sauce. Honey first, then the heat shows up.",
+        "attrs": "Sweetened with honey granules and cane sugar. Medium heat.",
+        "label_link": "See the nutrition panel",
+        "button_label": "Add to cart",
+        "soldout_label": "Sold out",
+        "ship_note": "2 or more jars ship free.",
+        "box_title": "Build a box and save",
+        "box_text": "3 jars save $5. All six save $12.95.",
+        "box_link": "shopify://pages/build-your-bundle",
+        "prev_label": "Previous photo",
+        "next_label": "Next photo",
+        "image_2": "shopify://shop_images/spx-shot-sweet-sriracha-b.png",
+        "show_gallery": false,
+        "image_3": "shopify://shop_images/spx-shot-sweet-sriracha-e.jpg",
+        "image_4": "shopify://shop_images/spx-shot-sweet-sriracha-f.jpg",
+        "image_5": "shopify://shop_images/spx-shot-sweet-sriracha-g.jpg",
+        "image_6": "shopify://shop_images/spx-real-sweet-sriracha.jpg"
+      }
+    },
+    "label": {
+      "type": "spx2-label",
+      "settings": {
+        "bg": "#F47A3F",
+        "fg": "#1F0F05",
+        "heading": "[product] is best on",
+        "keys": "Wings\nChicken thighs\nSalmon\nShrimp\nRoasted carrots",
+        "facts": "<p><b>Heat:</b> medium.</p><p><b>Make it tonight:</b> chicken thighs in the air fryer at 380°F for 13 to 15 minutes, flipped halfway, then more Sweet Sriracha and a little honey at the end.</p>",
+        "num_1": "142",
+        "num_1_label": "Servings per jar",
+        "num_2": "11",
+        "num_2_label": "Ingredients, all listed",
+        "nut_alt": "Nutrition facts panel",
+        "ing_label": "Ingredients:",
+        "ingredients": "Honey granules, cane sugar, sea salt, sweet paprika, sriracha powder, red pepper flakes, vinegar powder, cayenne, granulated garlic, onion powder, cornstarch.",
+        "note": "No MSG. No silicon dioxide. Net wt 5 oz (142g)",
+        "nut_image": "shopify://shop_images/spx-nutrition-sweet-sriracha.png"
+      }
+    },
+    "recipes": {
+      "type": "spx-pdp-recipes",
+      "settings": {
+        "bg_color": "#FFFFFF"
+      }
+    },
+    "more": {
+      "type": "spx2-flavors",
+      "blocks": {
+        "f1": {
+          "type": "flavor",
+          "settings": {
+            "product": "daily-blend",
+            "descriptor": "Salt, Pepper & Garlic",
+            "tagline": "Simple and versatile for a flavorful punch.",
+            "bg": "#4D5057",
+            "fg": "#FFFFFF"
+          }
+        },
+        "f2": {
+          "type": "flavor",
+          "settings": {
+            "product": "taco-blast",
+            "descriptor": "Mild Taco Seasoning",
+            "tagline": "Bold and robust, Mexican-inspired flavor.",
+            "bg": "#D4302C",
+            "fg": "#FFFFFF"
+          }
+        },
+        "f3": {
+          "type": "flavor",
+          "settings": {
+            "product": "sweet-sriracha",
+            "descriptor": "Honey Sriracha Seasoning",
+            "tagline": "A perfect blend of sweet and heat.",
+            "bg": "#F47A3F",
+            "fg": "#1F0F05"
+          }
+        },
+        "f4": {
+          "type": "flavor",
+          "settings": {
+            "product": "golden-hive",
+            "descriptor": "Honey BBQ Seasoning",
+            "tagline": "Sweet and smoky with a whole lot of tang.",
+            "bg": "#F7B32B",
+            "fg": "#1F1503"
+          }
+        },
+        "f5": {
+          "type": "flavor",
+          "settings": {
+            "product": "bella-blend",
+            "descriptor": "Italian Seasoning",
+            "tagline": "Savory and earthy with a hint of garlic.",
+            "bg": "#2F6B34",
+            "fg": "#FFFFFF"
+          }
+        },
+        "f6": {
+          "type": "flavor",
+          "settings": {
+            "product": "oh-cajun",
+            "descriptor": "Cajun Seasoning",
+            "tagline": "Deeply smoky and savory with a touch of heat.",
+            "bg": "#8C2F26",
+            "fg": "#FFFFFF"
+          }
+        }
+      },
+      "block_order": [
+        "f1",
+        "f2",
+        "f3",
+        "f4",
+        "f5",
+        "f6"
+      ],
+      "settings": {
+        "heading": "Try another flavor",
+        "subheading": "",
+        "add_label": "Add",
+        "soldout_label": "Sold out"
+      }
+    },
+    "reviews": {
+      "type": "spx-pdp-reviews",
+      "settings": {
+        "eyebrow": "Reviews",
+        "headline": "What cooks are saying.",
+        "stats": "<p>Straight from the people cooking with it.</p>",
+        "bg_color": "#FFF4E3"
+      }
+    },
+    "sticky": {
+      "type": "spx-pdp-sticky",
+      "settings": {
+        "accent_color": "#e07b3e"
+      }
+    },
+    "ingredients": {
+      "type": "spx2-ingredients",
+      "blocks": {
+        "n1": {
+          "type": "ingredient",
+          "settings": {
+            "image": "shopify://shop_images/spx-ing-honey-granules.png",
+            "name": "Honey granules"
+          }
+        },
+        "n2": {
+          "type": "ingredient",
+          "settings": {
+            "image": "shopify://shop_images/spx-ing-cane-sugar.png",
+            "name": "Cane sugar"
+          }
+        },
+        "n3": {
+          "type": "ingredient",
+          "settings": {
+            "image": "shopify://shop_images/spx-ing-sea-salt.png",
+            "name": "Sea salt"
+          }
+        },
+        "n4": {
+          "type": "ingredient",
+          "settings": {
+            "image": "shopify://shop_images/spx-ing-paprika.png",
+            "name": "Sweet paprika"
+          }
+        },
+        "n5": {
+          "type": "ingredient",
+          "settings": {
+            "image": "shopify://shop_images/spx-ing-sriracha-powder.png",
+            "name": "Sriracha powder"
+          }
+        },
+        "n6": {
+          "type": "ingredient",
+          "settings": {
+            "image": "shopify://shop_images/spx-ing-red-pepper-flakes.png",
+            "name": "Red pepper flakes"
+          }
+        },
+        "n7": {
+          "type": "ingredient",
+          "settings": {
+            "image": "shopify://shop_images/spx-ing-vinegar-powder.png",
+            "name": "Vinegar powder"
+          }
+        },
+        "n8": {
+          "type": "ingredient",
+          "settings": {
+            "image": "shopify://shop_images/spx-ing-cayenne.png",
+            "name": "Cayenne"
+          }
+        },
+        "n9": {
+          "type": "ingredient",
+          "settings": {
+            "image": "shopify://shop_images/spx-ing-granulated-garlic.png",
+            "name": "Granulated garlic"
+          }
+        },
+        "n10": {
+          "type": "ingredient",
+          "settings": {
+            "image": "shopify://shop_images/spx-ing-onion-powder.png",
+            "name": "Onion powder"
+          }
+        },
+        "n11": {
+          "type": "ingredient",
+          "settings": {
+            "image": "shopify://shop_images/spx-ing-cornstarch.png",
+            "name": "Cornstarch"
+          }
+        }
+      },
+      "block_order": [
+        "n1",
+        "n2",
+        "n3",
+        "n4",
+        "n5",
+        "n6",
+        "n7",
+        "n8",
+        "n9",
+        "n10",
+        "n11"
+      ],
+      "settings": {
+        "heading": "Made from things you recognize.",
+        "subheading": ""
+      }
+    }
+  },
+  "order": [
+    "main",
+    "ingredients",
+    "label",
+    "recipes",
+    "more",
+    "reviews",
+    "sticky"
+  ]
+}

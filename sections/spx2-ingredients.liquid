@@ -1,0 +1,40 @@
+{%- assign reps = 2 -%}
+{%- if section.blocks.size < 6 -%}{%- assign reps = 4 -%}{%- endif -%}
+{%- assign dur = section.blocks.size | times: reps | times: 3 -%}
+<section class="s2-ing" aria-label="{{ section.settings.heading | escape }}">
+  {%- if section.settings.heading != blank -%}
+    <div class="s2-head">
+      <h2 class="s2-h">{{ section.settings.heading }}</h2>
+      {%- if section.settings.subheading != blank -%}<p class="s2-sub">{{ section.settings.subheading }}</p>{%- endif -%}
+    </div>
+  {%- endif -%}
+  <div class="s2-ing__track" style="--dur:{{ dur }}s">
+    {%- for i in (1..reps) -%}
+      {%- for block in section.blocks -%}
+        <div class="s2-ing__item"{% if i > 1 %} aria-hidden="true"{% else %} {{ block.shopify_attributes }}{% endif %}>
+          <div class="s2-ing__disc">
+            {%- if block.settings.image != blank -%}
+              {{ block.settings.image | image_url: width: 520 | image_tag: loading: 'lazy', widths: '260, 520', sizes: '(min-width: 800px) 250px, 190px', alt: '' }}
+            {%- endif -%}
+          </div>
+          <p class="s2-ing__name">{{ block.settings.name }}</p>
+        </div>
+      {%- endfor -%}
+    {%- endfor -%}
+  </div>
+</section>
+{% schema %}
+{
+  "name": "S2 Ingredient carousel",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Made from things you recognize." },
+    { "type": "text", "id": "subheading", "label": "Subheading" }
+  ],
+  "max_blocks": 20,
+  "blocks": [{ "type": "ingredient", "name": "Ingredient", "settings": [
+    { "type": "image_picker", "id": "image", "label": "Photo" },
+    { "type": "text", "id": "name", "label": "Name", "default": "Sea salt" }
+  ]}],
+  "presets": [{ "name": "S2 Ingredient carousel" }]
+}
+{% endschema %}

@@ -1,0 +1,129 @@
+{%- comment -%}
+  SpiceX Bundle PDP · Give the Bundle (gifting cells)
+{%- endcomment -%}
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+
+{% style %}
+  #shopify-section-{{ section.id }} {
+    background: {{ section.settings.bg_color | default: '#f7f3ec' }};
+    color: #0a0a0a;
+    font-family: var(--spx-font-body);
+    box-sizing: border-box;
+  }
+  #shopify-section-{{ section.id }} *, #shopify-section-{{ section.id }} *::before, #shopify-section-{{ section.id }} *::after { box-sizing: border-box; }
+  #shopify-section-{{ section.id }} .bdl-g { max-width: 1480px; margin: 0 auto; padding: 80px clamp(20px, 4vw, 56px); }
+  #shopify-section-{{ section.id }} .bdl-g-head { text-align: center; max-width: 640px; margin: 0 auto 48px; }
+  #shopify-section-{{ section.id }} .bdl-g-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #6b6b6b;
+    margin: 0 0 14px;
+    line-height: 1;
+  }
+  #shopify-section-{{ section.id }} .bdl-g-eyebrow::before,
+  #shopify-section-{{ section.id }} .bdl-g-eyebrow::after { content: ''; width: 20px; height: 1px; background: #6b6b6b; }
+  #shopify-section-{{ section.id }} .bdl-g-title {
+    font-family: var(--spx-font-display);
+    font-weight: 500;
+    font-size: clamp(28px, 3vw, 40px);
+    letter-spacing: -0.025em;
+    color: #0a0a0a;
+    margin: 0 0 10px;
+    font-variation-settings: "WONK" 0, "SOFT" 30, "opsz" 144;
+  }
+  #shopify-section-{{ section.id }} .bdl-g-sub {
+    font-family: var(--spx-font-display);
+    font-style: italic;
+    font-size: 16px;
+    color: #6b6b6b;
+    margin: 0;
+    line-height: 1.5;
+  }
+  #shopify-section-{{ section.id }} .bdl-g-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px;
+  }
+  #shopify-section-{{ section.id }} .bdl-g-card {
+    background: #fbf8f2;
+    border: 1px solid rgba(10, 10, 10, 0.08);
+    border-radius: 12px;
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  #shopify-section-{{ section.id }} .bdl-g-icon {
+    font-size: 28px;
+    line-height: 1;
+    margin: 0 0 4px;
+  }
+  #shopify-section-{{ section.id }} .bdl-g-card-title {
+    font-family: var(--spx-font-display);
+    font-weight: 600;
+    font-size: 20px;
+    color: #0a0a0a;
+    margin: 0;
+    letter-spacing: -0.015em;
+    line-height: 1.2;
+  }
+  #shopify-section-{{ section.id }} .bdl-g-card-body {
+    font-size: 14px;
+    line-height: 1.55;
+    color: #555;
+    margin: 0;
+  }
+  @media (max-width: 900px) {
+    #shopify-section-{{ section.id }} .bdl-g { padding: 56px 20px; }
+    #shopify-section-{{ section.id }} .bdl-g-grid { grid-template-columns: 1fr; gap: 16px; }
+    #shopify-section-{{ section.id }} .bdl-g-card { padding: 24px; }
+  }
+{% endstyle %}
+
+<section class="bdl-g">
+  <header class="bdl-g-head">
+    {%- if section.settings.eyebrow != blank -%}<p class="bdl-g-eyebrow">{{ section.settings.eyebrow | escape }}</p>{%- endif -%}
+    <h2 class="bdl-g-title">{{ section.settings.headline | default: 'Built to give. Built to keep.' | escape }}</h2>
+    {%- if section.settings.sub != blank -%}<p class="bdl-g-sub">{{ section.settings.sub | escape }}</p>{%- endif -%}
+  </header>
+  <div class="bdl-g-grid">
+    {%- for block in section.blocks -%}
+      <article class="bdl-g-card" {{ block.shopify_attributes }}>
+        {%- if block.settings.icon != blank -%}<p class="bdl-g-icon" aria-hidden="true">{{ block.settings.icon | escape }}</p>{%- endif -%}
+        <h3 class="bdl-g-card-title">{{ block.settings.title | escape }}</h3>
+        <p class="bdl-g-card-body">{{ block.settings.body | escape }}</p>
+      </article>
+    {%- endfor -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Bundle PDP · Gifting",
+  "max_blocks": 4,
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Give The Bundle" },
+    { "type": "text", "id": "headline", "label": "Headline", "default": "Built to give. Built to keep." },
+    { "type": "text", "id": "sub", "label": "Subhead", "default": "The bundle is one of our most-gifted orders. Here's what makes it work as a gift." },
+    { "type": "color", "id": "bg_color", "label": "Background", "default": "#f7f3ec" }
+  ],
+  "blocks": [
+    {
+      "type": "cell",
+      "name": "Gifting cell",
+      "settings": [
+        { "type": "text", "id": "icon", "label": "Emoji icon", "default": "🎁" },
+        { "type": "text", "id": "title", "label": "Title", "default": "Ready to give." },
+        { "type": "textarea", "id": "body", "label": "Body", "default": "Ships in a single recyclable box. No extra wrapping required." }
+      ]
+    }
+  ],
+  "presets": [{ "name": "Bundle PDP · Gifting", "category": "Product" }]
+}
+{% endschema %}

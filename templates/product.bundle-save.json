@@ -1,0 +1,249 @@
+{
+  "sections": {
+    "main": {
+      "type": "spx2-pdp",
+      "settings": {
+        "bg": "#FFF4E3",
+        "fg": "#16120E",
+        "hero_image": "shopify://shop_images/spx-shot-lineup-square.jpg",
+        "show_gallery": false,
+        "shop_label": "Shop",
+        "shop_link": "shopify://pages/shop-all",
+        "summary": "All six flavors in one box, so no two dinners this week taste the same.",
+        "attrs": "Save $12.95 against buying them one by one. Ships free.",
+        "label_link": "",
+        "button_label": "Add to cart",
+        "soldout_label": "Sold out",
+        "ship_note": "30-day money back guarantee.",
+        "box_title": "",
+        "box_text": "",
+        "prev_label": "Previous photo",
+        "next_label": "Next photo"
+      }
+    },
+    "box": {
+      "type": "spx2-flavors",
+      "settings": {
+        "heading": "Six jars in the box",
+        "subheading": "Tap a jar to see what it does and what to put it on.",
+        "add_label": "Add",
+        "soldout_label": "Sold out"
+      },
+      "blocks": {
+        "f1": {
+          "type": "flavor",
+          "settings": {
+            "product": "daily-blend",
+            "descriptor": "Salt, Pepper & Garlic",
+            "tagline": "Simple and versatile for a flavorful punch.",
+            "bg": "#4D5057",
+            "fg": "#FFFFFF"
+          }
+        },
+        "f2": {
+          "type": "flavor",
+          "settings": {
+            "product": "taco-blast",
+            "descriptor": "Mild Taco Seasoning",
+            "tagline": "Bold and robust, Mexican-inspired flavor.",
+            "bg": "#D4302C",
+            "fg": "#FFFFFF"
+          }
+        },
+        "f3": {
+          "type": "flavor",
+          "settings": {
+            "product": "sweet-sriracha",
+            "descriptor": "Honey Sriracha Seasoning",
+            "tagline": "A perfect blend of sweet and heat.",
+            "bg": "#F47A3F",
+            "fg": "#1F0F05"
+          }
+        },
+        "f4": {
+          "type": "flavor",
+          "settings": {
+            "product": "golden-hive",
+            "descriptor": "Honey BBQ Seasoning",
+            "tagline": "Sweet and smoky with a whole lot of tang.",
+            "bg": "#F7B32B",
+            "fg": "#1F1503"
+          }
+        },
+        "f5": {
+          "type": "flavor",
+          "settings": {
+            "product": "bella-blend",
+            "descriptor": "Italian Seasoning",
+            "tagline": "Savory and earthy with a hint of garlic.",
+            "bg": "#2F6B34",
+            "fg": "#FFFFFF"
+          }
+        },
+        "f6": {
+          "type": "flavor",
+          "settings": {
+            "product": "oh-cajun",
+            "descriptor": "Cajun Seasoning",
+            "tagline": "Deeply smoky and savory with a touch of heat.",
+            "bg": "#8C2F26",
+            "fg": "#FFFFFF"
+          }
+        }
+      },
+      "block_order": [
+        "f1",
+        "f2",
+        "f3",
+        "f4",
+        "f5",
+        "f6"
+      ]
+    },
+    "gifting": {
+      "type": "spx-bdl-gifting",
+      "blocks": {
+        "g1": {
+          "type": "cell",
+          "settings": {
+            "icon": "🎁",
+            "title": "Ready to give.",
+            "body": "All six jars ship together in one box."
+          }
+        },
+        "g2": {
+          "type": "cell",
+          "settings": {
+            "icon": "🍳",
+            "title": "For the right kind of cook.",
+            "body": "Best for someone who actually reads labels and cares about ingredients. Not for a beginner or someone who eats out every meal."
+          }
+        },
+        "g3": {
+          "type": "cell",
+          "settings": {
+            "icon": "🚚",
+            "title": "Ships free.",
+            "body": "Free shipping on every bundle. No minimum and no code needed."
+          }
+        }
+      },
+      "block_order": [
+        "g1",
+        "g2",
+        "g3"
+      ],
+      "settings": {
+        "eyebrow": "Give The Bundle",
+        "headline": "Six jars in one box.",
+        "sub": "Six flavors, so whoever opens it has a different dinner every night.",
+        "bg_color": "#FFF4E3"
+      }
+    },
+    "reviews": {
+      "type": "spx-pdp-reviews",
+      "settings": {
+        "eyebrow": "Bundle Reviews",
+        "headline": "From cooks who started with the bundle.",
+        "stats": "<p><strong>4.9 average · 132 reviews across SpiceX</strong></p>",
+        "bg_color": "#FFFFFF"
+      }
+    },
+    "faq": {
+      "type": "spx-sa-faq",
+      "blocks": {
+        "q1": {
+          "type": "question",
+          "settings": {
+            "question": "Can I swap a blend in the Complete Bundle?",
+            "answer": "<p>Not currently. The Complete Bundle is fixed at all six blends, that's how we keep the price down and the order simple. If there's a specific blend you don't want, you can buy the other five individually, or grab a 3-Pack of your favorite from the stock-up section above.</p>"
+          }
+        },
+        "q2": {
+          "type": "question",
+          "settings": {
+            "question": "What if I already have one of the blends?",
+            "answer": "<p>The Complete Bundle is still the best per-jar value on the site, and it ships free. Most folks keep the extra jar as a backup or give the duplicate to a friend, that's how a lot of repeat bundle orders start. If you'd rather not double up, grab a 3-Pack of your favorite from the stock-up section above instead.</p>"
+          }
+        },
+        "q3": {
+          "type": "question",
+          "settings": {
+            "question": "How long does a bundle last?",
+            "answer": "<p>The six jars carry 856 servings on their labels in total. That is 142 for each 5 oz jar, 168 for Daily Blend, and 120 for Bella Blend. How fast it goes depends on how often you cook.</p>"
+          }
+        },
+        "q4": {
+          "type": "question",
+          "settings": {
+            "question": "What's the difference between the Complete Bundle and building my own?",
+            "answer": "<p>The <strong>Complete Bundle</strong> is a curated set, one of each of our six blends, added in one click ($64.99, save $12.95). <strong>Build Your Own</strong> (above) lets you pick any combination and the price scales as you add: 3 jars for $33.99, 4 for $45.96, 5 for $57.95, or 6 for $64.99, doubles of your favorites welcome. Both ship free. Pick the Complete Bundle for instant variety, or build your own if you already know what you like.</p>"
+          }
+        },
+        "q5": {
+          "type": "question",
+          "settings": {
+            "question": "Can I mix and match different blends?",
+            "answer": "<p>Yes, that's exactly what Build Your Own (above) is for. Add any blends you like and the deal grows with your cart: 3 jars $33.99, 4 jars $45.96, 5 jars $57.95, 6 jars $64.99. Want two Daily Blends and one Taco Blast? Go for it, every jar counts toward the bundle price.</p>"
+          }
+        },
+        "q6": {
+          "type": "question",
+          "settings": {
+            "question": "Can I order both the Complete Bundle and a custom mix?",
+            "answer": "<p>Yes. Some customers do exactly that, the Complete Bundle for variety, plus a few extra jars of their go-to blend from Build Your Own. Both ship free.</p>"
+          }
+        },
+        "q7": {
+          "type": "question",
+          "settings": {
+            "question": "Is the bundle giftable?",
+            "answer": "<p>Absolutely. Most of our bundle sales around the holidays are gifts. The Complete Bundle ships in one box and feels gift-ready as-is.</p>"
+          }
+        },
+        "q8": {
+          "type": "question",
+          "settings": {
+            "question": "What if I don't like one of the blends?",
+            "answer": "<p>Every SpiceX order comes with a 30-day money back guarantee. If you are not happy with it, email us within 30 days.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "q1",
+        "q2",
+        "q3",
+        "q4",
+        "q5",
+        "q6",
+        "q7",
+        "q8"
+      ],
+      "settings": {
+        "eyebrow": "About The Bundle",
+        "headline": "The bundle, answered.",
+        "sub": "Common bundle questions, before someone clicks add-to-cart.",
+        "card_eyebrow": "Email us",
+        "card_body": "Have a specific question? We answer every email personally, usually within a few hours.",
+        "card_cta": "Contact us",
+        "card_url": "/pages/contact",
+        "bg_color": "#FFF4E3",
+        "accent_color": "#f5b316"
+      }
+    },
+    "sticky": {
+      "type": "spx-pdp-sticky",
+      "settings": {
+        "accent_color": "#f5b316"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "box",
+    "gifting",
+    "reviews",
+    "faq",
+    "sticky"
+  ]
+}

@@ -1,0 +1,219 @@
+{%- comment -%}
+  SpiceX Home Hero · bundle-first conversion hero
+  - Primary CTA: add Bundle to cart (native form post -> /cart)
+  - Secondary CTA: scroll to the jar builder section (above this section on the homepage)
+  - Symmetric 2-col desktop, stacked mobile-first
+  - All CSS scoped under #shopify-section-{{ section.id }}
+{%- endcomment -%}
+
+{%- liquid
+  assign bundle = all_products[section.settings.bundle_product]
+  assign accent = section.settings.accent_color | default: '#e8a823'
+  assign savings = section.settings.savings_color | default: '#c2402e'
+-%}
+
+{% style %}
+  #shopify-section-{{ section.id }} .spx-hh {
+    position: relative;
+    background: {{ section.settings.bg_color }};
+    color: {{ section.settings.text_color }};
+    font-family: var(--spx-font-body, 'DM Sans', sans-serif);
+    overflow: hidden;
+  }
+  #shopify-section-{{ section.id }} .spx-hh *, #shopify-section-{{ section.id }} .spx-hh *::before, #shopify-section-{{ section.id }} .spx-hh *::after { box-sizing: border-box; }
+  #shopify-section-{{ section.id }} .spx-hh::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 70% 60% at 78% 40%, {{ accent }}26 0%, transparent 60%), radial-gradient(ellipse 50% 45% at 12% 90%, {{ savings }}1f 0%, transparent 60%);
+    pointer-events: none;
+  }
+  #shopify-section-{{ section.id }} .spx-hh__wrap {
+    position: relative;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: clamp(44px, 7vw, 96px) clamp(20px, 4vw, 56px);
+    display: grid;
+    grid-template-columns: 1.05fr 0.95fr;
+    gap: clamp(28px, 5vw, 72px);
+    align-items: center;
+  }
+  #shopify-section-{{ section.id }} .spx-hh__eyebrow {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-size: 11.5px; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase;
+    color: {{ accent }};
+    margin: 0 0 18px;
+  }
+  #shopify-section-{{ section.id }} .spx-hh__eyebrow::before { content: '🇺🇸'; font-size: 14px; letter-spacing: 0; }
+  #shopify-section-{{ section.id }} .spx-hh__title {
+    font-family: var(--spx-font-display);
+    font-size: clamp(38px, 5.6vw, 68px);
+    line-height: 1.02; letter-spacing: -0.025em; font-weight: 800;
+    color: {{ section.settings.text_color }};
+    margin: 0 0 16px;
+    font-variation-settings: "WONK" 0, "SOFT" 30, "opsz" 144;
+  }
+  #shopify-section-{{ section.id }} .spx-hh__title em { font-style: italic; color: {{ accent }}; font-weight: 700; }
+  #shopify-section-{{ section.id }} .spx-hh__sub {
+    font-size: clamp(16px, 1.5vw, 18.5px); line-height: 1.55; color: {{ section.settings.muted_color }};
+    max-width: 52ch; margin: 0 0 22px;
+  }
+  #shopify-section-{{ section.id }} .spx-hh__price {
+    display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin: 0 0 18px;
+  }
+  #shopify-section-{{ section.id }} .spx-hh__price-label { font-size: 12px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: {{ section.settings.muted_color }}; width: 100%; margin-bottom: 2px; }
+  #shopify-section-{{ section.id }} .spx-hh__price-now { font-family: var(--spx-font-display); font-size: clamp(30px, 3.4vw, 40px); font-weight: 800; color: {{ section.settings.text_color }}; font-variant-numeric: tabular-nums; }
+  #shopify-section-{{ section.id }} .spx-hh__price-was { font-size: 17px; color: {{ section.settings.muted_color }}; text-decoration: line-through; }
+  #shopify-section-{{ section.id }} .spx-hh__save-chip {
+    background: {{ savings }}; color: #fff; font-size: 12px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 6px 12px; border-radius: 100px;
+  }
+  #shopify-section-{{ section.id }} .spx-hh__ctas { display: flex; flex-direction: column; gap: 12px; max-width: 420px; }
+  #shopify-section-{{ section.id }} .spx-hh__btn-primary {
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    width: 100%; padding: 18px 28px; border: 0; cursor: pointer;
+    background: {{ accent }}; color: #0a0a0a; border-radius: 100px;
+    font-family: var(--spx-font-body, 'DM Sans', sans-serif);
+    font-size: 15px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; line-height: 1;
+    box-shadow: 0 14px 34px -12px {{ accent }}99;
+    transition: transform 0.2s ease, filter 0.2s ease;
+  }
+  #shopify-section-{{ section.id }} .spx-hh__btn-primary:hover { transform: translateY(-2px); filter: brightness(1.06); }
+  #shopify-section-{{ section.id }} .spx-hh__btn-secondary {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    width: 100%; padding: 16px 28px; cursor: pointer;
+    background: transparent; color: {{ section.settings.text_color }};
+    border: 1.5px solid {{ section.settings.text_color }}55; border-radius: 100px;
+    font-size: 13.5px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; line-height: 1;
+    text-decoration: none; transition: border-color 0.2s ease, background 0.2s ease;
+  }
+  #shopify-section-{{ section.id }} .spx-hh__btn-secondary:hover { border-color: {{ accent }}; background: {{ accent }}14; }
+  #shopify-section-{{ section.id }} .spx-hh__micro { text-align: center; font-size: 12.5px; color: {{ section.settings.muted_color }}; letter-spacing: 0.04em; margin: 2px 0 0; }
+  #shopify-section-{{ section.id }} .spx-hh__trust {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
+    margin-top: 30px; padding-top: 24px; border-top: 1px solid {{ section.settings.text_color }}1a;
+    max-width: 520px;
+  }
+  #shopify-section-{{ section.id }} .spx-hh__trust-item { display: flex; flex-direction: column; align-items: flex-start; gap: 7px; font-size: 12px; font-weight: 600; letter-spacing: 0.05em; color: {{ section.settings.muted_color }}; line-height: 1.35; }
+  #shopify-section-{{ section.id }} .spx-hh__trust-item svg { width: 18px; height: 18px; color: {{ accent }}; }
+  #shopify-section-{{ section.id }} .spx-hh__media { position: relative; display: flex; align-items: center; justify-content: center; }
+  #shopify-section-{{ section.id }} .spx-hh__img { width: 100%; max-width: 560px; height: auto; display: block; filter: drop-shadow(0 30px 60px rgba(0,0,0,0.55)); }
+  #shopify-section-{{ section.id }} .spx-hh__sticker {
+    position: absolute; top: 6%; right: 4%;
+    background: {{ savings }}; color: #fff; border-radius: 100px;
+    padding: 12px 18px; font-size: 13px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase;
+    transform: rotate(6deg);
+    box-shadow: 0 12px 28px -8px {{ savings }}aa;
+  }
+  @media (max-width: 900px) {
+    #shopify-section-{{ section.id }} .spx-hh__wrap { grid-template-columns: 1fr; gap: 8px; padding: 34px 20px 44px; }
+    #shopify-section-{{ section.id }} .spx-hh__media { order: 2; margin: 6px 0 10px; }
+    #shopify-section-{{ section.id }} .spx-hh__img { max-width: 78vw; }
+    #shopify-section-{{ section.id }} .spx-hh__copy { order: 1; text-align: center; }
+    #shopify-section-{{ section.id }} .spx-hh__actions { order: 3; }
+    #shopify-section-{{ section.id }} .spx-hh__eyebrow { justify-content: center; }
+    #shopify-section-{{ section.id }} .spx-hh__sub { margin-left: auto; margin-right: auto; }
+    #shopify-section-{{ section.id }} .spx-hh__price { justify-content: center; }
+    #shopify-section-{{ section.id }} .spx-hh__ctas { max-width: none; }
+    #shopify-section-{{ section.id }} .spx-hh__trust { max-width: none; }
+    #shopify-section-{{ section.id }} .spx-hh__trust-item { align-items: center; text-align: center; }
+    #shopify-section-{{ section.id }} .spx-hh__sticker { top: 2%; right: 2%; font-size: 11.5px; padding: 10px 14px; }
+  }
+{% endstyle %}
+
+<div class="spx-hh">
+  <div class="spx-hh__wrap">
+    <div class="spx-hh__main">
+      <div class="spx-hh__copy">
+        <p class="spx-hh__eyebrow">{{ section.settings.eyebrow | escape }}</p>
+        <h1 class="spx-hh__title">{{ section.settings.title }}</h1>
+        <p class="spx-hh__sub">{{ section.settings.sub | escape }}</p>
+        <div class="spx-hh__price">
+          <span class="spx-hh__price-label">{{ section.settings.price_label | escape }}</span>
+          <span class="spx-hh__price-now">{% if bundle != blank %}{{ bundle.price | money }}{% else %}$64.99{% endif %}</span>
+          <span class="spx-hh__price-was">{{ section.settings.compare_price | escape }}</span>
+          <span class="spx-hh__save-chip">{{ section.settings.savings_text | escape }}</span>
+        </div>
+      </div>
+      <div class="spx-hh__actions">
+        <div class="spx-hh__ctas">
+          {%- if bundle != blank -%}
+            {% form 'product', bundle %}
+              <input type="hidden" name="id" value="{{ bundle.selected_or_first_available_variant.id }}">
+              <input type="hidden" name="return_to" value="/cart">
+              <button type="submit" class="spx-hh__btn-primary">
+                {{ section.settings.cta_primary | escape }}
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+              </button>
+            {% endform %}
+          {%- else -%}
+            <a href="/products/bundle-save" class="spx-hh__btn-primary" style="text-decoration:none;">{{ section.settings.cta_primary | escape }}</a>
+          {%- endif -%}
+          <a href="#" class="spx-hh__btn-secondary" data-spx-scroll-builder>{{ section.settings.cta_secondary | escape }} ↑</a>
+          <p class="spx-hh__micro">{{ section.settings.micro | escape }}</p>
+        </div>
+        <div class="spx-hh__trust">
+          <div class="spx-hh__trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="6" width="14" height="11" rx="1.5"/><path d="M15 10h4l3 3v4h-7z"/><circle cx="6" cy="19" r="1.8"/><circle cx="18.5" cy="19" r="1.8"/></svg>{{ section.settings.trust_1 | escape }}</div>
+          <div class="spx-hh__trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 5-3.2 8.4-7 10-3.8-1.6-7-5-7-10V6z"/><path d="M9 12l2.2 2.2L15.5 10"/></svg>{{ section.settings.trust_2 | escape }}</div>
+          <div class="spx-hh__trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C8 7 5.5 10 5.5 14a6.5 6.5 0 0 0 13 0C18.5 10 16 7 12 2z"/></svg>{{ section.settings.trust_3 | escape }}</div>
+        </div>
+      </div>
+    </div>
+    <div class="spx-hh__media">
+      {%- if section.settings.image != blank -%}
+        <img class="spx-hh__img" src="{{ section.settings.image | image_url: width: 1200 }}" srcset="{{ section.settings.image | image_url: width: 600 }} 600w, {{ section.settings.image | image_url: width: 900 }} 900w, {{ section.settings.image | image_url: width: 1200 }} 1200w" sizes="(max-width: 900px) 78vw, 46vw" alt="The complete SpiceX bundle · all six blends" width="{{ section.settings.image.width }}" height="{{ section.settings.image.height }}" loading="eager" fetchpriority="high">
+      {%- elsif bundle != blank and bundle.featured_image != blank -%}
+        <img class="spx-hh__img" src="{{ bundle.featured_image | image_url: width: 1200 }}" alt="{{ bundle.title | escape }}" loading="eager" fetchpriority="high">
+      {%- endif -%}
+      {%- if section.settings.show_sticker -%}
+        <span class="spx-hh__sticker">{{ section.settings.sticker_text | escape }}</span>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+<script>
+  (function() {
+    var btn = document.querySelector('#shopify-section-{{ section.id }} [data-spx-scroll-builder]');
+    if (!btn) return;
+    btn.addEventListener('click', function(e) {
+      e.preventDefault();
+      var target = document.querySelector('[id$="__builder"]') || document.querySelector('.spx-cart-hero') || document.querySelector('[id$="__upgrade"]');
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "SpiceX home hero",
+  "class": "spx-hh-section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Made in the USA · Small-Batch · No Fillers" },
+    { "type": "html", "id": "title", "label": "Title (HTML, em = gold italic)", "default": "Real ingredients.<br><em>Unreal flavor.</em>" },
+    { "type": "text", "id": "sub", "label": "Subheading", "default": "Six hand-blended seasonings that make clean eating taste like a cheat meal. No MSG, no fillers, nothing you can't pronounce." },
+    { "type": "header", "content": "Bundle" },
+    { "type": "text", "id": "bundle_product", "label": "Bundle product handle", "default": "bundle-save" },
+    { "type": "text", "id": "price_label", "label": "Price label", "default": "The Complete Bundle · All 6 Blends" },
+    { "type": "text", "id": "compare_price", "label": "Compare-at price", "default": "$77.94" },
+    { "type": "text", "id": "savings_text", "label": "Savings chip", "default": "Save $12.95" },
+    { "type": "image_picker", "id": "image", "label": "Hero image" },
+    { "type": "checkbox", "id": "show_sticker", "label": "Show savings sticker", "default": true },
+    { "type": "text", "id": "sticker_text", "label": "Sticker text", "default": "Save $12.95" },
+    { "type": "header", "content": "CTAs" },
+    { "type": "text", "id": "cta_primary", "label": "Primary CTA", "default": "Get the Bundle · $64.99" },
+    { "type": "text", "id": "cta_secondary", "label": "Secondary CTA (arrow points up to builder)", "default": "Or build your own & save" },
+    { "type": "text", "id": "micro", "label": "Microcopy under CTAs", "default": "Free shipping · 30-day money back guarantee · Checkout in seconds" },
+    { "type": "header", "content": "Trust" },
+    { "type": "text", "id": "trust_1", "label": "Trust 1", "default": "Free shipping on 2+ jars" },
+    { "type": "text", "id": "trust_2", "label": "Trust 2", "default": "30-day money back guarantee" },
+    { "type": "text", "id": "trust_3", "label": "Trust 3", "default": "Hand-blended in the USA" },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "bg_color", "label": "Background", "default": "#0a0a0a" },
+    { "type": "color", "id": "text_color", "label": "Text", "default": "#ffffff" },
+    { "type": "color", "id": "muted_color", "label": "Muted text", "default": "#b5b0a6" },
+    { "type": "color", "id": "accent_color", "label": "Accent (gold)", "default": "#e8a823" },
+    { "type": "color", "id": "savings_color", "label": "Savings (red)", "default": "#c2402e" }
+  ],
+  "presets": [{ "name": "SpiceX home hero" }]
+}
+{% endschema %}

@@ -1,0 +1,771 @@
+{%- comment -%}
+  SpiceX Cart Builder Hero · shoppable hero where visitors build their cart
+  directly and watch multi-pack savings unlock live.
+  - Optional uploaded BACKGROUND PHOTO with adjustable dark overlay (falls back to brand gradient)
+  - Product tiles in an INFINITE horizontal wheel (loops both directions; swipe, arrows, drag)
+  - Add to Cart button on each tile (becomes a stepper once in cart)
+  - Live savings meter + live mini cart with checkout CTA
+{%- endcomment -%}
+
+{%- liquid
+  assign section_id = section.id
+  assign accent = section.settings.accent_color | default: '#e8a823'
+  assign savings_color = section.settings.savings_color | default: '#c2402e'
+  assign min_h_desktop = section.settings.min_height_desktop | default: 720
+  assign product_blocks = section.blocks | where: 'type', 'product'
+  assign bg_op = section.settings.bg_overlay | default: 55 | divided_by: 100.0
+-%}
+
+{% style %}
+  #shopify-section-{{ section_id }} {
+    position: relative;
+    background: {{ section.settings.background_color }};
+    color: {{ section.settings.text_color }};
+    overflow: hidden;
+    box-sizing: border-box;
+  }
+  #shopify-section-{{ section_id }} *,
+  #shopify-section-{{ section_id }} *::before,
+  #shopify-section-{{ section_id }} *::after { box-sizing: border-box; }
+
+  #shopify-section-{{ section_id }} .spx-carthero {
+    position: relative;
+    min-height: {{ min_h_desktop }}px;
+    display: flex;
+    align-items: center;
+    padding: 72px 24px;
+  }
+
+  /* ===== BACKGROUND PHOTO LAYER ===== */
+  #shopify-section-{{ section_id }} .spx-carthero__bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+  }
+  #shopify-section-{{ section_id }} .spx-carthero__bg img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  #shopify-section-{{ section_id }} .spx-carthero__bg-overlay {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(90deg, rgba(8, 6, 3, 0.42) 0%, rgba(8, 6, 3, 0.05) 55%, rgba(8, 6, 3, 0.18) 100%),
+      rgba(8, 6, 3, {{ bg_op }});
+  }
+
+  #shopify-section-{{ section_id }} .spx-carthero__inner {
+    width: 100%;
+    max-width: 1240px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: 56px;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ===== LEFT: EDITORIAL ===== */
+  #shopify-section-{{ section_id }} .spx-carthero__eyebrow {
+    display: inline-block;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: {{ section.settings.eyebrow_color }};
+    margin: 0 0 18px;
+  }
+  #shopify-section-{{ section_id }} .spx-carthero__title {
+    font-size: clamp(34px, 4.2vw, 58px);
+    line-height: 1.04;
+    font-weight: 800;
+    margin: 0 0 20px;
+    letter-spacing: -0.01em;
+  }
+  #shopify-section-{{ section_id }} .spx-carthero__title em { font-style: normal; color: {{ accent }}; }
+  #shopify-section-{{ section_id }} .spx-carthero__sub {
+    font-size: 17px;
+    line-height: 1.6;
+    color: rgba(255,255,255,0.82);
+    max-width: 44ch;
+    margin: 0 0 28px;
+  }
+  #shopify-section-{{ section_id }} .spx-carthero__trust { display: flex; flex-wrap: wrap; gap: 10px 22px; padding: 0; margin: 0; list-style: none; }
+  #shopify-section-{{ section_id }} .spx-carthero__trust li { display: flex; align-items: center; gap: 8px; font-size: 13.5px; color: rgba(255,255,255,0.72); }
+  #shopify-section-{{ section_id }} .spx-carthero__trust li::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: {{ accent }}; flex: 0 0 auto; }
+
+  /* ===== RIGHT: BUILDER PANEL ===== */
+  #shopify-section-{{ section_id }} .spx-carthero__builder {
+    background: rgba(12, 10, 8, 0.55);
+    border: 1px solid rgba(255,255,255,0.09);
+    border-radius: 20px;
+    padding: 22px;
+    backdrop-filter: blur(10px);
+  }
+
+  /* ===== INFINITE WHEEL ===== */
+  #shopify-section-{{ section_id }} .spx-carthero__carousel { position: relative; margin-bottom: 16px; }
+  #shopify-section-{{ section_id }} .spx-carthero__grid {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 10px;
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+    padding: 14px 2px 6px;
+    scrollbar-width: none;
+  }
+  #shopify-section-{{ section_id }} .spx-carthero__grid::-webkit-scrollbar { display: none; }
+  #shopify-section-{{ section_id }} .spx-carthero__grid.is-dragging { scroll-snap-type: none; cursor: grabbing; }
+  #shopify-section-{{ section_id }} .spx-carthero__carousel::before,
+  #shopify-section-{{ section_id }} .spx-carthero__carousel::after {
+    content: '';
+    position: absolute;
+    top: 0; bottom: 0;
+    width: 34px;
+    z-index: 2;
+    pointer-events: none;
+    opacity: 0.7;
+  }
+  #shopify-section-{{ section_id }} .spx-carthero__carousel::before { left: -2px; background: linear-gradient(90deg, rgba(10,8,5,0.9) 0%, transparent 100%); }
+  #shopify-section-{{ section_id }} .spx-carthero__carousel::after { right: -2px; background: linear-gradient(270deg, rgba(10,8,5,0.9) 0%, transparent 100%); }
+
+  #shopify-section-{{ section_id }} .spx-carthero__arrow {
+    position: absolute;
+    top: 44%;
+    transform: translateY(-50%);
+    z-index: 3;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(255,255,255,0.3);
+    background: rgba(10,10,10,0.75);
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 0;
+    transition: background .15s ease, border-color .15s ease, color .15s ease;
+  }
+  #shopify-section-{{ section_id }} .spx-carthero__arrow:hover { background: {{ accent }}; border-color: {{ accent }}; color: #0a0a0a; }
+  #shopify-section-{{ section_id }} .spx-carthero__arrow svg { width: 16px; height: 16px; display: block; }
+  #shopify-section-{{ section_id }} .spx-carthero__arrow--prev { left: -14px; }
+  #shopify-section-{{ section_id }} .spx-carthero__arrow--next { right: -14px; }
+
+  #shopify-section-{{ section_id }} .spx-carthero__tile {
+    position: relative;
+    flex: 0 0 176px;
+    scroll-snap-align: start;
+    background: rgba(20, 16, 12, 0.72);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 14px;
+    padding: 12px 10px 12px;
+    text-align: center;
+    transition: border-color .18s ease, transform .18s ease;
+  }
+  #shopify-section-{{ section_id }} .spx-carthero__tile:hover { border-color: rgba(255,255,255,0.22); transform: translateY(-2px); }
+  #shopify-section-{{ section_id }} .spx-carthero__tile.is-in-cart { border-color: var(--spx-chip, {{ accent }}); box-shadow: 0 0 0 1px var(--spx-chip, {{ accent }}); }
+  #shopify-section-{{ section_id }} .spx-carthero__tile-badge {
+    position: absolute;
+    top: -9px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: {{ savings_color }};
+    color: #fff;
+    font-size: 9.5px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 99px;
+    white-space: nowrap;
+    z-index: 1;
+  }
+  #shopify-section-{{ section_id }} .spx-carthero__tile-img { width: 100%; aspect-ratio: 1 / 1; object-fit: contain; margin-bottom: 6px; pointer-events: none; }
+  #shopify-section-{{ section_id }} .spx-carthero__tile-name { font-size: 12.5px; font-weight: 700; line-height: 1.25; margin-bottom: 2px; min-height: 2.5em; display: flex; align-items: center; justify-content: center; }
+  #shopify-section-{{ section_id }} .spx-carthero__tile-price { display: block; font-size: 12px; color: rgba(255,255,255,0.65); margin-bottom: 8px; }
+
+  #shopify-section-{{ section_id }} .spx-carthero__add {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 9px 8px;
+    border-radius: 10px;
+    border: 1.5px solid {{ accent }};
+    background: transparent;
+    color: {{ accent }};
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    line-height: 1;
+    cursor: pointer;
+    transition: background .15s ease, color .15s ease, transform .1s ease;
+  }
+  #shopify-section-{{ section_id }} .spx-carthero__add:hover:not(:disabled) { background: {{ accent }}; color: #0a0a0a; }
+  #shopify-section-{{ section_id }} .spx-carthero__add:active { transform: scale(0.97); }
+  #shopify-section-{{ section_id }} .spx-carthero__add:disabled { opacity: 0.4; cursor: default; }
+  #shopify-section-{{ section_id }} .spx-carthero__add[hidden] { display: none !important; }
+
+  #shopify-section-{{ section_id }} .spx-carthero__stepper { display: flex; align-items: center; justify-content: center; gap: 6px; }
+  #shopify-section-{{ section_id }} .spx-carthero__stepper[hidden] { display: none !important; }
+  #shopify-section-{{ section_id }} .spx-carthero__step {
+    width: 30px;
+    height: 30px;
+    border-radius: 9px;
+    border: 1px solid rgba(255,255,255,0.25);
+    background: transparent;
+    color: {{ section.settings.text_color }};
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    transition: background .15s ease, border-color .15s ease;
+  }
+  #shopify-section-{{ section_id }} .spx-carthero__step:hover:not(:disabled) { background: var(--spx-chip, {{ accent }}); border-color: var(--spx-chip, {{ accent }}); color: #0a0a0a; }
+  #shopify-section-{{ section_id }} .spx-carthero__step:disabled { opacity: 0.35; cursor: default; }
+  #shopify-section-{{ section_id }} .spx-carthero__qty { min-width: 22px; text-align: center; font-size: 14px; font-weight: 800; font-variant-numeric: tabular-nums; }
+  #shopify-section-{{ section_id }} .spx-carthero__tile.is-busy .spx-carthero__stepper,
+  #shopify-section-{{ section_id }} .spx-carthero__tile.is-busy .spx-carthero__add { opacity: 0.5; pointer-events: none; }
+
+  /* ===== SAVINGS METER ===== */
+  #shopify-section-{{ section_id }} .spx-carthero__meter { margin-bottom: 16px; }
+  #shopify-section-{{ section_id }} .spx-carthero__meter-label { display: flex; justify-content: space-between; align-items: baseline; font-size: 13px; margin-bottom: 8px; }
+  #shopify-section-{{ section_id }} .spx-carthero__meter-nudge { font-weight: 700; color: {{ accent }}; }
+  #shopify-section-{{ section_id }} .spx-carthero__meter-nudge.is-max { color: #6fcf7c; }
+  #shopify-section-{{ section_id }} .spx-carthero__meter-count { color: rgba(255,255,255,0.6); font-variant-numeric: tabular-nums; }
+  #shopify-section-{{ section_id }} .spx-carthero__bar { position: relative; height: 10px; border-radius: 99px; background: rgba(255,255,255,0.1); overflow: visible; }
+  #shopify-section-{{ section_id }} .spx-carthero__bar-fill { position: absolute; inset: 0 auto 0 0; width: 0%; border-radius: 99px; background: linear-gradient(90deg, {{ accent }}, #f0c04a); transition: width .35s cubic-bezier(.22,1,.36,1); }
+  #shopify-section-{{ section_id }} .spx-carthero__bar-tick { position: absolute; top: 50%; transform: translate(-50%, -50%); width: 16px; height: 16px; border-radius: 50%; background: #2a2a2a; border: 2px solid rgba(255,255,255,0.25); z-index: 1; transition: background .25s ease, border-color .25s ease; }
+  #shopify-section-{{ section_id }} .spx-carthero__bar-tick.is-hit { background: {{ accent }}; border-color: {{ accent }}; }
+  #shopify-section-{{ section_id }} .spx-carthero__bar-tick span { position: absolute; top: 18px; left: 50%; transform: translateX(-50%); font-size: 10.5px; font-weight: 700; color: rgba(255,255,255,0.55); white-space: nowrap; }
+  #shopify-section-{{ section_id }} .spx-carthero__bar-tick.is-hit span { color: {{ accent }}; }
+  #shopify-section-{{ section_id }} .spx-carthero__bar-wrap { padding-bottom: 26px; }
+
+  /* ===== CART VIEW ===== */
+  #shopify-section-{{ section_id }} .spx-carthero__cart { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 14px; }
+  #shopify-section-{{ section_id }} .spx-carthero__cart-title { font-size: 12px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.55); margin: 0 0 10px; }
+  #shopify-section-{{ section_id }} .spx-carthero__lines { list-style: none; margin: 0 0 12px; padding: 0; max-height: 132px; overflow-y: auto; scrollbar-width: thin; }
+  #shopify-section-{{ section_id }} .spx-carthero__line { display: flex; align-items: center; gap: 10px; padding: 5px 0; font-size: 13.5px; }
+  #shopify-section-{{ section_id }} .spx-carthero__line-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--spx-chip, rgba(255,255,255,0.4)); flex: 0 0 auto; }
+  #shopify-section-{{ section_id }} .spx-carthero__line-name { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  #shopify-section-{{ section_id }} .spx-carthero__line-qty { color: rgba(255,255,255,0.6); font-variant-numeric: tabular-nums; }
+  #shopify-section-{{ section_id }} .spx-carthero__line-price { font-weight: 700; font-variant-numeric: tabular-nums; }
+  #shopify-section-{{ section_id }} .spx-carthero__empty { font-size: 13.5px; color: rgba(255,255,255,0.55); margin: 0 0 12px; }
+  #shopify-section-{{ section_id }} .spx-carthero__totals { display: grid; gap: 5px; margin-bottom: 14px; font-size: 14px; }
+  #shopify-section-{{ section_id }} .spx-carthero__row { display: flex; justify-content: space-between; font-variant-numeric: tabular-nums; }
+  #shopify-section-{{ section_id }} .spx-carthero__row--muted { color: rgba(255,255,255,0.65); }
+  #shopify-section-{{ section_id }} .spx-carthero__row--savings { color: #6fcf7c; font-weight: 700; }
+  #shopify-section-{{ section_id }} .spx-carthero__row--total { font-size: 17px; font-weight: 800; padding-top: 5px; border-top: 1px solid rgba(255,255,255,0.1); }
+  #shopify-section-{{ section_id }} .spx-carthero__disclaimer { font-size: 11px; color: rgba(255,255,255,0.45); margin: -8px 0 12px; }
+  #shopify-section-{{ section_id }} .spx-carthero__checkout {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 15px 20px;
+    border: 0;
+    border-radius: 12px;
+    background: {{ section.settings.primary_btn_bg }};
+    color: {{ section.settings.primary_btn_text }};
+    font-size: 15.5px;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    text-decoration: none;
+    transition: transform .15s ease, filter .15s ease;
+  }
+  #shopify-section-{{ section_id }} .spx-carthero__checkout:hover { transform: translateY(-1px); filter: brightness(1.05); }
+  #shopify-section-{{ section_id }} .spx-carthero__checkout:disabled { opacity: 0.45; cursor: default; transform: none; }
+  #shopify-section-{{ section_id }} .spx-carthero__viewcart { display: block; text-align: center; margin-top: 10px; font-size: 13px; color: rgba(255,255,255,0.65); text-decoration: underline; text-underline-offset: 3px; }
+  #shopify-section-{{ section_id }} .spx-carthero__viewcart:hover { color: {{ accent }}; }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 989px) {
+    #shopify-section-{{ section_id }} .spx-carthero { padding: 56px 20px; min-height: 0; }
+    #shopify-section-{{ section_id }} .spx-carthero__inner { grid-template-columns: 1fr; gap: 32px; }
+  }
+  @media (max-width: 640px) {
+    #shopify-section-{{ section_id }} .spx-carthero { padding: 44px 16px; }
+    #shopify-section-{{ section_id }} .spx-carthero__builder { padding: 16px; }
+    #shopify-section-{{ section_id }} .spx-carthero__tile { flex: 0 0 43vw; }
+    #shopify-section-{{ section_id }} .spx-carthero__tile-name { min-height: 0; }
+    #shopify-section-{{ section_id }} .spx-carthero__arrow { display: none; }
+  }
+{% endstyle %}
+
+<div class="spx-carthero" data-spx-carthero>
+  {%- if section.settings.bg_image != blank -%}
+    <div class="spx-carthero__bg" aria-hidden="true">
+      <img src="{{ section.settings.bg_image | image_url: width: 2000 }}"
+           srcset="{{ section.settings.bg_image | image_url: width: 1000 }} 1000w, {{ section.settings.bg_image | image_url: width: 1600 }} 1600w, {{ section.settings.bg_image | image_url: width: 2400 }} 2400w"
+           sizes="100vw"
+           alt=""
+           loading="eager"
+           fetchpriority="high">
+      <div class="spx-carthero__bg-overlay"></div>
+    </div>
+  {%- endif -%}
+  <div class="spx-carthero__inner">
+
+    <div class="spx-carthero__content">
+      {%- if section.settings.eyebrow != blank -%}
+        <span class="spx-carthero__eyebrow">{{ section.settings.eyebrow | escape }}</span>
+      {%- endif -%}
+      <h1 class="spx-carthero__title">
+        {{ section.settings.title_line_1 | escape }}
+        {%- if section.settings.title_accent != blank %} <em>{{ section.settings.title_accent | escape }}</em>{% endif -%}
+      </h1>
+      {%- if section.settings.sub != blank -%}
+        <p class="spx-carthero__sub">{{ section.settings.sub | replace: 'Tap + on a blend', 'Tap Add on a blend' | escape }}</p>
+      {%- endif -%}
+      <ul class="spx-carthero__trust">
+        {%- if section.settings.trust_1 != blank -%}<li>{{ section.settings.trust_1 | escape }}</li>{%- endif -%}
+        {%- if section.settings.trust_2 != blank -%}<li>{{ section.settings.trust_2 | escape }}</li>{%- endif -%}
+        {%- if section.settings.trust_3 != blank -%}<li>{{ section.settings.trust_3 | escape }}</li>{%- endif -%}
+      </ul>
+    </div>
+
+    <div class="spx-carthero__builder">
+
+      <div class="spx-carthero__carousel" data-spx-carousel>
+        <button type="button" class="spx-carthero__arrow spx-carthero__arrow--prev" data-spx-prev aria-label="Previous blends">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
+        </button>
+        <div class="spx-carthero__grid" data-spx-track tabindex="0" role="group" aria-label="Browse blends">
+          {%- for dup in (1..2) -%}
+          {%- for block in product_blocks -%}
+            {%- assign p = all_products[block.settings.product] -%}
+            {%- if p != blank -%}
+              {%- assign v = p.selected_or_first_available_variant -%}
+              <div class="spx-carthero__tile"
+                   style="--spx-chip: {{ block.settings.chip_color }};"
+                   data-spx-tile
+                   {% if dup == 2 %}data-spx-clone aria-hidden="true"{% endif %}
+                   data-variant-id="{{ v.id }}"
+                   data-price="{{ v.price }}"
+                   data-counts="{{ block.settings.counts_toward_tiers }}"
+                   data-bundle-savings="{{ block.settings.bundle_savings_cents }}"
+                   data-name="{{ p.title | escape }}"
+                   {% if dup == 1 %}{{ block.shopify_attributes }}{% endif %}>
+                {%- if block.settings.badge != blank -%}
+                  <span class="spx-carthero__tile-badge">{{ block.settings.badge | escape }}</span>
+                {%- endif -%}
+                {%- if p.featured_media -%}
+                  <img class="spx-carthero__tile-img"
+                       src="{{ p.featured_media.preview_image | image_url: width: 300 }}"
+                       srcset="{{ p.featured_media.preview_image | image_url: width: 300 }} 300w, {{ p.featured_media.preview_image | image_url: width: 500 }} 500w"
+                       sizes="(max-width: 640px) 43vw, 176px"
+                       width="300" height="300"
+                       alt="{{ p.title | escape }}"
+                       loading="{% if dup == 1 and forloop.index <= 4 %}eager{% else %}lazy{% endif %}">
+                {%- endif -%}
+                <span class="spx-carthero__tile-name">{{ block.settings.name_override | default: p.title | escape }}</span>
+                <span class="spx-carthero__tile-price">{{ v.price | money }}</span>
+                <button type="button" class="spx-carthero__add" data-spx-add
+                        {% if v.available == false %}disabled{% endif %}
+                        {% if dup == 2 %}tabindex="-1"{% endif %}
+                        aria-label="Add {{ p.title | escape }} to cart">Add to Cart</button>
+                <div class="spx-carthero__stepper" data-spx-stepper hidden>
+                  <button type="button" class="spx-carthero__step" data-spx-minus disabled
+                          {% if dup == 2 %}tabindex="-1"{% endif %}
+                          aria-label="Remove one {{ p.title | escape }}">&minus;</button>
+                  <span class="spx-carthero__qty" data-spx-qty aria-live="polite">0</span>
+                  <button type="button" class="spx-carthero__step" data-spx-plus
+                          {% if v.available == false %}disabled{% endif %}
+                          {% if dup == 2 %}tabindex="-1"{% endif %}
+                          aria-label="Add one {{ p.title | escape }} to cart">+</button>
+                </div>
+              </div>
+            {%- endif -%}
+          {%- endfor -%}
+          {%- endfor -%}
+        </div>
+        <button type="button" class="spx-carthero__arrow spx-carthero__arrow--next" data-spx-next aria-label="More blends">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
+        </button>
+      </div>
+
+      <div class="spx-carthero__meter">
+        <div class="spx-carthero__meter-label">
+          <span class="spx-carthero__meter-nudge" data-spx-nudge>{{ section.settings.nudge_empty | escape }}</span>
+          <span class="spx-carthero__meter-count" data-spx-jarcount></span>
+        </div>
+        <div class="spx-carthero__bar-wrap">
+          <div class="spx-carthero__bar">
+            <div class="spx-carthero__bar-fill" data-spx-bar></div>
+            <div class="spx-carthero__bar-tick" style="left: 50%;" data-spx-tick="3"><span data-spx-tick-label="3"></span></div>
+            <div class="spx-carthero__bar-tick" style="left: 66.667%;" data-spx-tick="4"><span data-spx-tick-label="4"></span></div>
+            <div class="spx-carthero__bar-tick" style="left: 83.333%;" data-spx-tick="5"><span data-spx-tick-label="5"></span></div>
+            <div class="spx-carthero__bar-tick" style="left: 100%;" data-spx-tick="6"><span data-spx-tick-label="6"></span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="spx-carthero__cart">
+        <p class="spx-carthero__cart-title">{{ section.settings.cart_title | escape }}</p>
+        <p class="spx-carthero__empty" data-spx-empty>{{ section.settings.empty_text | replace: 'Tap + on a blend', 'Tap Add on a blend' | escape }}</p>
+        <ul class="spx-carthero__lines" data-spx-lines hidden></ul>
+        <div class="spx-carthero__totals" data-spx-totals hidden>
+          <div class="spx-carthero__row spx-carthero__row--muted"><span>Subtotal</span><span data-spx-subtotal></span></div>
+          <div class="spx-carthero__row spx-carthero__row--savings" data-spx-savings-row hidden><span>You&rsquo;re saving</span><span data-spx-savings></span></div>
+          <div class="spx-carthero__row spx-carthero__row--total"><span>Estimated total</span><span data-spx-total></span></div>
+        </div>
+        <p class="spx-carthero__disclaimer" data-spx-disclaimer hidden>{{ section.settings.disclaimer | escape }}</p>
+        <a href="/checkout" class="spx-carthero__checkout" data-spx-checkout aria-disabled="true">{{ section.settings.checkout_text | escape }}</a>
+        <a href="/cart" class="spx-carthero__viewcart">{{ section.settings.viewcart_text | escape }}</a>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+  (function() {
+    var section = document.getElementById('shopify-section-{{ section_id }}');
+    if (!section) return;
+
+    var TIERS = [
+      { qty: 6, cents: {{ section.settings.tier_6_savings | default: '12.95' | times: 100 | round }} },
+      { qty: 5, cents: {{ section.settings.tier_5_savings | default: '7.00' | times: 100 | round }} },
+      { qty: 4, cents: {{ section.settings.tier_4_savings | default: '6.00' | times: 100 | round }} },
+      { qty: 3, cents: {{ section.settings.tier_3_savings | default: '5.00' | times: 100 | round }} }
+    ];
+    var MAX_TIER_QTY = 6;
+
+    var tiles = Array.prototype.slice.call(section.querySelectorAll('[data-spx-tile]'));
+    var tileByVariant = {};
+    tiles.forEach(function(t) { tileByVariant[t.getAttribute('data-variant-id')] = t; });
+
+    var els = {
+      nudge: section.querySelector('[data-spx-nudge]'),
+      jarcount: section.querySelector('[data-spx-jarcount]'),
+      bar: section.querySelector('[data-spx-bar]'),
+      lines: section.querySelector('[data-spx-lines]'),
+      empty: section.querySelector('[data-spx-empty]'),
+      totals: section.querySelector('[data-spx-totals]'),
+      subtotal: section.querySelector('[data-spx-subtotal]'),
+      savingsRow: section.querySelector('[data-spx-savings-row]'),
+      savings: section.querySelector('[data-spx-savings]'),
+      total: section.querySelector('[data-spx-total]'),
+      disclaimer: section.querySelector('[data-spx-disclaimer]'),
+      checkout: section.querySelector('[data-spx-checkout]')
+    };
+
+    /* ===== Infinite wheel ===== */
+    var track = section.querySelector('[data-spx-track]');
+    var prevBtn = section.querySelector('[data-spx-prev]');
+    var nextBtn = section.querySelector('[data-spx-next]');
+
+    function setWidth() { return track.scrollWidth / 2; }
+    function stepWidth() {
+      var tile = track.querySelector('[data-spx-tile]');
+      return tile ? tile.getBoundingClientRect().width + 10 : 200;
+    }
+    function jumpTo(x) {
+      var prevBehavior = track.style.scrollBehavior;
+      track.style.scrollBehavior = 'auto';
+      track.scrollLeft = x;
+      track.style.scrollBehavior = prevBehavior;
+    }
+    var wrapPending = false;
+    function wrapLoop() {
+      if (wrapPending) return;
+      wrapPending = true;
+      requestAnimationFrame(function() {
+        wrapPending = false;
+        var half = setWidth();
+        if (half <= 0) return;
+        var x = track.scrollLeft;
+        if (x > half + 2) { jumpTo(x - half); }
+        else if (x < 2) { jumpTo(x + half); }
+      });
+    }
+    track.addEventListener('scroll', wrapLoop, { passive: true });
+
+    function glide(dir) {
+      var half = setWidth();
+      var x = track.scrollLeft;
+      if (dir < 0 && x < stepWidth() * 2.5) jumpTo(x + half);
+      if (dir > 0 && x > half * 2 - track.clientWidth - stepWidth() * 2.5) jumpTo(x - half);
+      track.scrollBy({ left: dir * stepWidth() * 2, behavior: 'smooth' });
+    }
+    if (prevBtn) prevBtn.addEventListener('click', function() { glide(-1); });
+    if (nextBtn) nextBtn.addEventListener('click', function() { glide(1); });
+
+    requestAnimationFrame(function() { jumpTo(setWidth()); });
+
+    var drag = { down: false, moved: false, startX: 0, startLeft: 0 };
+    track.addEventListener('pointerdown', function(e) {
+      if (e.pointerType !== 'mouse') return;
+      drag.down = true; drag.moved = false;
+      drag.startX = e.clientX; drag.startLeft = track.scrollLeft;
+    });
+    window.addEventListener('pointermove', function(e) {
+      if (!drag.down) return;
+      var dx = e.clientX - drag.startX;
+      if (!drag.moved && Math.abs(dx) > 6) {
+        drag.moved = true;
+        track.classList.add('is-dragging');
+      }
+      if (drag.moved) track.scrollLeft = drag.startLeft - dx;
+    });
+    window.addEventListener('pointerup', function() {
+      if (!drag.down) return;
+      drag.down = false;
+      if (drag.moved) track.classList.remove('is-dragging');
+    });
+    track.addEventListener('click', function(e) {
+      if (drag.moved) { e.preventDefault(); e.stopPropagation(); drag.moved = false; }
+    }, true);
+
+    /* ===== Savings + cart logic ===== */
+    section.querySelectorAll('[data-spx-tick]').forEach(function(tick) {
+      var q = parseInt(tick.getAttribute('data-spx-tick'), 10);
+      var tier = TIERS.filter(function(t) { return t.qty === q; })[0];
+      var label = tick.querySelector('[data-spx-tick-label]');
+      if (tier && label) label.textContent = '-' + money(tier.cents);
+    });
+
+    function money(cents) { return '$' + (cents / 100).toFixed(2).replace(/\.00$/, ''); }
+
+    function tierSavings(jarCount) {
+      for (var i = 0; i < TIERS.length; i++) { if (jarCount >= TIERS[i].qty) return TIERS[i].cents; }
+      return 0;
+    }
+
+    function nextTier(jarCount) {
+      var candidates = TIERS.slice().sort(function(a, b) { return a.qty - b.qty; });
+      for (var i = 0; i < candidates.length; i++) { if (jarCount < candidates[i].qty) return candidates[i]; }
+      return null;
+    }
+
+    function render(cart) {
+      var jarCount = 0;
+      var bundleSavings = 0;
+      var qtyByVariant = {};
+
+      cart.items.forEach(function(item) {
+        var vid = String(item.variant_id);
+        qtyByVariant[vid] = (qtyByVariant[vid] || 0) + item.quantity;
+        var tile = tileByVariant[vid];
+        if (tile) {
+          if (tile.getAttribute('data-counts') === 'true') jarCount += item.quantity;
+          var bs = parseInt(tile.getAttribute('data-bundle-savings'), 10) || 0;
+          bundleSavings += bs * item.quantity;
+        }
+      });
+
+      tiles.forEach(function(tile) {
+        var vid = tile.getAttribute('data-variant-id');
+        var q = qtyByVariant[vid] || 0;
+        tile.querySelector('[data-spx-qty]').textContent = q;
+        tile.querySelector('[data-spx-minus]').disabled = q === 0;
+        tile.classList.toggle('is-in-cart', q > 0);
+        var addBtn = tile.querySelector('[data-spx-add]');
+        var stepper = tile.querySelector('[data-spx-stepper]');
+        if (addBtn && stepper) {
+          addBtn.hidden = q > 0;
+          stepper.hidden = q === 0;
+        }
+      });
+
+      var savings = tierSavings(jarCount);
+      var pct = Math.min(jarCount, MAX_TIER_QTY) / MAX_TIER_QTY * 100;
+      els.bar.style.width = pct + '%';
+      section.querySelectorAll('[data-spx-tick]').forEach(function(tick) {
+        var q = parseInt(tick.getAttribute('data-spx-tick'), 10);
+        tick.classList.toggle('is-hit', jarCount >= q);
+      });
+      els.jarcount.textContent = jarCount === 1 ? '1 jar' : jarCount + ' jars';
+
+      var nt = nextTier(jarCount);
+      els.nudge.classList.remove('is-max');
+      if (jarCount === 0 && cart.item_count === 0) {
+        els.nudge.textContent = {{ section.settings.nudge_empty | json }};
+      } else if (nt) {
+        var need = nt.qty - jarCount;
+        var prefix = savings > 0 ? 'Saving ' + money(savings) + ' · ' : '';
+        els.nudge.textContent = prefix + 'Add ' + need + (need === 1 ? ' more jar' : ' more jars') + ' to save ' + money(nt.cents);
+      } else {
+        els.nudge.classList.add('is-max');
+        els.nudge.textContent = 'Max savings unlocked · ' + money(savings) + ' off';
+      }
+
+      if (cart.item_count === 0) {
+        els.empty.hidden = false;
+        els.lines.hidden = true;
+        els.totals.hidden = true;
+        els.disclaimer.hidden = true;
+        els.checkout.setAttribute('aria-disabled', 'true');
+      } else {
+        els.empty.hidden = true;
+        els.lines.hidden = false;
+        els.totals.hidden = false;
+        els.checkout.removeAttribute('aria-disabled');
+
+        els.lines.innerHTML = '';
+        cart.items.forEach(function(item) {
+          var li = document.createElement('li');
+          li.className = 'spx-carthero__line';
+          var tile = tileByVariant[String(item.variant_id)];
+          if (tile) li.style.setProperty('--spx-chip', getComputedStyle(tile).getPropertyValue('--spx-chip'));
+          var dot = document.createElement('span'); dot.className = 'spx-carthero__line-dot';
+          var name = document.createElement('span'); name.className = 'spx-carthero__line-name'; name.textContent = item.product_title;
+          var qty = document.createElement('span'); qty.className = 'spx-carthero__line-qty'; qty.textContent = '×' + item.quantity;
+          var price = document.createElement('span'); price.className = 'spx-carthero__line-price'; price.textContent = money(item.final_line_price);
+          li.appendChild(dot); li.appendChild(name); li.appendChild(qty); li.appendChild(price);
+          els.lines.appendChild(li);
+        });
+
+        els.subtotal.textContent = money(cart.items_subtotal_price);
+        var shownSavings = savings + bundleSavings;
+        if (shownSavings > 0) {
+          els.savingsRow.hidden = false;
+          els.savings.textContent = '-' + money(shownSavings);
+          els.disclaimer.hidden = false;
+        } else {
+          els.savingsRow.hidden = true;
+          els.disclaimer.hidden = true;
+        }
+        els.total.textContent = money(Math.max(cart.items_subtotal_price - savings, 0));
+      }
+    }
+
+    function refresh() {
+      return fetch('/cart.js', { headers: { 'Accept': 'application/json' } })
+        .then(function(r) { return r.json(); })
+        .then(function(cart) { render(cart); return cart; });
+    }
+
+    function announce(cart) {
+      window.dispatchEvent(new CustomEvent('cart:updated', { detail: cart }));
+    }
+
+    function changeQty(tile, delta) {
+      if (tile.classList.contains('is-busy')) return;
+      tile.classList.add('is-busy');
+      var vid = tile.getAttribute('data-variant-id');
+      var current = parseInt(tile.querySelector('[data-spx-qty]').textContent, 10) || 0;
+      var req;
+      if (delta > 0 && current === 0) {
+        req = fetch('/cart/add.js', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify({ id: parseInt(vid, 10), quantity: 1 })
+        });
+      } else {
+        req = fetch('/cart/change.js', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify({ id: vid, quantity: Math.max(current + delta, 0) })
+        });
+      }
+      req
+        .then(function(r) { if (!r.ok) throw new Error('Cart request failed'); return r.json(); })
+        .then(refresh)
+        .then(announce)
+        .catch(function(err) { console.error('SpiceX cart hero:', err); })
+        .finally(function() { tile.classList.remove('is-busy'); });
+    }
+
+    tiles.forEach(function(tile) {
+      tile.querySelector('[data-spx-plus]').addEventListener('click', function() { changeQty(tile, 1); });
+      tile.querySelector('[data-spx-minus]').addEventListener('click', function() { changeQty(tile, -1); });
+      var addBtn = tile.querySelector('[data-spx-add]');
+      if (addBtn) addBtn.addEventListener('click', function() { changeQty(tile, 1); });
+    });
+
+    els.checkout.addEventListener('click', function(e) {
+      if (els.checkout.getAttribute('aria-disabled') === 'true') e.preventDefault();
+    });
+
+    window.addEventListener('cart:updated', function(e) {
+      if (e.detail && e.detail.items) render(e.detail);
+    });
+
+    refresh();
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "SpiceX cart hero",
+  "class": "spx-cart-hero-section",
+  "settings": [
+    { "type": "header", "content": "Background" },
+    { "type": "image_picker", "id": "bg_image", "label": "Background photo", "info": "Optional. Shown behind the whole hero with a dark overlay for readability. Leave empty to keep the warm brand gradient." },
+    { "type": "range", "id": "bg_overlay", "label": "Photo darkness overlay", "min": 0, "max": 90, "step": 5, "unit": "%", "default": 55, "info": "Raise it if text is hard to read over your photo." },
+    { "type": "header", "content": "Heading" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Made in the USA · All-natural" },
+    { "type": "text", "id": "title_line_1", "label": "Title", "default": "Build your set." },
+    { "type": "text", "id": "title_accent", "label": "Title accent (gold)", "default": "Watch the savings stack." },
+    { "type": "textarea", "id": "sub", "label": "Subtext", "default": "Tap a blend to start your cart. The more jars you add, the more you save. Discounts apply automatically at checkout." },
+    { "type": "header", "content": "Savings tiers" },
+    { "type": "text", "id": "tier_3_savings", "label": "Savings at 3 jars (dollars)", "default": "5.00" },
+    { "type": "text", "id": "tier_4_savings", "label": "Savings at 4 jars (dollars)", "default": "6.00" },
+    { "type": "text", "id": "tier_5_savings", "label": "Savings at 5 jars (dollars)", "default": "7.00" },
+    { "type": "text", "id": "tier_6_savings", "label": "Savings at 6 jars (dollars)", "default": "12.95" },
+    { "type": "text", "id": "nudge_empty", "label": "Meter text when empty", "default": "Add 3 jars to unlock $5 off" },
+    { "type": "header", "content": "Cart panel" },
+    { "type": "text", "id": "cart_title", "label": "Cart panel title", "default": "Your cart" },
+    { "type": "text", "id": "empty_text", "label": "Empty cart text", "default": "Nothing yet. Tap Add on a blend to get started." },
+    { "type": "text", "id": "checkout_text", "label": "Checkout button text", "default": "Checkout" },
+    { "type": "text", "id": "viewcart_text", "label": "View cart link text", "default": "View full cart" },
+    { "type": "text", "id": "disclaimer", "label": "Savings disclaimer", "default": "Multi-pack discount applied automatically at checkout." },
+    { "type": "header", "content": "Trust strip" },
+    { "type": "text", "id": "trust_1", "label": "Trust item 1", "default": "Free shipping on 2+ jars" },
+    { "type": "text", "id": "trust_2", "label": "Trust item 2", "default": "30-day money-back" },
+    { "type": "text", "id": "trust_3", "label": "Trust item 3", "default": "Hand-blended in the USA" },
+    { "type": "header", "content": "Layout" },
+    { "type": "range", "id": "min_height_desktop", "label": "Min height (desktop)", "min": 480, "max": 900, "step": 20, "unit": "px", "default": 720 },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "background_color", "label": "Background", "default": "#0a0a0a" },
+    { "type": "color", "id": "text_color", "label": "Text", "default": "#ffffff" },
+    { "type": "color", "id": "eyebrow_color", "label": "Eyebrow", "default": "#e8a823" },
+    { "type": "color", "id": "accent_color", "label": "Accent", "default": "#e8a823" },
+    { "type": "color", "id": "savings_color", "label": "Badge / savings", "default": "#c2402e" },
+    { "type": "color", "id": "primary_btn_bg", "label": "Checkout button background", "default": "#e8a823" },
+    { "type": "color", "id": "primary_btn_text", "label": "Checkout button text", "default": "#0a0a0a" }
+  ],
+  "blocks": [
+    {
+      "type": "product",
+      "name": "Product tile",
+      "settings": [
+        { "type": "product", "id": "product", "label": "Product" },
+        { "type": "text", "id": "name_override", "label": "Display name (optional)" },
+        { "type": "color", "id": "chip_color", "label": "Brand color", "default": "#e8a823" },
+        { "type": "checkbox", "id": "counts_toward_tiers", "label": "Counts toward jar savings tiers", "default": true },
+        { "type": "text", "id": "bundle_savings_cents", "label": "Built-in savings per unit (cents, e.g. 1295 for the bundle)", "default": "0" },
+        { "type": "text", "id": "badge", "label": "Badge (optional)" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "SpiceX cart hero",
+      "blocks": [
+        { "type": "product" },
+        { "type": "product" },
+        { "type": "product" },
+        { "type": "product" },
+        { "type": "product" },
+        { "type": "product" }
+      ]
+    }
+  ]
+}
+{% endschema %}

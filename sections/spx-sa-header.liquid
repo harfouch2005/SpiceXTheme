@@ -1,0 +1,92 @@
+{%- comment -%}
+  Shop All · Page header (eyebrow + headline + subhead, centered cream band)
+{%- endcomment -%}
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+
+{% style %}
+  #shopify-section-{{ section.id }} {
+    background: {{ section.settings.bg_color | default: '#f7f3ec' }};
+    color: #0a0a0a;
+    font-family: var(--spx-font-body);
+    box-sizing: border-box;
+  }
+  #shopify-section-{{ section.id }} *,
+  #shopify-section-{{ section.id }} *::before,
+  #shopify-section-{{ section.id }} *::after { box-sizing: border-box; }
+  #shopify-section-{{ section.id }} .sa-h {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 80px 20px 40px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  #shopify-section-{{ section.id }} .sa-h-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #6b6b6b;
+    margin: 0;
+    line-height: 1;
+  }
+  #shopify-section-{{ section.id }} .sa-h-eyebrow::before {
+    content: '';
+    width: 24px;
+    height: 1px;
+    background: #6b6b6b;
+  }
+  #shopify-section-{{ section.id }} .sa-h-title {
+    font-family: var(--spx-font-display);
+    font-weight: 500;
+    font-size: clamp(40px, 5vw, 64px);
+    line-height: 1;
+    letter-spacing: -0.025em;
+    color: #0a0a0a;
+    margin: 0;
+    font-variation-settings: "WONK" 0, "SOFT" 30, "opsz" 144;
+  }
+  #shopify-section-{{ section.id }} .sa-h-sub {
+    font-family: var(--spx-font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 1.5;
+    color: #6b6b6b;
+    margin: 0;
+    font-variation-settings: "WONK" 0, "SOFT" 50;
+  }
+  @media (max-width: 700px) {
+    #shopify-section-{{ section.id }} .sa-h { padding: 56px 20px 32px; }
+    #shopify-section-{{ section.id }} .sa-h-sub { font-size: 16px; }
+  }
+{% endstyle %}
+
+<section class="sa-h">
+  {%- if section.settings.eyebrow != blank -%}
+    <p class="sa-h-eyebrow">{{ section.settings.eyebrow | escape }}</p>
+  {%- endif -%}
+  <h1 class="sa-h-title">{{ section.settings.headline | default: 'Six blends. One spice rack.' | escape }}</h1>
+  {%- if section.settings.subhead != blank -%}
+    <p class="sa-h-sub">{{ section.settings.subhead | escape }}</p>
+  {%- endif -%}
+</section>
+
+{% schema %}
+{
+  "name": "Shop All · Header",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Shop All" },
+    { "type": "text", "id": "headline", "label": "Headline", "default": "Six blends. One spice rack." },
+    { "type": "text", "id": "subhead", "label": "Subhead", "default": "Built to make every meal taste better. Start with one, or get all six." },
+    { "type": "color", "id": "bg_color", "label": "Background", "default": "#f7f3ec" }
+  ],
+  "presets": [{ "name": "Shop All · Header", "category": "Shop All" }]
+}
+{% endschema %}

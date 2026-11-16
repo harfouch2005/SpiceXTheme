@@ -1,0 +1,241 @@
+{%- comment -%}
+  SpiceX Cart · conversion-optimized cart page
+  - Free-shipping progress (2+ jars or any bundle)
+  - One-tap discount code apply (Shopify /discount/ cookie)
+  - No-JS-safe quantity steppers, sticky mobile checkout bar
+  - Cross-sell: blends not yet in cart
+{%- endcomment -%}
+
+{%- liquid
+  assign accent = section.settings.accent_color | default: '#e8a823'
+  assign savings_c = section.settings.savings_color | default: '#c2402e'
+  assign has_bundle = false
+  for item in cart.items
+    if item.product.handle == 'bundle-save'
+      assign has_bundle = true
+    endif
+  endfor
+  assign jars = cart.item_count
+  assign free_ship = false
+  if has_bundle or jars >= 2
+    assign free_ship = true
+  endif
+-%}
+
+{% style %}
+  .spx-cart { font-family: var(--spx-font-body, 'DM Sans', sans-serif); background: #faf7f1; min-height: 60vh; }
+  .spx-cart *, .spx-cart *::before, .spx-cart *::after { box-sizing: border-box; }
+  .spx-cart__wrap { max-width: 1120px; margin: 0 auto; padding: clamp(24px, 4vw, 48px) clamp(16px, 3vw, 40px) 120px; }
+  .spx-cart__title { font-family: var(--spx-font-display); font-size: clamp(30px, 4vw, 44px); font-weight: 800; letter-spacing: -0.02em; margin: 0 0 6px; color: #0a0a0a; }
+  .spx-cart__count { font-size: 14px; color: #6b6b6b; margin: 0 0 22px; }
+  .spx-cart__grid { display: grid; grid-template-columns: 1.6fr 1fr; gap: clamp(20px, 3vw, 40px); align-items: start; }
+  @media (max-width: 860px) { .spx-cart__grid { grid-template-columns: 1fr; } }
+
+  .spx-cart__ship { background: #ffffff; border: 1px solid #eee5d5; border-radius: 14px; padding: 16px 18px; margin-bottom: 18px; }
+  .spx-cart__ship-msg { font-size: 14px; font-weight: 700; color: #0a0a0a; margin: 0 0 10px; display: flex; align-items: center; gap: 8px; }
+  .spx-cart__ship-msg.is-free { color: #2a7a3b; }
+  .spx-cart__ship-bar { height: 8px; border-radius: 100px; background: #f0e9da; overflow: hidden; }
+  .spx-cart__ship-fill { height: 100%; border-radius: 100px; background: linear-gradient(90deg, {{ accent }}, #f5c95c); transition: width 0.4s ease; }
+
+  .spx-cart__item { display: grid; grid-template-columns: 84px 1fr auto; gap: 14px; padding: 16px 0; border-bottom: 1px solid #eee5d5; align-items: center; }
+  .spx-cart__item-img { width: 84px; height: 84px; border-radius: 12px; object-fit: cover; background: #fff; border: 1px solid #eee5d5; }
+  .spx-cart__item-title { font-size: 15.5px; font-weight: 700; color: #0a0a0a; margin: 0 0 4px; text-decoration: none; display: block; }
+  .spx-cart__item-price { font-size: 13.5px; color: #6b6b6b; }
+  .spx-cart__item-line { text-align: right; }
+  .spx-cart__item-line-price { font-size: 15.5px; font-weight: 800; color: #0a0a0a; font-variant-numeric: tabular-nums; }
+  .spx-cart__qty { display: inline-flex; align-items: center; border: 1.5px solid #e2d8c3; border-radius: 100px; margin-top: 8px; overflow: hidden; background: #fff; }
+  .spx-cart__qty a { display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; color: #0a0a0a; text-decoration: none; font-size: 17px; font-weight: 700; }
+  .spx-cart__qty a:hover { background: #f7f0e2; }
+  .spx-cart__qty-n { min-width: 30px; text-align: center; font-size: 14px; font-weight: 700; }
+  .spx-cart__remove { font-size: 12px; color: #9a9a9a; text-decoration: underline; margin-top: 6px; display: inline-block; }
+
+  .spx-cart__panel { background: #0a0a0a; color: #fff; border-radius: 18px; padding: 22px; position: sticky; top: 96px; }
+  .spx-cart__panel-title { font-family: var(--spx-font-display); font-size: 20px; font-weight: 700; margin: 0 0 14px; }
+  .spx-cart__row { display: flex; justify-content: space-between; font-size: 14.5px; margin: 8px 0; color: #cfcabe; }
+  .spx-cart__row--total { font-size: 18px; font-weight: 800; color: #fff; border-top: 1px solid #2a2a2a; padding-top: 12px; margin-top: 12px; }
+  .spx-cart__row--disc { color: {{ accent }}; }
+  .spx-cart__free-note { font-size: 12.5px; color: #9fdcab; }
+
+  .spx-cart__code { display: flex; gap: 8px; margin: 14px 0 4px; }
+  .spx-cart__code input { flex: 1; background: #171717; color: #fff; border: 1.5px solid #333; border-radius: 100px; padding: 12px 16px; font-size: 14px; outline: none; }
+  .spx-cart__code input:focus { border-color: {{ accent }}; }
+  .spx-cart__code button { background: transparent; color: {{ accent }}; border: 1.5px solid {{ accent }}; border-radius: 100px; padding: 0 18px; font-size: 12.5px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; }
+  .spx-cart__code button:hover { background: {{ accent }}22; }
+  .spx-cart__code-chip { display: none; align-items: center; gap: 8px; background: #12351a; color: #9fdcab; border-radius: 10px; padding: 10px 14px; font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+  .spx-cart__code-chip.is-on { display: flex; }
+
+  .spx-cart__checkout { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; margin-top: 14px; padding: 18px; border: 0; border-radius: 100px; background: {{ accent }}; color: #0a0a0a; font-size: 15px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer; box-shadow: 0 14px 30px -12px {{ accent }}99; transition: transform 0.2s ease, filter 0.2s ease; }
+  .spx-cart__checkout:hover { transform: translateY(-2px); filter: brightness(1.06); }
+  .spx-cart__express { margin-top: 10px; }
+  .spx-cart__express .additional-checkout-buttons { display: block; }
+  .spx-cart__trust { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 16px; padding-top: 14px; border-top: 1px solid #2a2a2a; font-size: 11px; color: #a8a396; text-align: center; letter-spacing: 0.04em; }
+
+  .spx-cart__xsell { margin-top: 26px; }
+  .spx-cart__xsell-title { font-family: var(--spx-font-display); font-size: 19px; font-weight: 700; margin: 0 0 4px; color: #0a0a0a; }
+  .spx-cart__xsell-sub { font-size: 13px; color: #6b6b6b; margin: 0 0 12px; }
+  .spx-cart__xsell-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; background: #fff; border: 1px solid #eee5d5; border-radius: 12px; padding: 12px 14px; margin-bottom: 8px; }
+  .spx-cart__xsell-name { font-size: 14px; font-weight: 700; color: #0a0a0a; display: flex; align-items: center; gap: 10px; }
+  .spx-cart__xsell-dot { width: 10px; height: 10px; border-radius: 50%; flex: 0 0 auto; }
+  .spx-cart__xsell-price { font-size: 13px; color: #6b6b6b; }
+  .spx-cart__xsell-add { background: #0a0a0a; color: #fff; border-radius: 100px; padding: 9px 16px; font-size: 12px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; white-space: nowrap; }
+  .spx-cart__xsell-add:hover { background: {{ accent }}; color: #0a0a0a; }
+
+  .spx-cart__empty { text-align: center; padding: 60px 20px 80px; }
+  .spx-cart__empty h1 { font-family: var(--spx-font-display); font-size: clamp(28px, 4vw, 40px); font-weight: 800; margin: 0 0 10px; }
+  .spx-cart__empty p { color: #6b6b6b; margin: 0 0 22px; }
+  .spx-cart__empty-ctas { display: flex; flex-direction: column; gap: 12px; max-width: 360px; margin: 0 auto; }
+  .spx-cart__empty-primary { background: {{ accent }}; color: #0a0a0a; border-radius: 100px; padding: 16px 26px; font-size: 14px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none; }
+  .spx-cart__empty-secondary { color: #0a0a0a; border: 1.5px solid #0a0a0a44; border-radius: 100px; padding: 14px 26px; font-size: 13px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none; }
+
+  .spx-cart__sticky { display: none; }
+  @media (max-width: 860px) {
+    .spx-cart__panel { position: static; }
+    .spx-cart__sticky { display: flex; position: fixed; left: 0; right: 0; bottom: 0; z-index: 60; background: #0a0a0a; padding: 12px 16px calc(12px + env(safe-area-inset-bottom)); align-items: center; gap: 14px; box-shadow: 0 -10px 30px rgba(0,0,0,0.25); }
+    .spx-cart__sticky-total { color: #fff; font-size: 16px; font-weight: 800; font-variant-numeric: tabular-nums; line-height: 1.2; }
+    .spx-cart__sticky-total small { display: block; font-size: 10.5px; font-weight: 600; color: #a8a396; letter-spacing: 0.08em; text-transform: uppercase; }
+    .spx-cart__sticky-btn { flex: 1; text-align: center; background: {{ accent }}; color: #0a0a0a; border: 0; border-radius: 100px; padding: 15px 10px; font-size: 13.5px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; }
+  }
+{% endstyle %}
+
+<div class="spx-cart">
+  {%- if cart.item_count == 0 -%}
+    <div class="spx-cart__empty">
+      <h1>Your cart is empty.</h1>
+      <p>Start with all six for $12.95 off, shipped free.</p>
+      <div class="spx-cart__empty-ctas">
+        <a class="spx-cart__empty-primary" href="/products/bundle-save">Get all six · Save $12.95</a>
+        <a class="spx-cart__empty-secondary" href="/pages/shop-all">Pick your own</a>
+      </div>
+    </div>
+  {%- else -%}
+  <div class="spx-cart__wrap">
+    <h1 class="spx-cart__title">Your cart</h1>
+    <p class="spx-cart__count">{{ cart.item_count }} {% if cart.item_count == 1 %}item{% else %}items{% endif %} · <a href="/pages/shop-all" style="color:inherit;">Keep shopping</a></p>
+
+    <div class="spx-cart__grid">
+      <div>
+        <div class="spx-cart__ship">
+          {%- if free_ship -%}
+            <p class="spx-cart__ship-msg is-free">✓ Your order ships FREE</p>
+            <div class="spx-cart__ship-bar"><div class="spx-cart__ship-fill" style="width:100%;"></div></div>
+          {%- else -%}
+            <p class="spx-cart__ship-msg">🚚 Add 1 more jar to unlock FREE shipping</p>
+            <div class="spx-cart__ship-bar"><div class="spx-cart__ship-fill" style="width:50%;"></div></div>
+          {%- endif -%}
+        </div>
+
+        <form action="{{ routes.cart_url }}" method="post" novalidate id="CartPageForm">
+          {%- for item in cart.items -%}
+            <div class="spx-cart__item">
+              <a href="{{ item.url }}">
+                {%- if item.image -%}
+                  <img class="spx-cart__item-img" src="{{ item.image | image_url: width: 168 }}" alt="{{ item.title | escape }}" width="84" height="84" loading="lazy">
+                {%- endif -%}
+              </a>
+              <div>
+                <a class="spx-cart__item-title" href="{{ item.url }}">{{ item.product.title }}</a>
+                <span class="spx-cart__item-price">{{ item.price | money }}{% if item.product.handle == 'bundle-save' %} · Save $12.95{% endif %}</span>
+                <div>
+                  <span class="spx-cart__qty">
+                    <a href="{{ routes.cart_change_url }}?line={{ forloop.index }}&quantity={{ item.quantity | minus: 1 }}" aria-label="Decrease quantity">−</a>
+                    <span class="spx-cart__qty-n">{{ item.quantity }}</span>
+                    <a href="{{ routes.cart_change_url }}?line={{ forloop.index }}&quantity={{ item.quantity | plus: 1 }}" aria-label="Increase quantity">+</a>
+                  </span>
+                </div>
+              </div>
+              <div class="spx-cart__item-line">
+                <span class="spx-cart__item-line-price">{{ item.final_line_price | money }}</span><br>
+                <a class="spx-cart__remove" href="{{ routes.cart_change_url }}?line={{ forloop.index }}&quantity=0">Remove</a>
+              </div>
+            </div>
+          {%- endfor -%}
+        </form>
+
+        {%- assign xsell_handles = 'daily-blend,bella-blend,taco-blast,sweet-sriracha,golden-hive,oh-cajun' | split: ',' -%}
+        {%- assign xsell_colors = '#4D5057,#2F6B34,#D4302C,#F47A3F,#F7B32B,#8C2F26' | split: ',' -%}
+        {%- unless has_bundle -%}
+        <div class="spx-cart__xsell">
+          <h2 class="spx-cart__xsell-title">Add another flavor</h2>
+          <p class="spx-cart__xsell-sub">3 or more jars save automatically at checkout.</p>
+          {%- for h in xsell_handles -%}
+            {%- assign p = all_products[h] -%}
+            {%- if p != blank and p.available -%}
+              {%- assign in_cart = false -%}
+              {%- for item in cart.items -%}
+                {%- if item.product.handle == h -%}{%- assign in_cart = true -%}{%- endif -%}
+              {%- endfor -%}
+              {%- unless in_cart -%}
+                <div class="spx-cart__xsell-row">
+                  <span class="spx-cart__xsell-name"><span class="spx-cart__xsell-dot" style="background:{{ xsell_colors[forloop.index0] }};"></span>{{ p.title }}</span>
+                  <span class="spx-cart__xsell-price">{{ p.price | money }}</span>
+                  <a class="spx-cart__xsell-add" href="{{ routes.cart_add_url }}?id={{ p.selected_or_first_available_variant.id }}&return_to=/cart">+ Add</a>
+                </div>
+              {%- endunless -%}
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+        {%- endunless -%}
+      </div>
+
+      <aside class="spx-cart__panel">
+        <h2 class="spx-cart__panel-title">Order summary</h2>
+        <div class="spx-cart__code-chip" data-code-chip>✓ Code <strong data-code-name></strong> will be applied at checkout</div>
+        <div class="spx-cart__code">
+          <input type="text" placeholder="Discount code" data-discount-input aria-label="Discount code" autocomplete="off" autocapitalize="characters">
+          <button type="button" data-discount-apply>Apply</button>
+        </div>
+        {%- if cart.cart_level_discount_applications != blank -%}
+          {%- for d in cart.cart_level_discount_applications -%}
+            <div class="spx-cart__row spx-cart__row--disc"><span>{{ d.title }}</span><span>−{{ d.total_allocated_amount | money }}</span></div>
+          {%- endfor -%}
+        {%- endif -%}
+        <div class="spx-cart__row"><span>Subtotal</span><span>{{ cart.total_price | money }}</span></div>
+        <div class="spx-cart__row"><span>Shipping</span><span>{% if free_ship %}<span class="spx-cart__free-note">FREE</span>{% else %}Calculated at checkout{% endif %}</span></div>
+        <div class="spx-cart__row spx-cart__row--total"><span>Total</span><span>{{ cart.total_price | money }}</span></div>
+        <button type="submit" name="checkout" form="CartPageForm" class="spx-cart__checkout">Checkout
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+        {%- if additional_checkout_buttons -%}
+          <div class="spx-cart__express">{{ content_for_additional_checkout_buttons }}</div>
+        {%- endif -%}
+        <div class="spx-cart__trust"><span>🚚 Free ship 2+ jars</span><span>🛡 30-day guarantee</span><span>🇺🇸 Made in USA</span></div>
+      </aside>
+    </div>
+  </div>
+
+  <div class="spx-cart__sticky">
+    <div class="spx-cart__sticky-total"><small>Total</small>{{ cart.total_price | money }}</div>
+    <button type="submit" name="checkout" form="CartPageForm" class="spx-cart__sticky-btn">Checkout →</button>
+  </div>
+  {%- endif -%}
+</div>
+
+<script>
+  (function() {
+    var input = document.querySelector('[data-discount-input]');
+    var btn = document.querySelector('[data-discount-apply]');
+    var chip = document.querySelector('[data-code-chip]');
+    var chipName = document.querySelector('[data-code-name]');
+    function apply() {
+      if (!input || !input.value.trim()) return;
+      var code = input.value.trim().toUpperCase();
+      window.location.href = '/discount/' + encodeURIComponent(code) + '?redirect=%2Fcart%3Fapplied%3D' + encodeURIComponent(code);
+    }
+    if (btn) btn.addEventListener('click', apply);
+    if (input) input.addEventListener('keydown', function(e) { if (e.key === 'Enter') { e.preventDefault(); apply(); } });
+    try {
+      var applied = new URLSearchParams(window.location.search).get('applied');
+      if (applied && chip && chipName) { chipName.textContent = applied; chip.classList.add('is-on'); }
+    } catch (_) {}
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "SpiceX cart",
+  "settings": [
+    { "type": "color", "id": "accent_color", "label": "Accent", "default": "#e8a823" },
+    { "type": "color", "id": "savings_color", "label": "Savings", "default": "#c2402e" }
+  ]
+}
+{% endschema %}

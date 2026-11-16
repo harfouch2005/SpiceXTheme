@@ -1,0 +1,104 @@
+<style>
+.s2-ppl{padding:44px 0 0}
+.s2-ppl--cards{padding:56px 0}
+.s2-ppl__row{display:flex;gap:0;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.s2-ppl__row::-webkit-scrollbar{display:none}
+.s2-ppl__card{position:relative;display:block;flex:0 0 44vw;aspect-ratio:2/3;overflow:hidden;background:var(--c,#333);color:#fff;text-decoration:none;scroll-snap-align:start}
+.s2-ppl__card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s ease}
+.s2-ppl__cap{position:absolute;left:0;right:0;bottom:0;display:flex;flex-direction:column;gap:3px;padding:54px 14px 14px;background:linear-gradient(to top,rgba(0,0,0,.66),rgba(0,0,0,0))}
+.s2-ppl__k{font:700 12px/1.1 var(--spx-font-body);letter-spacing:.07em;text-transform:uppercase;color:#fff}
+.s2-ppl__n{font:900 22px/1.02 var(--s2-display);letter-spacing:-.02em;color:#fff}
+.s2-ppl__card:focus-visible{outline:3px solid var(--s2-ink);outline-offset:-3px}
+.s2-ppl--cards .s2-ppl__wrap{position:relative;max-width:1220px;margin:0 auto}
+.s2-ppl--cards .s2-ppl__row{gap:12px;padding:0 14px;scroll-padding-left:14px}
+.s2-ppl--cards .s2-ppl__card{flex-basis:62vw;border-radius:var(--s2-r)}
+.s2-ppl__nav{display:none}
+@media(hover:hover){.s2-ppl__card:hover img{transform:scale(1.04)}}
+@media(prefers-reduced-motion:reduce){.s2-ppl__card img{transition:none}}
+@media(min-width:600px){
+  .s2-ppl__card{flex-basis:30vw}
+  .s2-ppl--cards .s2-ppl__card{flex-basis:300px}
+}
+@media(min-width:900px){
+  .s2-ppl--wall .s2-ppl__row{display:grid;grid-template-columns:repeat(6,1fr);overflow:visible}
+  .s2-ppl__n{font-size:24px}
+  .s2-ppl--cards .s2-ppl__row{gap:14px;padding:0 20px;scroll-padding-left:20px}
+  .s2-ppl--cards .s2-ppl__card{flex-basis:calc((100% - 42px) / 4)}
+  .s2-ppl__nav{position:absolute;top:50%;transform:translateY(-50%);width:46px;height:46px;border-radius:50%;border:0;background:#fff;color:var(--s2-ink);font:700 22px/1 var(--s2-display);cursor:pointer;display:grid;place-items:center;box-shadow:0 6px 18px rgba(22,18,14,.18);z-index:2}
+  .s2-ppl__nav--prev{left:4px}
+  .s2-ppl__nav--next{right:4px}
+  .s2-ppl__nav[disabled]{opacity:0;pointer-events:none}
+}
+</style>
+<section class="s2-ppl s2-ppl--{{ section.settings.layout }}" data-s2-ppl>
+  {%- if section.settings.heading != blank -%}
+    <div class="s2-head">
+      <h2 class="s2-h">{{ section.settings.heading }}</h2>
+      {%- if section.settings.subheading != blank -%}<p class="s2-sub">{{ section.settings.subheading }}</p>{%- endif -%}
+    </div>
+  {%- endif -%}
+  <div class="s2-ppl__wrap">
+    <div class="s2-ppl__row" data-s2-ppl-row>
+      {%- for block in section.blocks -%}
+        {%- assign p = block.settings.product -%}
+        {%- if p == blank or block.settings.image == blank -%}{%- continue -%}{%- endif -%}
+        <a class="s2-ppl__card" href="{{ p.url }}" style="--c:{{ block.settings.bg }}" {{ block.shopify_attributes }}>
+          {%- if section.settings.layout == 'wall' -%}
+            {{ block.settings.image | image_url: width: 900 | image_tag: loading: 'lazy', widths: '300, 450, 600, 900', sizes: '(min-width: 900px) 17vw, (min-width: 600px) 30vw, 44vw' }}
+          {%- else -%}
+            {{ block.settings.image | image_url: width: 900 | image_tag: loading: 'lazy', widths: '360, 540, 720, 900', sizes: '(min-width: 900px) 290px, (min-width: 600px) 300px, 62vw' }}
+          {%- endif -%}
+          <span class="s2-ppl__cap">
+            {%- if block.settings.kicker != blank -%}<span class="s2-ppl__k">{{ block.settings.kicker }}</span>{%- endif -%}
+            <span class="s2-ppl__n">{{ p.title }}</span>
+          </span>
+        </a>
+      {%- endfor -%}
+    </div>
+    {%- if section.settings.layout == 'cards' -%}
+      <button type="button" class="s2-ppl__nav s2-ppl__nav--prev" data-s2-ppl-prev aria-label="{{ section.settings.prev_label }}" disabled>‹</button>
+      <button type="button" class="s2-ppl__nav s2-ppl__nav--next" data-s2-ppl-next aria-label="{{ section.settings.next_label }}">›</button>
+    {%- endif -%}
+  </div>
+</section>
+{%- if section.settings.layout == 'cards' -%}
+<script>
+(function(){
+  var root = document.currentScript.previousElementSibling;
+  while (root && !(root.matches && root.matches('[data-s2-ppl]'))) root = root.previousElementSibling;
+  if (!root) return;
+  var row = root.querySelector('[data-s2-ppl-row]'), prev = root.querySelector('[data-s2-ppl-prev]'), next = root.querySelector('[data-s2-ppl-next]');
+  if (!row || !prev || !next) return;
+  function step(){ var c = row.querySelector('.s2-ppl__card'); return c ? c.getBoundingClientRect().width + 14 : 300; }
+  function sync(){ prev.disabled = row.scrollLeft < 8; next.disabled = row.scrollLeft + row.clientWidth > row.scrollWidth - 8; }
+  prev.addEventListener('click', function(){ row.scrollBy({ left: -step() * 2, behavior: 'smooth' }); });
+  next.addEventListener('click', function(){ row.scrollBy({ left: step() * 2, behavior: 'smooth' }); });
+  row.addEventListener('scroll', sync, { passive: true });
+  window.addEventListener('resize', sync);
+  sync();
+})();
+</script>
+{%- endif -%}
+{% schema %}
+{
+  "name": "S2 People photos",
+  "settings": [
+    { "type": "select", "id": "layout", "label": "Layout", "default": "wall", "options": [
+      { "value": "wall", "label": "Edge to edge color wall" },
+      { "value": "cards", "label": "Scrolling photo cards" }
+    ]},
+    { "type": "text", "id": "heading", "label": "Heading" },
+    { "type": "text", "id": "subheading", "label": "Subheading" },
+    { "type": "text", "id": "prev_label", "label": "Previous button label", "default": "Previous photos" },
+    { "type": "text", "id": "next_label", "label": "Next button label", "default": "More photos" }
+  ],
+  "max_blocks": 8,
+  "blocks": [{ "type": "person", "name": "Photo", "settings": [
+    { "type": "product", "id": "product", "label": "Blend this photo links to" },
+    { "type": "image_picker", "id": "image", "label": "Photo (tall, 2 by 3)" },
+    { "type": "text", "id": "kicker", "label": "Small line above the blend name" },
+    { "type": "color", "id": "bg", "label": "Color behind the photo while it loads", "default": "#D4302C" }
+  ]}],
+  "presets": [{ "name": "S2 People photos" }]
+}
+{% endschema %}

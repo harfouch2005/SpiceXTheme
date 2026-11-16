@@ -1,0 +1,445 @@
+{%- comment -%}
+  SpiceX FAQ · accordion of common questions
+  - Centered header with hand-drawn SVG underline
+  - Single-column accordion with smooth height animation
+  - Plus icon rotates to X on open
+  - All CSS scoped under #shopify-section-{{ section.id }}
+{%- endcomment -%}
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+
+{% style %}
+  #shopify-section-{{ section.id }} {
+    --q-bg: {{ section.settings.bg_color | default: '#f7f3ec' }};
+    --q-ink: #0a0a0a;
+    --q-ink-mute: #555555;
+    --q-ink-dim: #999999;
+    --q-line: rgba(10, 10, 10, 0.12);
+    --q-accent: {{ section.settings.accent_color | default: '#e8a823' }};
+    --q-display: var(--spx-font-display);
+    --q-body: var(--spx-font-body);
+    --q-ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+    background: var(--q-bg);
+    color: var(--q-ink);
+    font-family: var(--q-body);
+    box-sizing: border-box;
+  }
+  #shopify-section-{{ section.id }} *,
+  #shopify-section-{{ section.id }} *::before,
+  #shopify-section-{{ section.id }} *::after { box-sizing: border-box; }
+
+  #shopify-section-{{ section.id }} .faq {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: clamp(72px, 9vw, 128px) clamp(20px, 4vw, 56px);
+  }
+
+  /* ===== Header ===== */
+  #shopify-section-{{ section.id }} .faq-head {
+    text-align: center;
+    margin: 0 0 clamp(48px, 6vw, 80px);
+  }
+  #shopify-section-{{ section.id }} .faq-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    font-family: var(--q-body);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--q-ink-mute);
+    margin: 0 0 22px;
+    line-height: 1;
+  }
+  #shopify-section-{{ section.id }} .faq-eyebrow::before,
+  #shopify-section-{{ section.id }} .faq-eyebrow::after {
+    content: '';
+    width: 24px;
+    height: 1px;
+    background: var(--q-ink-mute);
+  }
+  #shopify-section-{{ section.id }} .faq-headline {
+    font-family: var(--q-display);
+    font-weight: 500;
+    font-size: clamp(36px, 4.5vw, 56px);
+    line-height: 1.02;
+    letter-spacing: -0.025em;
+    color: var(--q-ink);
+    margin: 0 0 16px;
+    font-variation-settings: "WONK" 0, "SOFT" 30, "opsz" 144;
+  }
+  #shopify-section-{{ section.id }} .faq-underline {
+    display: inline-block;
+    width: 220px;
+    max-width: 70%;
+    height: 16px;
+    overflow: visible;
+    margin: 4px 0 14px;
+  }
+  #shopify-section-{{ section.id }} .faq-underline path {
+    fill: none;
+    stroke-linecap: round;
+    stroke-width: 2;
+  }
+  #shopify-section-{{ section.id }} .faq-underline .is-main { stroke: var(--q-ink); }
+  #shopify-section-{{ section.id }} .faq-underline .is-accent { stroke: var(--q-accent); }
+  #shopify-section-{{ section.id }} .faq-sub {
+    font-family: var(--q-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(15px, 1.5vw, 18px);
+    color: var(--q-ink-mute);
+    margin: 0;
+    max-width: 540px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.4;
+  }
+
+  /* ===== Accordion list ===== */
+  #shopify-section-{{ section.id }} .faq-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--q-line);
+  }
+  #shopify-section-{{ section.id }} .faq-item {
+    border-bottom: 1px solid var(--q-line);
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.6s var(--q-ease), transform 0.6s var(--q-ease);
+  }
+  #shopify-section-{{ section.id }} .faq-item.is-in { opacity: 1; transform: translateY(0); }
+
+  #shopify-section-{{ section.id }} .faq-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    width: 100%;
+    padding: 24px 4px;
+    background: none;
+    border: 0;
+    cursor: pointer;
+    text-align: left;
+    color: var(--q-ink);
+    font-family: var(--q-display);
+    font-weight: 500;
+    font-size: clamp(18px, 1.9vw, 22px);
+    line-height: 1.25;
+    letter-spacing: -0.015em;
+    font-variation-settings: "WONK" 0, "SOFT" 30, "opsz" 144;
+    transition: color 0.25s ease;
+  }
+  #shopify-section-{{ section.id }} .faq-toggle:hover {
+    color: var(--q-accent);
+  }
+  #shopify-section-{{ section.id }} .faq-toggle-text { flex: 1; }
+  #shopify-section-{{ section.id }} .faq-icon {
+    flex: 0 0 auto;
+    width: 36px;
+    height: 36px;
+    border: 1.5px solid var(--q-ink);
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.35s var(--q-ease), background 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+    color: var(--q-ink);
+  }
+  #shopify-section-{{ section.id }} .faq-toggle:hover .faq-icon {
+    background: var(--q-ink);
+    color: #ffffff;
+  }
+  #shopify-section-{{ section.id }} .faq-item.is-open .faq-icon {
+    transform: rotate(45deg);
+    background: var(--q-accent);
+    border-color: var(--q-accent);
+    color: #0a0a0a;
+  }
+  #shopify-section-{{ section.id }} .faq-icon svg { width: 14px; height: 14px; display: block; }
+
+  /* Smooth height animation via grid-template-rows trick */
+  #shopify-section-{{ section.id }} .faq-content {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.4s var(--q-ease);
+  }
+  #shopify-section-{{ section.id }} .faq-item.is-open .faq-content {
+    grid-template-rows: 1fr;
+  }
+  #shopify-section-{{ section.id }} .faq-content-inner {
+    overflow: hidden;
+    min-height: 0;
+  }
+  #shopify-section-{{ section.id }} .faq-answer {
+    font-family: var(--q-body);
+    font-size: 15px;
+    line-height: 1.65;
+    color: var(--q-ink-mute);
+    margin: 0;
+    padding: 0 56px 28px 4px;
+    max-width: 720px;
+  }
+  #shopify-section-{{ section.id }} .faq-answer a {
+    color: var(--q-ink);
+    text-decoration: underline;
+    text-decoration-color: var(--q-accent);
+    text-underline-offset: 3px;
+    text-decoration-thickness: 1.5px;
+  }
+
+  /* ===== Bottom CTA card ===== */
+  #shopify-section-{{ section.id }} .faq-cta {
+    margin-top: clamp(48px, 6vw, 72px);
+    text-align: center;
+    padding: clamp(32px, 4vw, 48px) clamp(24px, 4vw, 40px);
+    background: #ffffff;
+    border-radius: 14px;
+    box-shadow: 0 14px 32px -16px rgba(0, 0, 0, 0.14);
+  }
+  #shopify-section-{{ section.id }} .faq-cta-title {
+    font-family: var(--q-display);
+    font-weight: 500;
+    font-size: clamp(20px, 2.4vw, 28px);
+    color: var(--q-ink);
+    margin: 0 0 8px;
+    letter-spacing: -0.02em;
+    font-variation-settings: "WONK" 0, "SOFT" 30;
+  }
+  #shopify-section-{{ section.id }} .faq-cta-sub {
+    font-family: var(--q-body);
+    font-size: 14px;
+    color: var(--q-ink-mute);
+    margin: 0 0 22px;
+    line-height: 1.5;
+  }
+  #shopify-section-{{ section.id }} .faq-cta-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--q-body);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--q-ink);
+    text-decoration: none;
+    padding: 14px 22px;
+    border-radius: 100px;
+    background: var(--q-accent);
+    transition: transform 0.2s var(--q-ease), filter 0.2s ease;
+    line-height: 1;
+  }
+  #shopify-section-{{ section.id }} .faq-cta-link:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.08);
+  }
+  #shopify-section-{{ section.id }} .faq-cta-link svg { width: 14px; height: 14px; }
+
+  /* ===== Mobile ===== */
+  @media (max-width: 640px) {
+    #shopify-section-{{ section.id }} .faq-toggle { padding: 20px 0; font-size: 17px; }
+    #shopify-section-{{ section.id }} .faq-icon { width: 32px; height: 32px; }
+    #shopify-section-{{ section.id }} .faq-answer { padding: 0 8px 24px 0; font-size: 14px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #shopify-section-{{ section.id }} .faq-item { opacity: 1; transform: none; transition: none; }
+    #shopify-section-{{ section.id }} .faq-content { transition: none; }
+    #shopify-section-{{ section.id }} .faq-icon { transition: none; }
+  }
+{% endstyle %}
+
+<section class="faq-section" aria-labelledby="faq-headline-{{ section.id }}">
+  <div class="faq">
+    <header class="faq-head">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="faq-eyebrow">{{ section.settings.eyebrow | escape }}</p>
+      {%- endif -%}
+      <h2 id="faq-headline-{{ section.id }}" class="faq-headline">{{ section.settings.headline | default: 'Questions, answered.' | escape }}</h2>
+      <svg class="faq-underline" viewBox="0 0 220 16" aria-hidden="true" preserveAspectRatio="none">
+        <path class="is-main" d="M 6 6 Q 50 3, 110 5.5 T 214 5"/>
+        <path class="is-accent" d="M 28 12 Q 80 10, 140 11.5 T 198 11"/>
+      </svg>
+      {%- if section.settings.subhead != blank -%}
+        <p class="faq-sub">{{ section.settings.subhead | escape }}</p>
+      {%- endif -%}
+    </header>
+
+    <ul class="faq-list">
+      {%- for block in section.blocks -%}
+        <li class="faq-item" data-faq-item {{ block.shopify_attributes }}>
+          <button type="button" class="faq-toggle" data-faq-toggle aria-expanded="false">
+            <span class="faq-toggle-text">{{ block.settings.question | escape }}</span>
+            <span class="faq-icon" aria-hidden="true">
+              <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="7" y1="1" x2="7" y2="13"/><line x1="1" y1="7" x2="13" y2="7"/></svg>
+            </span>
+          </button>
+          <div class="faq-content">
+            <div class="faq-content-inner">
+              <div class="faq-answer">{{ block.settings.answer }}</div>
+            </div>
+          </div>
+        </li>
+      {%- endfor -%}
+    </ul>
+
+    {%- if section.settings.cta_title != blank or section.settings.cta_text != blank -%}
+      <div class="faq-cta">
+        {%- if section.settings.cta_title != blank -%}
+          <h3 class="faq-cta-title">{{ section.settings.cta_title | escape }}</h3>
+        {%- endif -%}
+        {%- if section.settings.cta_sub != blank -%}
+          <p class="faq-cta-sub">{{ section.settings.cta_sub | escape }}</p>
+        {%- endif -%}
+        {%- if section.settings.cta_text != blank -%}
+          <a href="{{ section.settings.cta_url | default: 'mailto:hello@spicexseasoning.com' }}" class="faq-cta-link">
+            {{ section.settings.cta_text | escape }}
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+          </a>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+<script>
+  (function() {
+    var section = document.getElementById('shopify-section-{{ section.id }}');
+    if (!section) return;
+
+    // Accordion toggle
+    section.querySelectorAll('[data-faq-toggle]').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var item = btn.closest('[data-faq-item]');
+        if (!item) return;
+        var open = item.classList.toggle('is-open');
+        btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      });
+    });
+
+    // Entrance animation
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (!('IntersectionObserver' in window)) {
+      section.querySelectorAll('[data-faq-item]').forEach(function(el) { el.classList.add('is-in'); });
+      return;
+    }
+    var io = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry, i) {
+        if (entry.isIntersecting) {
+          var el = entry.target;
+          var idx = Array.prototype.indexOf.call(el.parentNode.children, el);
+          el.style.transitionDelay = (idx * 0.05) + 's';
+          el.classList.add('is-in');
+          io.unobserve(el);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+    section.querySelectorAll('[data-faq-item]').forEach(function(el) { io.observe(el); });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "FAQ",
+  "class": "spx-faq-section",
+  "max_blocks": 16,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Header"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Good Questions"
+    },
+    {
+      "type": "text",
+      "id": "headline",
+      "label": "Headline",
+      "default": "Questions, answered."
+    },
+    {
+      "type": "text",
+      "id": "subhead",
+      "label": "Subhead",
+      "default": "Everything you wanted to know before you upgrade your spice rack."
+    },
+    {
+      "type": "header",
+      "content": "Bottom CTA card"
+    },
+    {
+      "type": "text",
+      "id": "cta_title",
+      "label": "CTA title",
+      "default": "Still curious?"
+    },
+    {
+      "type": "text",
+      "id": "cta_sub",
+      "label": "CTA subtitle",
+      "default": "We answer every email personally · usually within a day."
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "CTA button",
+      "default": "Email Us"
+    },
+    {
+      "type": "url",
+      "id": "cta_url",
+      "label": "CTA link",
+      "info": "Use mailto: for an email link, e.g. mailto:hello@spicexseasoning.com"
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background",
+      "default": "#f7f3ec"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent",
+      "default": "#e8a823"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "question",
+      "name": "Question",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "default": "What's in your spices?"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Answer",
+          "default": "<p>Just real ingredients you can pronounce. Every blend lists every spice by name · no \"spices\" hiding 20 things, no MSG, no silicon dioxide, no fillers.</p>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "FAQ",
+      "category": "Story"
+    }
+  ]
+}
+{% endschema %}

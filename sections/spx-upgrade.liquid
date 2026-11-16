@@ -1,0 +1,690 @@
+{%- comment -%}
+  SpiceX Upgrade Your Spice Rack · 6 product cards in a 3-column grid
+  - Each card color-coded to its blend
+  - Hover over card reveals ingredient list (desktop)
+  - Tap "Read label" button to reveal on mobile
+  - AJAX Add to Cart wired to existing cart event system
+  - All CSS scoped under #shopify-section-{{ section.id }}
+{%- endcomment -%}
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+
+{% style %}
+  #shopify-section-{{ section.id }} {
+    --u-bg: {{ section.settings.bg_color | default: '#fbf8f2' }};
+    --u-card-bg: {{ section.settings.card_bg | default: '#ffffff' }};
+    --u-ink: #0a0a0a;
+    --u-ink-mute: #555555;
+    --u-ink-dim: #999999;
+    --u-line: rgba(10, 10, 10, 0.08);
+    --u-display: var(--spx-font-display);
+    --u-body: var(--spx-font-body);
+    --u-ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+    background: var(--u-bg);
+    color: var(--u-ink);
+    font-family: var(--u-body);
+    box-sizing: border-box;
+  }
+  #shopify-section-{{ section.id }} *,
+  #shopify-section-{{ section.id }} *::before,
+  #shopify-section-{{ section.id }} *::after { box-sizing: border-box; }
+
+  #shopify-section-{{ section.id }} .upg {
+    max-width: 1480px;
+    margin: 0 auto;
+    padding: clamp(72px, 9vw, 128px) clamp(20px, 4vw, 56px);
+  }
+
+  /* ===== Header ===== */
+  #shopify-section-{{ section.id }} .upg-head {
+    text-align: center;
+    max-width: 720px;
+    margin: 0 auto clamp(48px, 6vw, 80px);
+  }
+  #shopify-section-{{ section.id }} .upg-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    font-family: var(--u-body);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--u-ink-mute);
+    margin: 0 0 20px;
+    line-height: 1;
+  }
+  #shopify-section-{{ section.id }} .upg-eyebrow::before,
+  #shopify-section-{{ section.id }} .upg-eyebrow::after {
+    content: '';
+    width: 24px;
+    height: 1px;
+    background: var(--u-ink-mute);
+  }
+  #shopify-section-{{ section.id }} .upg-headline {
+    font-family: var(--u-display);
+    font-weight: 500;
+    font-size: clamp(36px, 4.5vw, 64px);
+    line-height: 1.02;
+    letter-spacing: -0.025em;
+    color: var(--u-ink);
+    margin: 0 0 16px;
+    font-variation-settings: "WONK" 0, "SOFT" 30, "opsz" 144;
+  }
+  #shopify-section-{{ section.id }} .upg-sub {
+    font-family: var(--u-display);
+    font-style: italic;
+    font-size: clamp(16px, 1.6vw, 19px);
+    color: var(--u-ink-mute);
+    margin: 0;
+    line-height: 1.4;
+  }
+
+  /* ===== Grid ===== */
+  #shopify-section-{{ section.id }} .upg-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(20px, 2.5vw, 32px);
+  }
+
+  /* ===== Card ===== */
+  #shopify-section-{{ section.id }} .upg-card {
+    position: relative;
+    background: var(--u-card-bg);
+    border-radius: 14px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 12px 32px -16px rgba(0, 0, 0, 0.14);
+    border: 1px solid var(--u-line);
+    transition: transform 0.4s var(--u-ease), box-shadow 0.4s var(--u-ease);
+  }
+  @media (hover: hover) {
+    #shopify-section-{{ section.id }} .upg-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 24px 48px -20px rgba(0, 0, 0, 0.22);
+    }
+  }
+
+  /* Featured label (top-right corner) */
+  #shopify-section-{{ section.id }} .upg-card-label {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    z-index: 4;
+    background: var(--card-color, #0099d6);
+    color: #ffffff;
+    padding: 6px 10px;
+    border-radius: 100px;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    line-height: 1;
+  }
+
+  /* ===== Image area ===== */
+  #shopify-section-{{ section.id }} .upg-card-media {
+    position: relative;
+    display: block;
+  }
+  #shopify-section-{{ section.id }} .upg-card-img-wrap {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    background: color-mix(in srgb, var(--card-color, #0099d6) 6%, transparent);
+    display: block;
+  }
+  #shopify-section-{{ section.id }} .upg-card-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 24px;
+    transition: transform 0.6s var(--u-ease), opacity 0.4s ease;
+    display: block;
+  }
+  @media (hover: hover) {
+    #shopify-section-{{ section.id }} .upg-card:hover .upg-card-img {
+      transform: scale(1.06);
+    }
+  }
+  #shopify-section-{{ section.id }} .upg-card-img-placeholder {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--u-ink-dim);
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    text-align: center;
+    padding: 20px;
+  }
+
+  /* ===== Hover reveal: ingredients ===== */
+  #shopify-section-{{ section.id }} .upg-card-reveal {
+    position: absolute;
+    inset: 0;
+    background: var(--u-card-bg);
+    padding: 28px 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.45s var(--u-ease);
+    pointer-events: none;
+    border-bottom: 4px solid var(--card-color, #0099d6);
+    z-index: 2;
+  }
+  @media (hover: hover) {
+    #shopify-section-{{ section.id }} .upg-card:hover .upg-card-reveal {
+      opacity: 1;
+      pointer-events: auto;
+    }
+  }
+  #shopify-section-{{ section.id }} .upg-card.is-revealed .upg-card-reveal {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  #shopify-section-{{ section.id }} .upg-card-reveal-count {
+    font-family: var(--u-body);
+    font-size: 10.5px;
+    font-weight: 800;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--card-color, #0099d6);
+    margin: 0 0 14px;
+    line-height: 1;
+  }
+  #shopify-section-{{ section.id }} .upg-card-reveal-title {
+    font-family: var(--u-display);
+    font-weight: 500;
+    font-size: 18px;
+    color: var(--u-ink);
+    margin: 0 0 10px;
+    line-height: 1.1;
+    letter-spacing: -0.015em;
+  }
+  #shopify-section-{{ section.id }} .upg-card-reveal-text {
+    font-family: var(--u-display);
+    font-style: italic;
+    font-size: 14.5px;
+    line-height: 1.5;
+    color: var(--u-ink);
+    margin: 0;
+    overflow-y: auto;
+    max-height: 100%;
+  }
+
+  /* Mobile tap-toggle (small "i" pill on the image) */
+  #shopify-section-{{ section.id }} .upg-card-reveal-toggle {
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
+    z-index: 3;
+    background: rgba(10, 10, 10, 0.78);
+    color: #ffffff;
+    border: 0;
+    padding: 7px 12px;
+    border-radius: 100px;
+    font-family: var(--u-body);
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    line-height: 1;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    transition: background 0.25s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  #shopify-section-{{ section.id }} .upg-card-reveal-toggle:hover {
+    background: rgba(10, 10, 10, 0.9);
+  }
+  #shopify-section-{{ section.id }} .upg-card-reveal-toggle::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--card-color, #0099d6);
+  }
+  #shopify-section-{{ section.id }} .upg-card.is-revealed .upg-card-reveal-toggle {
+    background: var(--card-color, #0099d6);
+  }
+  @media (hover: hover) {
+    #shopify-section-{{ section.id }} .upg-card-reveal-toggle { display: none; }
+  }
+
+  /* Color stripe at top of body */
+  #shopify-section-{{ section.id }} .upg-card-accent {
+    height: 3px;
+    background: var(--card-color, #0099d6);
+    width: 100%;
+  }
+
+  /* ===== Card body ===== */
+  #shopify-section-{{ section.id }} .upg-card-body {
+    padding: 22px 22px 22px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+  #shopify-section-{{ section.id }} .upg-card-title {
+    font-family: var(--u-display);
+    font-weight: 600;
+    font-size: 22px;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    color: var(--u-ink);
+    margin: 0 0 6px;
+    font-variation-settings: "WONK" 0, "SOFT" 30, "opsz" 144;
+  }
+  #shopify-section-{{ section.id }} .upg-card-title a {
+    color: inherit;
+    text-decoration: none;
+  }
+  #shopify-section-{{ section.id }} .upg-card-title a:hover {
+    color: var(--card-color, #0099d6);
+  }
+  #shopify-section-{{ section.id }} .upg-card-descriptor {
+    font-family: var(--u-body);
+    font-size: 12.5px;
+    color: var(--u-ink-mute);
+    margin: 0 0 18px;
+    line-height: 1.4;
+  }
+  #shopify-section-{{ section.id }} .upg-card-cta-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: auto;
+    padding-top: 12px;
+    border-top: 1px solid var(--u-line);
+  }
+  #shopify-section-{{ section.id }} .upg-card-price {
+    font-family: var(--u-display);
+    font-weight: 600;
+    font-size: 20px;
+    color: var(--u-ink);
+    letter-spacing: -0.02em;
+    font-variation-settings: "WONK" 0, "SOFT" 30;
+  }
+  #shopify-section-{{ section.id }} .upg-card-add {
+    background: var(--card-color, #0099d6);
+    color: #ffffff;
+    border: 0;
+    padding: 12px 18px;
+    border-radius: 100px;
+    font-family: var(--u-body);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    line-height: 1;
+    transition: transform 0.2s var(--u-ease), background 0.2s ease, opacity 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    position: relative;
+    min-width: 130px;
+    justify-content: center;
+  }
+  #shopify-section-{{ section.id }} .upg-card-add:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.08);
+  }
+  #shopify-section-{{ section.id }} .upg-card-add:disabled { opacity: 0.6; cursor: wait; }
+  #shopify-section-{{ section.id }} .upg-card-add-default,
+  #shopify-section-{{ section.id }} .upg-card-add-added,
+  #shopify-section-{{ section.id }} .upg-card-add-loading {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: opacity 0.2s ease;
+  }
+  #shopify-section-{{ section.id }} .upg-card-add-added,
+  #shopify-section-{{ section.id }} .upg-card-add-loading { display: none; }
+  #shopify-section-{{ section.id }} .upg-card-add.is-loading .upg-card-add-default { display: none; }
+  #shopify-section-{{ section.id }} .upg-card-add.is-loading .upg-card-add-loading { display: inline-flex; }
+  #shopify-section-{{ section.id }} .upg-card-add.is-added .upg-card-add-default { display: none; }
+  #shopify-section-{{ section.id }} .upg-card-add.is-added .upg-card-add-added { display: inline-flex; }
+  #shopify-section-{{ section.id }} .upg-card-add svg { width: 14px; height: 14px; }
+  /* Spinner */
+  #shopify-section-{{ section.id }} .upg-spin {
+    width: 12px;
+    height: 12px;
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    border-top-color: #ffffff;
+    border-radius: 50%;
+    animation: upg-spin 0.7s linear infinite;
+    flex: 0 0 auto;
+  }
+  @keyframes upg-spin { to { transform: rotate(360deg); } }
+
+  /* ===== Entrance animation ===== */
+  #shopify-section-{{ section.id }} .upg-card {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s var(--u-ease), transform 0.6s var(--u-ease), box-shadow 0.4s var(--u-ease);
+  }
+  #shopify-section-{{ section.id }} .upg-card.is-in {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  #shopify-section-{{ section.id }} .upg-card:nth-child(1) { transition-delay: 0.05s; }
+  #shopify-section-{{ section.id }} .upg-card:nth-child(2) { transition-delay: 0.12s; }
+  #shopify-section-{{ section.id }} .upg-card:nth-child(3) { transition-delay: 0.19s; }
+  #shopify-section-{{ section.id }} .upg-card:nth-child(4) { transition-delay: 0.26s; }
+  #shopify-section-{{ section.id }} .upg-card:nth-child(5) { transition-delay: 0.33s; }
+  #shopify-section-{{ section.id }} .upg-card:nth-child(6) { transition-delay: 0.40s; }
+
+  /* ===== Tablet ===== */
+  @media (max-width: 1024px) {
+    #shopify-section-{{ section.id }} .upg-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  /* ===== Mobile ===== */
+  @media (max-width: 640px) {
+    #shopify-section-{{ section.id }} .upg-grid {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+    #shopify-section-{{ section.id }} .upg-card-body { padding: 20px; }
+    #shopify-section-{{ section.id }} .upg-card-title { font-size: 20px; }
+    #shopify-section-{{ section.id }} .upg-card-price { font-size: 18px; }
+    #shopify-section-{{ section.id }} .upg-card-add { padding: 11px 16px; font-size: 11.5px; min-width: 120px; }
+    #shopify-section-{{ section.id }} .upg-card-reveal { padding: 20px 18px; }
+    #shopify-section-{{ section.id }} .upg-card-reveal-text { font-size: 13.5px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #shopify-section-{{ section.id }} .upg-card { opacity: 1; transform: none; transition: none; }
+    #shopify-section-{{ section.id }} .upg-card-reveal { transition: none; }
+  }
+{% endstyle %}
+
+<section class="upg" aria-labelledby="upg-headline-{{ section.id }}">
+  <header class="upg-head">
+    {%- if section.settings.eyebrow != blank -%}
+      <p class="upg-eyebrow">{{ section.settings.eyebrow | escape }}</p>
+    {%- endif -%}
+    <h2 id="upg-headline-{{ section.id }}" class="upg-headline">{{ section.settings.headline | default: 'Upgrade Your Spice Rack' | escape }}</h2>
+    {%- if section.settings.subhead != blank -%}
+      <p class="upg-sub">{{ section.settings.subhead | escape }}</p>
+    {%- endif -%}
+  </header>
+
+  <div class="upg-grid">
+    {%- for block in section.blocks -%}
+      {%- assign product = block.settings.product -%}
+      {%- assign card_color = block.settings.card_color | default: '#0099d6' -%}
+      {%- assign card_image = block.settings.image -%}
+      {%- if card_image == blank and product != blank -%}
+        {%- assign card_image = product.featured_image -%}
+      {%- endif -%}
+      {%- assign card_title = block.settings.title_override | default: product.title -%}
+      {%- if card_title == blank -%}{%- assign card_title = 'Product' -%}{%- endif -%}
+      {%- assign card_price = product.price -%}
+      {%- assign variant_id = product.selected_or_first_available_variant.id -%}
+      {%- assign product_url = product.url | default: '#' -%}
+
+      <article class="upg-card" style="--card-color: {{ card_color }};" data-upg-card {{ block.shopify_attributes }}>
+        {%- if block.settings.featured_label != blank -%}
+          <span class="upg-card-label">{{ block.settings.featured_label | escape }}</span>
+        {%- endif -%}
+
+        <div class="upg-card-media">
+          <a href="{{ product_url }}" class="upg-card-img-wrap" aria-label="{{ card_title | escape }}">
+            {%- if card_image != blank -%}
+              <img class="upg-card-img"
+                src="{{ card_image | image_url: width: 600 }}"
+                srcset="{{ card_image | image_url: width: 300 }} 300w, {{ card_image | image_url: width: 500 }} 500w, {{ card_image | image_url: width: 700 }} 700w"
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                alt="{{ card_title | escape }}"
+                loading="lazy">
+            {%- else -%}
+              <div class="upg-card-img-placeholder">Connect a product or upload an image</div>
+            {%- endif -%}
+
+            {%- comment -%} Hover/tap reveal: ingredients {%- endcomment -%}
+            <div class="upg-card-reveal" aria-hidden="true">
+              {%- if block.settings.ingredient_count != blank -%}
+                <p class="upg-card-reveal-count">{{ block.settings.ingredient_count }} ingredients</p>
+              {%- endif -%}
+              {%- if block.settings.descriptor != blank -%}
+                <p class="upg-card-reveal-title">{{ block.settings.descriptor | escape }}</p>
+              {%- endif -%}
+              {%- if block.settings.ingredients != blank -%}
+                <p class="upg-card-reveal-text">{{ block.settings.ingredients | escape }}</p>
+              {%- endif -%}
+            </div>
+          </a>
+
+          {%- comment -%} Mobile tap toggle · scoped to the media wrapper so it stays on the image {%- endcomment -%}
+          <button type="button" class="upg-card-reveal-toggle" data-upg-toggle aria-label="Show ingredients" aria-expanded="false">Read label</button>
+        </div>
+
+        <span class="upg-card-accent" aria-hidden="true"></span>
+
+        <div class="upg-card-body">
+          <h3 class="upg-card-title"><a href="{{ product_url }}">{{ card_title | escape }}</a></h3>
+          {%- if block.settings.descriptor != blank -%}
+            <p class="upg-card-descriptor">{{ block.settings.descriptor | escape }}</p>
+          {%- endif -%}
+          <div class="upg-card-cta-row">
+            <span class="upg-card-price">
+              {%- if product != blank -%}{{ card_price | money }}{%- else -%}·{%- endif -%}
+            </span>
+            <button type="button" class="upg-card-add" data-upg-add data-variant-id="{{ variant_id }}" data-product-title="{{ card_title | escape }}" {% if variant_id == blank %}disabled aria-disabled="true"{% endif %}>
+              <span class="upg-card-add-default">Add to Cart
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+              </span>
+              <span class="upg-card-add-loading"><span class="upg-spin" aria-hidden="true"></span>Adding…</span>
+              <span class="upg-card-add-added">Added
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg>
+              </span>
+            </button>
+          </div>
+        </div>
+      </article>
+    {%- endfor -%}
+  </div>
+</section>
+
+<script>
+  (function() {
+    var section = document.getElementById('shopify-section-{{ section.id }}');
+    if (!section) return;
+
+    // Mobile reveal toggle
+    section.querySelectorAll('[data-upg-toggle]').forEach(function(btn) {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var card = btn.closest('.upg-card');
+        if (!card) return;
+        var on = card.classList.toggle('is-revealed');
+        btn.setAttribute('aria-expanded', on ? 'true' : 'false');
+        btn.textContent = on ? 'Close' : 'Read label';
+      });
+    });
+
+    // AJAX Add to Cart
+    section.querySelectorAll('[data-upg-add]').forEach(function(btn) {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        var variantId = btn.getAttribute('data-variant-id');
+        if (!variantId || btn.disabled) return;
+
+        btn.classList.add('is-loading');
+        btn.classList.remove('is-added');
+        btn.disabled = true;
+
+        fetch('/cart/add.js', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify({ id: variantId, quantity: 1 })
+        })
+          .then(function(r) {
+            if (!r.ok) throw new Error('Add to cart failed');
+            return r.json();
+          })
+          .then(function() {
+            return fetch('/cart.js', { headers: { 'Accept': 'application/json' } });
+          })
+          .then(function(r) { return r.json(); })
+          .then(function(cart) {
+            window.dispatchEvent(new CustomEvent('cart:updated', { detail: cart }));
+            // Open cart drawer if the theme exposes one
+            if (window.theme && window.theme.cart && typeof window.theme.cart.open === 'function') {
+              window.theme.cart.open();
+            }
+            btn.classList.remove('is-loading');
+            btn.classList.add('is-added');
+            setTimeout(function() {
+              btn.classList.remove('is-added');
+              btn.disabled = false;
+            }, 1800);
+          })
+          .catch(function(err) {
+            console.error('SpiceX add to cart:', err);
+            btn.classList.remove('is-loading');
+            btn.disabled = false;
+          });
+      });
+    });
+
+    // Entrance animation via IntersectionObserver
+    if (!('IntersectionObserver' in window)) {
+      section.querySelectorAll('[data-upg-card]').forEach(function(el) { el.classList.add('is-in'); });
+      return;
+    }
+    var io = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-in');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+    section.querySelectorAll('[data-upg-card]').forEach(function(el) { io.observe(el); });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Upgrade your spice rack",
+  "class": "spx-upgrade-section",
+  "max_blocks": 12,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section header"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "The Lineup"
+    },
+    {
+      "type": "text",
+      "id": "headline",
+      "label": "Headline",
+      "default": "Upgrade Your Spice Rack"
+    },
+    {
+      "type": "text",
+      "id": "subhead",
+      "label": "Subhead",
+      "default": "Six blends. One promise. Pick your favorites · or pick them all."
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Section background",
+      "default": "#fbf8f2"
+    },
+    {
+      "type": "color",
+      "id": "card_bg",
+      "label": "Card background",
+      "default": "#ffffff"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "product",
+      "name": "Product",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product",
+          "info": "Connect a Shopify product to enable Add to Cart."
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image override (optional)",
+          "info": "Falls back to the product's featured image."
+        },
+        {
+          "type": "text",
+          "id": "title_override",
+          "label": "Title override (optional)"
+        },
+        {
+          "type": "color",
+          "id": "card_color",
+          "label": "Brand color",
+          "default": "#0099d6"
+        },
+        {
+          "type": "text",
+          "id": "descriptor",
+          "label": "Descriptor",
+          "default": "Salt, Pepper & Garlic Seasoning · 6 oz · 168 servings"
+        },
+        {
+          "type": "textarea",
+          "id": "ingredients",
+          "label": "Ingredients (full list)",
+          "default": "Sea Salt, Black Pepper, Granulated Garlic."
+        },
+        {
+          "type": "number",
+          "id": "ingredient_count",
+          "label": "Ingredient count",
+          "default": 3
+        },
+        {
+          "type": "text",
+          "id": "featured_label",
+          "label": "Corner label (optional)",
+          "info": "E.g. \"BEST SELLER\", \"NEW\". Leave blank to hide."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Upgrade your spice rack",
+      "category": "Products"
+    }
+  ]
+}
+{% endschema %}

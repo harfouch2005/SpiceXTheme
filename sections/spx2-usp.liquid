@@ -1,0 +1,36 @@
+<section class="s2-sec s2-usp">
+  <div class="s2-head">
+    {%- if section.settings.eyebrow != blank -%}<p class="s2-usp__eyebrow">{{ section.settings.eyebrow }}</p>{%- endif -%}
+    <h2 class="s2-h">{{ section.settings.heading }}</h2>
+    {%- if section.settings.subheading != blank -%}<p class="s2-sub">{{ section.settings.subheading }}</p>{%- endif -%}
+  </div>
+  <ul class="s2-usp__grid">
+    {%- for block in section.blocks -%}
+      <li class="s2-usp__card" {{ block.shopify_attributes }}>
+        <span class="s2-usp__big">{{ block.settings.big }}</span>
+        <h3 class="s2-usp__t">{{ block.settings.title }}</h3>
+        <p class="s2-usp__d">{{ block.settings.text }}</p>
+      </li>
+    {%- endfor -%}
+  </ul>
+  {%- if section.settings.button_label != blank -%}<p class="s2-usp__cta"><a class="s2-btn" href="{{ section.settings.button_link }}">{{ section.settings.button_label }}</a></p>{%- endif -%}
+</section>
+{% schema %}
+{
+  "name": "S2 Why SpiceX",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Small line above heading" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "The recipe is already in the jar." },
+    { "type": "textarea", "id": "subheading", "label": "Subheading" },
+    { "type": "text", "id": "button_label", "label": "Button label" },
+    { "type": "url", "id": "button_link", "label": "Button link" }
+  ],
+  "max_blocks": 4,
+  "blocks": [{ "type": "point", "name": "Point", "settings": [
+    { "type": "text", "id": "big", "label": "Big word or number", "default": "1 jar" },
+    { "type": "text", "id": "title", "label": "Title" },
+    { "type": "textarea", "id": "text", "label": "Text" }
+  ]}],
+  "presets": [{ "name": "S2 Why SpiceX" }]
+}
+{% endschema %}

@@ -1,0 +1,406 @@
+{%- comment -%}
+  SpiceX Bundle PDP · Tabs (What's Inside / How to use / Shipping / Ingredients accordion)
+{%- endcomment -%}
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+
+{% style %}
+  #shopify-section-{{ section.id }} {
+    --bg: {{ section.settings.bg_color | default: '#f7f3ec' }};
+    --gold: {{ section.settings.gold | default: '#f5b316' }};
+    --ink: #0a0a0a;
+    --ink-mute: #555555;
+    --ink-dim: #999999;
+    --line: rgba(10, 10, 10, 0.10);
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--spx-font-body);
+    box-sizing: border-box;
+  }
+  #shopify-section-{{ section.id }} *, #shopify-section-{{ section.id }} *::before, #shopify-section-{{ section.id }} *::after { box-sizing: border-box; }
+
+  #shopify-section-{{ section.id }} .bdl-t { max-width: 1480px; margin: 0 auto; padding: 64px clamp(20px, 4vw, 56px); }
+  #shopify-section-{{ section.id }} .bdl-t-inner { max-width: 920px; margin: 0 auto; }
+  #shopify-section-{{ section.id }} .bdl-t-nav {
+    display: flex;
+    gap: 32px;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 40px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  #shopify-section-{{ section.id }} .bdl-t-nav::-webkit-scrollbar { display: none; }
+  #shopify-section-{{ section.id }} .bdl-t-btn {
+    background: none;
+    border: 0;
+    padding: 14px 2px;
+    font-size: 12.5px;
+    font-weight: 700;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    white-space: nowrap;
+  }
+  #shopify-section-{{ section.id }} .bdl-t-btn.is-active { color: var(--ink); border-bottom-color: var(--gold); }
+  #shopify-section-{{ section.id }} .bdl-t-panel { display: none; }
+  #shopify-section-{{ section.id }} .bdl-t-panel.is-active { display: block; }
+
+  /* WHAT'S INSIDE */
+  #shopify-section-{{ section.id }} .bdl-inside-list { display: flex; flex-direction: column; gap: 16px; }
+  #shopify-section-{{ section.id }} .bdl-inside-row {
+    --c: #0099d6;
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: 20px;
+    padding: 20px;
+    background: #fbf8f2;
+    border-left: 3px solid var(--c);
+    border-radius: 8px;
+    align-items: center;
+  }
+  #shopify-section-{{ section.id }} .bdl-inside-img {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    background: color-mix(in srgb, var(--c) 10%, transparent);
+    border-radius: 6px;
+    padding: 8px;
+    display: block;
+  }
+  #shopify-section-{{ section.id }} .bdl-inside-name {
+    font-family: var(--spx-font-display);
+    font-weight: 600;
+    font-size: 18px;
+    margin: 0 0 2px;
+    letter-spacing: -0.015em;
+    color: var(--ink);
+    line-height: 1.2;
+    font-variation-settings: "WONK" 0, "SOFT" 30;
+  }
+  #shopify-section-{{ section.id }} .bdl-inside-cat {
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--c);
+    margin: 0 0 8px;
+    line-height: 1;
+  }
+  #shopify-section-{{ section.id }} .bdl-inside-desc {
+    font-size: 13.5px;
+    line-height: 1.55;
+    color: var(--ink-mute);
+    margin: 0 0 10px;
+  }
+  #shopify-section-{{ section.id }} .bdl-inside-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  #shopify-section-{{ section.id }} .bdl-inside-chip {
+    background: #ffffff;
+    border: 1px solid var(--line);
+    padding: 4px 10px;
+    border-radius: 100px;
+    font-size: 11.5px;
+    font-weight: 500;
+    color: var(--ink);
+    line-height: 1;
+  }
+
+  /* HOW TO USE */
+  #shopify-section-{{ section.id }} .bdl-how-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  #shopify-section-{{ section.id }} .bdl-how-card {
+    background: #ffffff;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 24px;
+  }
+  #shopify-section-{{ section.id }} .bdl-how-num {
+    font-family: var(--spx-font-display);
+    font-style: italic;
+    font-weight: 500;
+    font-size: 16px;
+    color: var(--gold);
+    line-height: 1;
+    margin: 0 0 10px;
+    font-variation-settings: "WONK" 0, "SOFT" 50";
+  }
+  #shopify-section-{{ section.id }} .bdl-how-title {
+    font-family: var(--spx-font-display);
+    font-weight: 600;
+    font-size: 18px;
+    color: var(--ink);
+    margin: 0 0 10px;
+    letter-spacing: -0.015em;
+    line-height: 1.2;
+  }
+  #shopify-section-{{ section.id }} .bdl-how-body {
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--ink-mute);
+    margin: 0;
+  }
+
+  /* PROSE */
+  #shopify-section-{{ section.id }} .bdl-prose {
+    max-width: 640px;
+    margin: 0 auto;
+    font-size: 15.5px;
+    line-height: 1.7;
+    color: var(--ink-mute);
+  }
+  #shopify-section-{{ section.id }} .bdl-prose p { margin: 0 0 16px; }
+  #shopify-section-{{ section.id }} .bdl-prose strong { color: var(--ink); font-weight: 700; }
+
+  /* INGREDIENTS ACCORDION */
+  #shopify-section-{{ section.id }} .bdl-ing-intro {
+    text-align: center;
+    margin: 0 0 28px;
+    font-size: 14.5px;
+    color: var(--ink-mute);
+  }
+  #shopify-section-{{ section.id }} .bdl-ing-list {
+    border-top: 1px solid var(--line);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  #shopify-section-{{ section.id }} .bdl-ing-item { border-bottom: 1px solid var(--line); }
+  #shopify-section-{{ section.id }} .bdl-ing-toggle {
+    --c: #0099d6;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    width: 100%;
+    padding: 18px 4px;
+    background: none;
+    border: 0;
+    cursor: pointer;
+    text-align: left;
+    color: var(--ink);
+    font-family: var(--spx-font-display);
+    font-weight: 500;
+    font-size: 18px;
+    letter-spacing: -0.015em;
+    line-height: 1.2;
+    transition: color 0.2s ease;
+    font-variation-settings: "WONK" 0, "SOFT" 30;
+  }
+  #shopify-section-{{ section.id }} .bdl-ing-toggle:hover { color: var(--c); }
+  #shopify-section-{{ section.id }} .bdl-ing-toggle-left { display: inline-flex; align-items: center; gap: 12px; flex: 1; }
+  #shopify-section-{{ section.id }} .bdl-ing-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--c); flex: 0 0 auto; }
+  #shopify-section-{{ section.id }} .bdl-ing-icon {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    border: 1.5px solid var(--ink);
+    display: inline-flex; align-items: center; justify-content: center;
+    transition: transform 0.3s ease, background 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+    flex: 0 0 auto;
+  }
+  #shopify-section-{{ section.id }} .bdl-ing-item.is-open .bdl-ing-icon { transform: rotate(45deg); background: var(--gold); border-color: var(--gold); color: var(--ink); }
+  #shopify-section-{{ section.id }} .bdl-ing-icon svg { width: 12px; height: 12px; }
+  #shopify-section-{{ section.id }} .bdl-ing-content {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  #shopify-section-{{ section.id }} .bdl-ing-item.is-open .bdl-ing-content { grid-template-rows: 1fr; }
+  #shopify-section-{{ section.id }} .bdl-ing-content-inner { overflow: hidden; min-height: 0; }
+  #shopify-section-{{ section.id }} .bdl-ing-detail {
+    padding: 0 4px 22px 24px;
+    font-size: 14.5px;
+    line-height: 1.6;
+    color: var(--ink-mute);
+  }
+
+  @media (max-width: 720px) {
+    #shopify-section-{{ section.id }} .bdl-t { padding: 56px 20px; }
+    #shopify-section-{{ section.id }} .bdl-inside-row { grid-template-columns: 1fr; gap: 14px; }
+    #shopify-section-{{ section.id }} .bdl-inside-img { width: 80px; }
+    #shopify-section-{{ section.id }} .bdl-how-grid { grid-template-columns: 1fr; gap: 16px; }
+  }
+{% endstyle %}
+
+<section class="bdl-t">
+  <div class="bdl-t-inner">
+    <div class="bdl-t-nav" role="tablist">
+      <button type="button" class="bdl-t-btn is-active" data-bdl-tab="inside" role="tab">What's inside</button>
+      <button type="button" class="bdl-t-btn" data-bdl-tab="how" role="tab">How to use</button>
+      <button type="button" class="bdl-t-btn" data-bdl-tab="shipping" role="tab">Shipping & returns</button>
+      <button type="button" class="bdl-t-btn" data-bdl-tab="ingredients" role="tab">Ingredients</button>
+    </div>
+
+    {%- comment -%} ===== WHAT'S INSIDE ===== {%- endcomment -%}
+    <div class="bdl-t-panel is-active" data-bdl-panel="inside">
+      <div class="bdl-inside-list">
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'blend' -%}
+            {%- assign bp = block.settings.product -%}
+            {%- assign bimg = block.settings.image -%}
+            {%- if bimg == blank and bp != blank -%}{%- assign bimg = bp.featured_image -%}{%- endif -%}
+            <div class="bdl-inside-row" style="--c: {{ block.settings.accent_color | default: '#0099d6' }};" {{ block.shopify_attributes }}>
+              {%- if bimg != blank -%}
+                <img class="bdl-inside-img" src="{{ bimg | image_url: width: 200 }}" alt="{{ block.settings.name | escape }}" loading="lazy">
+              {%- endif -%}
+              <div>
+                <p class="bdl-inside-cat">{{ block.settings.category | escape }}</p>
+                <h3 class="bdl-inside-name">{{ block.settings.name | escape }}</h3>
+                {%- if block.settings.description != blank -%}<p class="bdl-inside-desc">{{ block.settings.description | escape }}</p>{%- endif -%}
+                {%- if block.settings.chips != blank -%}
+                  <div class="bdl-inside-chips">
+                    {%- assign cs = block.settings.chips | split: ',' -%}
+                    {%- for c in cs -%}
+                      {%- assign cc = c | strip -%}
+                      {%- if cc != blank -%}<span class="bdl-inside-chip">{{ cc | escape }}</span>{%- endif -%}
+                    {%- endfor -%}
+                  </div>
+                {%- endif -%}
+              </div>
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    </div>
+
+    {%- comment -%} ===== HOW TO USE ===== {%- endcomment -%}
+    <div class="bdl-t-panel" data-bdl-panel="how">
+      <div class="bdl-how-grid">
+        {%- for i in (1..3) -%}
+          {%- assign n_key = 'how_' | append: i | append: '_num' -%}
+          {%- assign t_key = 'how_' | append: i | append: '_title' -%}
+          {%- assign b_key = 'how_' | append: i | append: '_body' -%}
+          {%- assign n_val = section.settings[n_key] -%}
+          {%- assign t_val = section.settings[t_key] -%}
+          {%- assign b_val = section.settings[b_key] -%}
+          {%- if t_val != blank -%}
+            <div class="bdl-how-card">
+              {%- if n_val != blank -%}<p class="bdl-how-num">{{ n_val | escape }}</p>{%- endif -%}
+              <h4 class="bdl-how-title">{{ t_val | escape }}</h4>
+              {%- if b_val != blank -%}<p class="bdl-how-body">{{ b_val | escape }}</p>{%- endif -%}
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    </div>
+
+    {%- comment -%} ===== SHIPPING ===== {%- endcomment -%}
+    <div class="bdl-t-panel" data-bdl-panel="shipping">
+      <div class="bdl-prose">
+        {%- if section.settings.shipping_text != blank -%}
+          {{ section.settings.shipping_text }}
+        {%- else -%}
+          <p>The bundle ships in one box from Denver within 1 business day. U.S. delivery typically arrives in 3-5 business days. <strong>Free shipping always included with the bundle and on 3-Packs.</strong></p>
+          <p><strong>30-day money back guarantee.</strong> If you are not happy with it, email us within 30 days.</p>
+        {%- endif -%}
+      </div>
+    </div>
+
+    {%- comment -%} ===== INGREDIENTS ACCORDION ===== {%- endcomment -%}
+    <div class="bdl-t-panel" data-bdl-panel="ingredients">
+      <p class="bdl-ing-intro">{{ section.settings.ing_intro | default: 'Every ingredient is named on every jar. Click any blend below for its full list.' | escape }}</p>
+      <ul class="bdl-ing-list">
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'blend' -%}
+            <li class="bdl-ing-item" data-bdl-ing-item style="--c: {{ block.settings.accent_color | default: '#0099d6' }};">
+              <button type="button" class="bdl-ing-toggle" data-bdl-ing-toggle aria-expanded="false">
+                <span class="bdl-ing-toggle-left">
+                  <span class="bdl-ing-dot" aria-hidden="true"></span>
+                  <span>{{ block.settings.name | escape }}</span>
+                </span>
+                <span class="bdl-ing-icon" aria-hidden="true">
+                  <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="6" y1="1" x2="6" y2="11"/><line x1="1" y1="6" x2="11" y2="6"/></svg>
+                </span>
+              </button>
+              <div class="bdl-ing-content">
+                <div class="bdl-ing-content-inner">
+                  <div class="bdl-ing-detail">{{ block.settings.ingredients | default: 'Sea Salt, Black Pepper, Granulated Garlic.' | escape }}</div>
+                </div>
+              </div>
+            </li>
+          {%- endif -%}
+        {%- endfor -%}
+      </ul>
+    </div>
+  </div>
+</section>
+
+<script>
+  (function() {
+    var section = document.getElementById('shopify-section-{{ section.id }}');
+    if (!section) return;
+    var btns = section.querySelectorAll('[data-bdl-tab]');
+    var panels = section.querySelectorAll('[data-bdl-panel]');
+    btns.forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var key = btn.getAttribute('data-bdl-tab');
+        btns.forEach(function(b) { b.classList.toggle('is-active', b.getAttribute('data-bdl-tab') === key); });
+        panels.forEach(function(p) { p.classList.toggle('is-active', p.getAttribute('data-bdl-panel') === key); });
+      });
+    });
+    // Ingredients accordion (single-open)
+    var items = section.querySelectorAll('[data-bdl-ing-item]');
+    section.querySelectorAll('[data-bdl-ing-toggle]').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var item = btn.closest('[data-bdl-ing-item]');
+        var willOpen = !item.classList.contains('is-open');
+        items.forEach(function(o) {
+          o.classList.remove('is-open');
+          var t = o.querySelector('[data-bdl-ing-toggle]');
+          if (t) t.setAttribute('aria-expanded', 'false');
+        });
+        if (willOpen) {
+          item.classList.add('is-open');
+          btn.setAttribute('aria-expanded', 'true');
+        }
+      });
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Bundle PDP · Tabs",
+  "max_blocks": 8,
+  "settings": [
+    { "type": "header", "content": "How to use cards" },
+    { "type": "text", "id": "how_1_num", "label": "Card 1 number", "default": "Week 1" },
+    { "type": "text", "id": "how_1_title", "label": "Card 1 title", "default": "Daily Blend on everything." },
+    { "type": "textarea", "id": "how_1_body", "label": "Card 1 body", "default": "Start with Daily Blend for your first week. Use it on chicken, eggs, vegetables, potatoes · everything you'd normally salt and pepper." },
+    { "type": "text", "id": "how_2_num", "label": "Card 2 number", "default": "Week 2" },
+    { "type": "text", "id": "how_2_title", "label": "Card 2 title", "default": "Match a blend to a meal." },
+    { "type": "textarea", "id": "how_2_body", "label": "Card 2 body", "default": "Once Daily Blend is part of your routine, match the other blends to specific meals. Bella for pasta night, Taco Blast for Tuesday, Golden Hive on the grill." },
+    { "type": "text", "id": "how_3_num", "label": "Card 3 number", "default": "Week 3" },
+    { "type": "text", "id": "how_3_title", "label": "Card 3 title", "default": "Find your favorite." },
+    { "type": "textarea", "id": "how_3_body", "label": "Card 3 body", "default": "By week three, you'll know which blends you reach for most. That's the one to restock · or grab a 3-Pack of it from the stock-up section above." },
+    { "type": "header", "content": "Shipping" },
+    { "type": "richtext", "id": "shipping_text", "label": "Shipping prose" },
+    { "type": "header", "content": "Ingredients intro" },
+    { "type": "text", "id": "ing_intro", "label": "Intro line", "default": "Every ingredient is named on every jar. Click any blend below for its full list." },
+    { "type": "header", "content": "Style" },
+    { "type": "color", "id": "gold", "label": "Brand gold", "default": "#f5b316" },
+    { "type": "color", "id": "bg_color", "label": "Background", "default": "#f7f3ec" }
+  ],
+  "blocks": [
+    {
+      "type": "blend",
+      "name": "Blend row",
+      "settings": [
+        { "type": "product", "id": "product", "label": "Linked product (for image)" },
+        { "type": "image_picker", "id": "image", "label": "Image override" },
+        { "type": "text", "id": "name", "label": "Name", "default": "Daily Blend" },
+        { "type": "text", "id": "category", "label": "Category", "default": "DAILY SEASONING" },
+        { "type": "textarea", "id": "description", "label": "Description", "default": "Salt, pepper, garlic. Three real ingredients ground fresh. The blend you'll reach for without thinking." },
+        { "type": "text", "id": "chips", "label": "Use-case chips (comma-separated)", "default": "Chicken, Eggs, Vegetables, Potatoes" },
+        { "type": "textarea", "id": "ingredients", "label": "Full ingredient list (for Ingredients tab)", "default": "Sea Salt, Black Pepper, Granulated Garlic." },
+        { "type": "color", "id": "accent_color", "label": "Accent", "default": "#0099d6" }
+      ]
+    }
+  ],
+  "presets": [{ "name": "Bundle PDP · Tabs", "category": "Product" }]
+}
+{% endschema %}

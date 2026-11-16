@@ -1,0 +1,290 @@
+{%- comment -%}
+  Shop All · Pairings module ("Stack the flavor.")
+{%- endcomment -%}
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+
+{% style %}
+  #shopify-section-{{ section.id }} {
+    background: {{ section.settings.bg_color | default: '#f7f3ec' }};
+    color: #0a0a0a;
+    font-family: var(--spx-font-body);
+    box-sizing: border-box;
+  }
+  #shopify-section-{{ section.id }} *,
+  #shopify-section-{{ section.id }} *::before,
+  #shopify-section-{{ section.id }} *::after { box-sizing: border-box; }
+  #shopify-section-{{ section.id }} .sa-p {
+    max-width: 1480px;
+    margin: 0 auto;
+    padding: 60px clamp(20px, 4vw, 56px);
+  }
+  #shopify-section-{{ section.id }} .sa-p-head {
+    text-align: center;
+    margin: 0 0 40px;
+  }
+  #shopify-section-{{ section.id }} .sa-p-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #6b6b6b;
+    margin: 0 0 12px;
+    line-height: 1;
+  }
+  #shopify-section-{{ section.id }} .sa-p-eyebrow::before,
+  #shopify-section-{{ section.id }} .sa-p-eyebrow::after { content: ''; width: 20px; height: 1px; background: #6b6b6b; }
+  #shopify-section-{{ section.id }} .sa-p-title {
+    font-family: var(--spx-font-display);
+    font-weight: 500;
+    font-size: clamp(28px, 3vw, 40px);
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+    color: #0a0a0a;
+    margin: 0;
+    font-variation-settings: "WONK" 0, "SOFT" 30, "opsz" 144;
+  }
+  #shopify-section-{{ section.id }} .sa-p-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  #shopify-section-{{ section.id }} .sa-pair {
+    --c1: #0099d6;
+    --c2: #5a7c44;
+    background: #fbf8f2;
+    border: 1px solid rgba(10,10,10,0.08);
+    border-radius: 12px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  #shopify-section-{{ section.id }} .sa-pair-media {
+    position: relative;
+    aspect-ratio: 5/3;
+    border-radius: 10px;
+    overflow: hidden;
+    background: linear-gradient(135deg, color-mix(in srgb, var(--c1) 22%, transparent) 0%, color-mix(in srgb, var(--c2) 22%, transparent) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  #shopify-section-{{ section.id }} .sa-pair-jars {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  #shopify-section-{{ section.id }} .sa-pair-jar {
+    position: relative;
+    height: 84%;
+    width: auto;
+    object-fit: contain;
+    transition: transform 0.4s ease;
+  }
+  #shopify-section-{{ section.id }} .sa-pair-jar--1 { transform: translateX(20%) rotate(-4deg); z-index: 1; }
+  #shopify-section-{{ section.id }} .sa-pair-jar--2 { transform: translateX(-20%) rotate(4deg); z-index: 2; }
+  #shopify-section-{{ section.id }} .sa-pair:hover .sa-pair-jar--1 { transform: translateX(24%) rotate(-6deg); }
+  #shopify-section-{{ section.id }} .sa-pair:hover .sa-pair-jar--2 { transform: translateX(-24%) rotate(6deg); }
+  #shopify-section-{{ section.id }} .sa-pair-eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #6b6b6b;
+    margin: 0;
+    line-height: 1;
+  }
+  #shopify-section-{{ section.id }} .sa-pair-title {
+    font-family: var(--spx-font-display);
+    font-weight: 600;
+    font-size: 20px;
+    color: #0a0a0a;
+    margin: 4px 0 0;
+    letter-spacing: -0.015em;
+    line-height: 1.2;
+    font-variation-settings: "WONK" 0, "SOFT" 30, "opsz" 144;
+  }
+  #shopify-section-{{ section.id }} .sa-pair-desc {
+    font-family: var(--spx-font-body);
+    font-style: italic;
+    font-size: 13.5px;
+    color: #555;
+    margin: 4px 0 0;
+    line-height: 1.55;
+  }
+  #shopify-section-{{ section.id }} .sa-pair-foot {
+    margin-top: auto;
+    padding-top: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    border-top: 1px solid rgba(10,10,10,0.08);
+  }
+  #shopify-section-{{ section.id }} .sa-pair-price {
+    font-family: var(--spx-font-display);
+    font-weight: 600;
+    font-size: 18px;
+    color: #0a0a0a;
+    letter-spacing: -0.015em;
+  }
+  #shopify-section-{{ section.id }} .sa-pair-add {
+    background: transparent;
+    color: #0a0a0a;
+    border: 1.5px solid #0a0a0a;
+    padding: 9px 16px;
+    border-radius: 100px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    cursor: pointer;
+    line-height: 1;
+    transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    min-width: 110px;
+    text-align: center;
+  }
+  #shopify-section-{{ section.id }} .sa-pair-add:hover {
+    background: #0099d6;
+    color: #ffffff;
+    border-color: #0099d6;
+  }
+  #shopify-section-{{ section.id }} .sa-pair-add:disabled { opacity: 0.6; cursor: wait; }
+  #shopify-section-{{ section.id }} .sa-pair-add.is-added { background: #2a7a3a; color: #ffffff; border-color: #2a7a3a; }
+  @media (max-width: 900px) {
+    #shopify-section-{{ section.id }} .sa-p-grid { grid-template-columns: 1fr; }
+  }
+{% endstyle %}
+
+<section class="sa-p">
+  <header class="sa-p-head">
+    {%- if section.settings.eyebrow != blank -%}<p class="sa-p-eyebrow">{{ section.settings.eyebrow | escape }}</p>{%- endif -%}
+    {%- if section.settings.headline != blank -%}<h2 class="sa-p-title">{{ section.settings.headline | escape }}</h2>{%- endif -%}
+  </header>
+  <div class="sa-p-grid">
+    {%- for block in section.blocks -%}
+      {%- assign p1 = block.settings.product_1 -%}
+      {%- assign p2 = block.settings.product_2 -%}
+      {%- assign v1 = p1.selected_or_first_available_variant.id -%}
+      {%- assign v2 = p2.selected_or_first_available_variant.id -%}
+      {%- assign img1 = block.settings.image_1 -%}
+      {%- if img1 == blank and p1 != blank -%}{%- assign img1 = p1.featured_image -%}{%- endif -%}
+      {%- assign img2 = block.settings.image_2 -%}
+      {%- if img2 == blank and p2 != blank -%}{%- assign img2 = p2.featured_image -%}{%- endif -%}
+      {%- assign combined_display = block.settings.combined_price -%}
+      {%- if combined_display == blank and p1 != blank and p2 != blank -%}
+        {%- assign combo = p1.price | plus: p2.price -%}
+        {%- assign combined_display = combo | money -%}
+      {%- endif -%}
+      <article class="sa-pair" style="--c1: {{ block.settings.accent_1 | default: '#0099d6' }}; --c2: {{ block.settings.accent_2 | default: '#5a7c44' }};" {{ block.shopify_attributes }}>
+        <div class="sa-pair-media">
+          <div class="sa-pair-jars">
+            {%- if block.settings.image_1 == blank and p1 != blank -%}
+              {%- render 'spx2-jar', p: p1, alt: '', cls: 'sa-pair-jar sa-pair-jar--1', size: 400, sizes: '160px' -%}
+            {%- elsif img1 != blank -%}
+              <img class="sa-pair-jar sa-pair-jar--1" src="{{ img1 | image_url: width: 400 }}" alt="" loading="lazy">
+            {%- endif -%}
+            {%- if block.settings.image_2 == blank and p2 != blank -%}
+              {%- render 'spx2-jar', p: p2, alt: '', cls: 'sa-pair-jar sa-pair-jar--2', size: 400, sizes: '160px' -%}
+            {%- elsif img2 != blank -%}
+              <img class="sa-pair-jar sa-pair-jar--2" src="{{ img2 | image_url: width: 400 }}" alt="" loading="lazy">
+            {%- endif -%}
+          </div>
+        </div>
+        {%- if block.settings.label != blank -%}<p class="sa-pair-eyebrow">{{ block.settings.label | escape }}</p>{%- endif -%}
+        <h3 class="sa-pair-title">{{ block.settings.name | default: 'Pairing' | escape }}</h3>
+        {%- if block.settings.description != blank -%}<p class="sa-pair-desc">{{ block.settings.description | escape }}</p>{%- endif -%}
+        <div class="sa-pair-foot">
+          <span class="sa-pair-price">{{ combined_display | default: '·' }}</span>
+          <button type="button" class="sa-pair-add" data-sa-pair-add data-variants="{% if v1 != blank %}{{ v1 }}{% endif %}{% if v2 != blank %},{{ v2 }}{% endif %}" {% if v1 == blank or v2 == blank %}disabled aria-disabled="true"{% endif %} aria-label="Add {{ block.settings.name | escape }} to cart">
+            <span class="sa-pair-add-default">Add Both</span>
+            <span class="sa-pair-add-loading" style="display:none">Adding…</span>
+            <span class="sa-pair-add-added" style="display:none">Added ✓</span>
+          </button>
+        </div>
+      </article>
+    {%- endfor -%}
+  </div>
+</section>
+
+<script>
+  (function() {
+    var section = document.getElementById('shopify-section-{{ section.id }}');
+    if (!section) return;
+    section.querySelectorAll('[data-sa-pair-add]').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var ids = btn.getAttribute('data-variants') || '';
+        var arr = ids.split(',').filter(Boolean);
+        if (!arr.length || btn.disabled) return;
+        var defaultEl = btn.querySelector('.sa-pair-add-default');
+        var loadingEl = btn.querySelector('.sa-pair-add-loading');
+        var addedEl = btn.querySelector('.sa-pair-add-added');
+        btn.disabled = true;
+        if (defaultEl) defaultEl.style.display = 'none';
+        if (loadingEl) loadingEl.style.display = 'inline-block';
+        if (addedEl) addedEl.style.display = 'none';
+        var items = arr.map(function(v) { return { id: parseInt(v, 10), quantity: 1 }; });
+        fetch('/cart/add.js', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ items: items }) })
+          .then(function(r) { if (!r.ok) throw new Error('add failed'); return r.json(); })
+          .then(function() { return fetch('/cart.js'); })
+          .then(function(r) { return r.json(); })
+          .then(function(cart) {
+            window.dispatchEvent(new CustomEvent('cart:updated', { detail: cart }));
+            if (loadingEl) loadingEl.style.display = 'none';
+            if (addedEl) addedEl.style.display = 'inline-block';
+            btn.classList.add('is-added');
+            setTimeout(function() {
+              btn.classList.remove('is-added');
+              if (addedEl) addedEl.style.display = 'none';
+              if (defaultEl) defaultEl.style.display = 'inline-block';
+              btn.disabled = false;
+            }, 1800);
+          })
+          .catch(function(e) {
+            console.error(e);
+            if (loadingEl) loadingEl.style.display = 'none';
+            if (defaultEl) defaultEl.style.display = 'inline-block';
+            btn.disabled = false;
+          });
+      });
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Shop All · Pairings",
+  "max_blocks": 6,
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Pairs Well" },
+    { "type": "text", "id": "headline", "label": "Headline", "default": "Stack the flavor." },
+    { "type": "color", "id": "bg_color", "label": "Background", "default": "#f7f3ec" }
+  ],
+  "blocks": [
+    {
+      "type": "pair",
+      "name": "Pairing",
+      "settings": [
+        { "type": "text", "id": "label", "label": "Label (eyebrow)", "default": "THE STARTER" },
+        { "type": "text", "id": "name", "label": "Pairing name", "default": "Daily Blend + Bella Blend" },
+        { "type": "textarea", "id": "description", "label": "Description", "default": "The easiest way to upgrade weeknight dinners and pasta nights at the same time." },
+        { "type": "product", "id": "product_1", "label": "Product 1" },
+        { "type": "image_picker", "id": "image_1", "label": "Image 1 override" },
+        { "type": "color", "id": "accent_1", "label": "Accent 1", "default": "#0099d6" },
+        { "type": "product", "id": "product_2", "label": "Product 2" },
+        { "type": "image_picker", "id": "image_2", "label": "Image 2 override" },
+        { "type": "color", "id": "accent_2", "label": "Accent 2", "default": "#5a7c44" },
+        { "type": "text", "id": "combined_price", "label": "Combined price display (optional)", "info": "Falls back to sum of both products' prices." }
+      ]
+    }
+  ],
+  "presets": [{ "name": "Shop All · Pairings", "category": "Shop All" }]
+}
+{% endschema %}

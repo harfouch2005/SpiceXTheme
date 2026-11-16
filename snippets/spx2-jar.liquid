@@ -1,0 +1,9 @@
+{%- comment -%}
+  Jar image for cards and tiles on flavor colors. Uses the product's rendering
+  (first product image) so every tile is uniform.
+  Usage: {% render 'spx2-jar', p: product, alt: '', cls: '', size: 600 %}
+{%- endcomment -%}
+{%- assign jar_size = size | default: 600 -%}
+{%- if p.featured_image -%}
+  {{ p.featured_image | image_url: width: jar_size | image_tag: loading: 'lazy', alt: alt, class: cls, sizes: sizes }}
+{%- endif -%}

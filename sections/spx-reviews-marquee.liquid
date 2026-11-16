@@ -1,0 +1,273 @@
+{%- comment -%}
+  SpiceX Reviews Marquee · thin banner with reviews scrolling right-to-left
+  - Manual review blocks OR Loox @app block
+  - CSS marquee with duplicated content for seamless loop
+  - Pauses on hover
+  - Respects prefers-reduced-motion (becomes static row)
+  - All CSS scoped under #shopify-section-{{ section.id }}
+{%- endcomment -%}
+
+{%- liquid
+  assign speed = section.settings.scroll_speed | default: 55
+  assign block_count = section.blocks.size
+-%}
+
+{% style %}
+  #shopify-section-{{ section.id }} {
+    position: relative;
+    width: 100%;
+    background: {{ section.settings.background_color }};
+    color: {{ section.settings.text_color }};
+    font-family: var(--spx-font-body, 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif);
+    overflow: hidden;
+    box-sizing: border-box;
+    border-top: 1px solid {{ section.settings.divider_color | default: 'rgba(255,255,255,0.08)' }};
+    border-bottom: 1px solid {{ section.settings.divider_color | default: 'rgba(255,255,255,0.08)' }};
+  }
+  #shopify-section-{{ section.id }} *,
+  #shopify-section-{{ section.id }} *::before,
+  #shopify-section-{{ section.id }} *::after { box-sizing: border-box; }
+
+  #shopify-section-{{ section.id }} .spx-rev {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+  }
+  #shopify-section-{{ section.id }} .spx-rev__viewport {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    padding: 18px 0;
+  }
+
+  #shopify-section-{{ section.id }} .spx-rev__track {
+    display: flex;
+    width: max-content;
+    align-items: center;
+    animation: spx-rev-scroll-{{ section.id }} {{ speed }}s linear infinite;
+    will-change: transform;
+  }
+  #shopify-section-{{ section.id }} .spx-rev__viewport:hover .spx-rev__track {
+    animation-play-state: paused;
+  }
+
+  #shopify-section-{{ section.id }} .spx-rev__list {
+    display: flex;
+    align-items: center;
+    gap: clamp(28px, 4vw, 56px);
+    list-style: none;
+    margin: 0;
+    padding: 0 clamp(28px, 4vw, 56px) 0 0;
+    flex-shrink: 0;
+  }
+
+  #shopify-section-{{ section.id }} .spx-rev__item {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    white-space: nowrap;
+    line-height: 1.3;
+  }
+
+  #shopify-section-{{ section.id }} .spx-rev__stars {
+    color: {{ section.settings.stars_color }};
+    font-size: 15px;
+    letter-spacing: 0.05em;
+    line-height: 1;
+    flex: 0 0 auto;
+  }
+
+  #shopify-section-{{ section.id }} .spx-rev__quote {
+    font-family: var(--spx-font-display);
+    font-size: 15px;
+    font-weight: 500;
+    font-style: italic;
+    color: inherit;
+    letter-spacing: -0.005em;
+    font-variation-settings: "WONK" 0, "SOFT" 40;
+  }
+
+  #shopify-section-{{ section.id }} .spx-rev__author {
+    font-family: var(--spx-font-body);
+    font-size: 12px;
+    font-weight: 700;
+    color: inherit;
+    opacity: 0.7;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  #shopify-section-{{ section.id }} .spx-rev__dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: currentColor;
+    opacity: 0.35;
+    display: inline-block;
+    flex: 0 0 auto;
+  }
+
+  /* App-block container (Loox) */
+  #shopify-section-{{ section.id }} .spx-rev__item--app {
+    color: inherit;
+  }
+  #shopify-section-{{ section.id }} .spx-rev__item--app > * {
+    color: inherit !important;
+  }
+
+  @keyframes spx-rev-scroll-{{ section.id }} {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  @media (max-width: 600px) {
+    #shopify-section-{{ section.id }} .spx-rev__viewport { padding: 14px 0; }
+    #shopify-section-{{ section.id }} .spx-rev__quote { font-size: 13px; }
+    #shopify-section-{{ section.id }} .spx-rev__author { font-size: 10.5px; letter-spacing: 0.06em; }
+    #shopify-section-{{ section.id }} .spx-rev__stars { font-size: 13px; }
+    #shopify-section-{{ section.id }} .spx-rev__item { gap: 10px; }
+    #shopify-section-{{ section.id }} .spx-rev__list { gap: clamp(20px, 4vw, 40px); padding-right: clamp(20px, 4vw, 40px); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #shopify-section-{{ section.id }} .spx-rev__track {
+      animation: none;
+      width: 100%;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    #shopify-section-{{ section.id }} .spx-rev__list--duplicate {
+      display: none;
+    }
+  }
+{% endstyle %}
+
+{%- if block_count > 0 -%}
+  <section class="spx-rev" role="region" aria-label="Customer reviews">
+    <div class="spx-rev__viewport">
+      <div class="spx-rev__track" data-spx-rev-track>
+        {%- for repeat in (1..2) -%}
+          <ul class="spx-rev__list{% if forloop.last %} spx-rev__list--duplicate{% endif %}" {% if forloop.last %}aria-hidden="true"{% endif %}>
+            {%- for block in section.blocks -%}
+              {%- if block.type == 'review' -%}
+                {%- assign rating = block.settings.rating | default: 5 -%}
+                <li class="spx-rev__item" {{ block.shopify_attributes }}>
+                  <span class="spx-rev__stars" aria-label="{{ rating }} out of 5">
+                    {%- for i in (1..5) -%}{%- if i <= rating -%}★{%- else -%}☆{%- endif -%}{%- endfor -%}
+                  </span>
+                  {%- if block.settings.quote != blank -%}
+                    <span class="spx-rev__quote">"{{ block.settings.quote | escape }}"</span>
+                  {%- endif -%}
+                  {%- if block.settings.author != blank -%}
+                    <span class="spx-rev__author">{{ block.settings.author | escape }}</span>
+                  {%- endif -%}
+                  <span class="spx-rev__dot" aria-hidden="true"></span>
+                </li>
+              {%- elsif block.type == '@app' -%}
+                <li class="spx-rev__item spx-rev__item--app" {{ block.shopify_attributes }}>
+                  {% render block %}
+                  <span class="spx-rev__dot" aria-hidden="true"></span>
+                </li>
+              {%- endif -%}
+            {%- endfor -%}
+          </ul>
+        {%- endfor -%}
+      </div>
+    </div>
+  </section>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Reviews marquee",
+  "class": "spx-rev-section",
+  "max_blocks": 24,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Thin scrolling banner of customer reviews. Add Review blocks below, or add a Loox app block (e.g. reviews carousel) for live data."
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#0a0a0a"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "stars_color",
+      "label": "Stars color",
+      "default": "#e8a823"
+    },
+    {
+      "type": "color",
+      "id": "divider_color",
+      "label": "Top/bottom hairline color",
+      "default": "#1f1f1f"
+    },
+    {
+      "type": "header",
+      "content": "Behavior"
+    },
+    {
+      "type": "range",
+      "id": "scroll_speed",
+      "label": "Scroll duration",
+      "info": "Seconds for one full loop. Lower = faster scroll.",
+      "min": 25,
+      "max": 120,
+      "step": 5,
+      "default": 55,
+      "unit": "s"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "@app"
+    },
+    {
+      "type": "review",
+      "name": "Review",
+      "settings": [
+        {
+          "type": "range",
+          "id": "rating",
+          "label": "Rating",
+          "min": 1,
+          "max": 5,
+          "step": 1,
+          "default": 5
+        },
+        {
+          "type": "text",
+          "id": "quote",
+          "label": "Quote",
+          "default": "Best clean ingredients I've ever bought."
+        },
+        {
+          "type": "text",
+          "id": "author",
+          "label": "Author",
+          "default": "Sarah K."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Reviews marquee",
+      "category": "Social proof"
+    }
+  ]
+}
+{% endschema %}

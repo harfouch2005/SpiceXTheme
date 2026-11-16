@@ -1,0 +1,47 @@
+{%- assign nut = section.settings.nut_image -%}
+<section class="s2-label" id="s2-label">
+  <div class="s2-label__card" style="--bg:{{ section.settings.bg }};--fg:{{ section.settings.fg }}">
+    <div>
+      <div class="s2-label__head">
+        {%- render 'spx2-jar', p: product, alt: '', size: 300, sizes: '90px' -%}
+        <h2 class="s2-label__name">{{ section.settings.heading | replace: '[product]', product.title }}</h2>
+      </div>
+      {%- assign keys = section.settings.keys | newline_to_br | split: '<br />' -%}
+      <ul class="s2-label__keys">
+        {%- for k in keys -%}{%- assign kk = k | strip -%}{%- if kk != blank -%}<li>{{ kk }}</li>{%- endif -%}{%- endfor -%}
+      </ul>
+      {%- if section.settings.facts != blank -%}<div class="s2-label__facts">{{ section.settings.facts }}</div>{%- endif -%}
+      <div class="s2-label__nums">
+        <div class="s2-label__num"><b>{{ section.settings.num_1 }}</b><span>{{ section.settings.num_1_label }}</span></div>
+        <div class="s2-label__num"><b>{{ section.settings.num_2 }}</b><span>{{ section.settings.num_2_label }}</span></div>
+      </div>
+    </div>
+    <div class="s2-label__right">
+      {%- capture nut_alt -%}{{ section.settings.nut_alt }}. {{ section.settings.ing_label }} {{ section.settings.ingredients }}{%- endcapture -%}
+      {%- if nut != blank -%}{{ nut | image_url: width: 700 | image_tag: loading: 'lazy', alt: nut_alt }}{%- endif -%}
+      {%- if nut == blank -%}<p class="s2-label__ing"><strong>{{ section.settings.ing_label }}</strong> {{ section.settings.ingredients }}</p>{%- endif -%}
+      {%- if section.settings.note != blank -%}<p class="s2-label__note">{{ section.settings.note }}</p>{%- endif -%}
+    </div>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "S2 Label card",
+  "settings": [
+    { "type": "color", "id": "bg", "label": "Blend color", "default": "#4D5057" },
+    { "type": "color", "id": "fg", "label": "Text color", "default": "#FFFFFF" },
+    { "type": "text", "id": "heading", "label": "Heading ([product] inserts the name)", "default": "What's in [product]" },
+    { "type": "textarea", "id": "keys", "label": "Lead ingredients, one per line" },
+    { "type": "richtext", "id": "facts", "label": "Heat and uses" },
+    { "type": "text", "id": "num_1", "label": "Number 1" },
+    { "type": "text", "id": "num_1_label", "label": "Number 1 label", "default": "Servings per jar" },
+    { "type": "text", "id": "num_2", "label": "Number 2" },
+    { "type": "text", "id": "num_2_label", "label": "Number 2 label", "default": "Ingredients, all named" },
+    { "type": "image_picker", "id": "nut_image", "label": "Nutrition panel, cropped" },
+    { "type": "text", "id": "nut_alt", "label": "Nutrition image description", "default": "Nutrition facts panel" },
+    { "type": "text", "id": "ing_label", "label": "Ingredients label", "default": "Ingredients:" },
+    { "type": "textarea", "id": "ingredients", "label": "Full ingredient list (from the label)" },
+    { "type": "text", "id": "note", "label": "Small note", "default": "No MSG. No silicon dioxide." }
+  ]
+}
+{% endschema %}

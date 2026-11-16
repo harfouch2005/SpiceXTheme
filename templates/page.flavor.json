@@ -1,0 +1,308 @@
+{
+  "sections": {
+    "hero": {
+      "type": "spx2-hero",
+      "settings": {
+        "rating": "4.9 from 132 reviews",
+        "heading": "Same dinner,",
+        "heading_accent": "six new flavors.",
+        "subheading": "Taco night, honey BBQ, cajun and Italian from the chicken, rice and vegetables you already cook. Change the jar and dinner tastes new.",
+        "button_label": "Build your box",
+        "button_link": "shopify://pages/build-your-bundle",
+        "link_label": "Shop all six",
+        "link_url": "shopify://pages/shop-all",
+        "image": "shopify://shop_images/spx-hero-flavor.jpg"
+      }
+    },
+    "ticker": {
+      "type": "spx2-ticker",
+      "blocks": {
+        "t1": {
+          "type": "item",
+          "settings": {
+            "text": "Free shipping on 2 or more jars"
+          }
+        },
+        "t2": {
+          "type": "item",
+          "settings": {
+            "text": "No MSG, no fillers"
+          }
+        },
+        "t3": {
+          "type": "item",
+          "settings": {
+            "text": "120+ servings in every jar"
+          }
+        },
+        "t4": {
+          "type": "item",
+          "settings": {
+            "text": "4.9 stars from 132 reviews"
+          }
+        },
+        "t5": {
+          "type": "item",
+          "settings": {
+            "text": "All six flavors, $12.95 off, ships free",
+            "link": "shopify://products/bundle-save"
+          }
+        }
+      },
+      "block_order": [
+        "t1",
+        "t2",
+        "t3",
+        "t4",
+        "t5"
+      ],
+      "settings": {}
+    },
+    "steps": {
+      "type": "spx2-steps",
+      "blocks": {
+        "s1": {
+          "type": "step",
+          "settings": {
+            "title": "Taco Blast",
+            "text": "Chili, cumin and lime for taco night."
+          }
+        },
+        "s2": {
+          "type": "step",
+          "settings": {
+            "title": "Golden Hive",
+            "text": "Sweet and smoky honey BBQ for wings, ribs and chicken thighs."
+          }
+        },
+        "s3": {
+          "type": "step",
+          "settings": {
+            "title": "Oh' Cajun",
+            "text": "Smoked paprika and four peppers for shrimp, chicken and fish."
+          }
+        }
+      },
+      "block_order": [
+        "s1",
+        "s2",
+        "s3"
+      ],
+      "settings": {
+        "heading": "A different flavor every night of the week.",
+        "subheading": "Each blend is built around a dinner you already know.",
+        "image": "shopify://shop_images/spx-dish-tacos.jpg",
+        "button_label": "Build your box",
+        "button_link": "shopify://pages/build-your-bundle"
+      }
+    },
+    "packs": {
+      "type": "spx2-packs",
+      "blocks": {
+        "p0": {
+          "type": "pack",
+          "settings": {
+            "title": "Build your own box",
+            "blurb": "Pick any jars you want. Save $5 on 3, $6 on 4, $7 on 5 and $12.95 on 6.",
+            "products": [
+              "taco-blast",
+              "daily-blend",
+              "golden-hive",
+              "bella-blend",
+              "oh-cajun",
+              "sweet-sriracha"
+            ],
+            "note": "2 or more jars ship free",
+            "button_label": "Build your box",
+            "link": "shopify://pages/build-your-bundle",
+            "badge": "Save up to $12.95",
+            "featured": true,
+            "pick": true
+          }
+        },
+        "p1": {
+          "type": "pack",
+          "settings": {
+            "title": "Sweet Heat Trio",
+            "blurb": "Wings, ribs, and shrimp. The weekend set.",
+            "products": [
+              "sweet-sriracha",
+              "golden-hive",
+              "oh-cajun"
+            ],
+            "note": "Save $5 on any 3 jars",
+            "button_label": "Add the trio"
+          }
+        },
+        "p2": {
+          "type": "pack",
+          "settings": {
+            "title": "The Full Six",
+            "blurb": "A different dinner every night. $12.95 less than buying them one by one.",
+            "products": [
+              "daily-blend",
+              "taco-blast",
+              "sweet-sriracha",
+              "golden-hive",
+              "bella-blend",
+              "oh-cajun"
+            ],
+            "cart_product": "bundle-save",
+            "note": "Ships free",
+            "button_label": "Add all six"
+          }
+        }
+      },
+      "block_order": [
+        "p0",
+        "p1",
+        "p2"
+      ],
+      "settings": {
+        "heading": "Pick your flavors.",
+        "subheading": "Build your own box, or pick a set and add it in one tap.",
+        "more_label": "",
+        "more_link": "shopify://pages/build-your-bundle",
+        "busy_label": "Adding",
+        "fail_label": "Try again"
+      }
+    },
+    "flavors": {
+      "type": "spx2-flavors",
+      "blocks": {
+        "f1": {
+          "type": "flavor",
+          "settings": {
+            "product": "daily-blend",
+            "descriptor": "Salt, Pepper & Garlic",
+            "tagline": "Simple and versatile for a flavorful punch.",
+            "bg": "#4D5057",
+            "fg": "#FFFFFF"
+          }
+        },
+        "f2": {
+          "type": "flavor",
+          "settings": {
+            "product": "taco-blast",
+            "descriptor": "Mild Taco Seasoning",
+            "tagline": "Bold and robust, Mexican-inspired flavor.",
+            "bg": "#D4302C",
+            "fg": "#FFFFFF"
+          }
+        },
+        "f3": {
+          "type": "flavor",
+          "settings": {
+            "product": "sweet-sriracha",
+            "descriptor": "Honey Sriracha Seasoning",
+            "tagline": "A perfect blend of sweet and heat.",
+            "bg": "#F47A3F",
+            "fg": "#1F0F05"
+          }
+        },
+        "f4": {
+          "type": "flavor",
+          "settings": {
+            "product": "golden-hive",
+            "descriptor": "Honey BBQ Seasoning",
+            "tagline": "Sweet and smoky with a whole lot of tang.",
+            "bg": "#F7B32B",
+            "fg": "#1F1503"
+          }
+        },
+        "f5": {
+          "type": "flavor",
+          "settings": {
+            "product": "bella-blend",
+            "descriptor": "Italian Seasoning",
+            "tagline": "Savory and earthy with a hint of garlic.",
+            "bg": "#2F6B34",
+            "fg": "#FFFFFF"
+          }
+        },
+        "f6": {
+          "type": "flavor",
+          "settings": {
+            "product": "oh-cajun",
+            "descriptor": "Cajun Seasoning",
+            "tagline": "Deeply smoky and savory with a touch of heat.",
+            "bg": "#8C2F26",
+            "fg": "#FFFFFF"
+          }
+        }
+      },
+      "block_order": [
+        "f1",
+        "f2",
+        "f3",
+        "f4",
+        "f5",
+        "f6"
+      ],
+      "settings": {
+        "heading": "You will forget you are eating healthy.",
+        "subheading": "Add one, or build a box of all six and save $12.95.",
+        "add_label": "Add",
+        "soldout_label": "Sold out"
+      }
+    },
+    "sticky": {
+      "type": "spx2-sticky",
+      "settings": {
+        "note": "Save up to $12.95",
+        "button_label": "Build your box",
+        "button_link": "shopify://pages/build-your-bundle"
+      }
+    },
+    "recipes": {
+      "type": "spx2-recipes",
+      "settings": {
+        "heading": "Recipes with big flavor.",
+        "subheading": "Wings, blackened chicken and more from the SpiceX cookbook.",
+        "more_label": "See all recipes",
+        "more_link": "shopify://blogs/recipes"
+      },
+      "blocks": {
+        "r0": {
+          "type": "recipe",
+          "settings": {
+            "article": "recipes/golden-hive-honey-bbq-wings"
+          }
+        },
+        "r1": {
+          "type": "recipe",
+          "settings": {
+            "article": "recipes/cajun-blackened-chicken-with-cream-sauce"
+          }
+        },
+        "r2": {
+          "type": "recipe",
+          "settings": {
+            "article": "recipes/korean-beef-lettuce-wraps-with-peanut-sauce"
+          }
+        },
+        "r3": {
+          "type": "recipe",
+          "settings": {
+            "article": "recipes/bang-bang-chicken-fries"
+          }
+        }
+      },
+      "block_order": [
+        "r0",
+        "r1",
+        "r2",
+        "r3"
+      ]
+    }
+  },
+  "order": [
+    "hero",
+    "ticker",
+    "steps",
+    "packs",
+    "recipes",
+    "flavors",
+    "sticky"
+  ]
+}

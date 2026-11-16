@@ -1,0 +1,16 @@
+<section class="s2-sec s2-pagehead" style="padding-bottom:8px">
+  <div class="s2-head" style="margin-bottom:0">
+    <h1 class="s2-h">{{ section.settings.heading }}</h1>
+    {%- if section.settings.subheading != blank -%}<p class="s2-sub">{{ section.settings.subheading }}</p>{%- endif -%}
+  </div>
+</section>
+{% schema %}
+{
+  "name": "S2 Page heading",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "About SpiceX" },
+    { "type": "text", "id": "subheading", "label": "Subheading" }
+  ],
+  "presets": [{ "name": "S2 Page heading" }]
+}
+{% endschema %}

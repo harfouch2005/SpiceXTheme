@@ -1,0 +1,262 @@
+{%- comment -%}
+  Shop All · Buying-decisions FAQ with sticky sidebar (2-column on desktop)
+{%- endcomment -%}
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+
+{% style %}
+  #shopify-section-{{ section.id }} {
+    background: {{ section.settings.bg_color | default: '#f7f3ec' }};
+    color: #0a0a0a;
+    font-family: var(--spx-font-body);
+    box-sizing: border-box;
+  }
+  #shopify-section-{{ section.id }} *,
+  #shopify-section-{{ section.id }} *::before,
+  #shopify-section-{{ section.id }} *::after { box-sizing: border-box; }
+  #shopify-section-{{ section.id }} .sa-faq {
+    max-width: 1480px;
+    margin: 0 auto;
+    padding: 80px clamp(20px, 4vw, 56px);
+    display: grid;
+    grid-template-columns: 2fr 3fr;
+    gap: clamp(32px, 5vw, 80px);
+    align-items: start;
+  }
+  #shopify-section-{{ section.id }} .sa-faq-side {
+    position: sticky;
+    top: 88px;
+  }
+  #shopify-section-{{ section.id }} .sa-faq-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #6b6b6b;
+    margin: 0 0 14px;
+    line-height: 1;
+  }
+  #shopify-section-{{ section.id }} .sa-faq-eyebrow::before { content: ''; width: 22px; height: 1px; background: #6b6b6b; }
+  #shopify-section-{{ section.id }} .sa-faq-title {
+    font-family: var(--spx-font-display);
+    font-weight: 500;
+    font-size: clamp(28px, 3vw, 36px);
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+    color: #0a0a0a;
+    margin: 0 0 14px;
+    font-variation-settings: "WONK" 0, "SOFT" 30, "opsz" 144;
+  }
+  #shopify-section-{{ section.id }} .sa-faq-sub {
+    font-family: var(--spx-font-display);
+    font-style: italic;
+    font-size: 16px;
+    color: #6b6b6b;
+    margin: 0 0 28px;
+    line-height: 1.5;
+  }
+  #shopify-section-{{ section.id }} .sa-faq-card {
+    background: #fbf8f2;
+    border: 1px solid rgba(10,10,10,0.08);
+    border-radius: 12px;
+    padding: 22px 22px 24px;
+  }
+  #shopify-section-{{ section.id }} .sa-faq-card-eyebrow {
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.20em;
+    text-transform: uppercase;
+    color: {{ section.settings.accent_color | default: '#0099d6' }};
+    margin: 0 0 10px;
+    line-height: 1;
+  }
+  #shopify-section-{{ section.id }} .sa-faq-card-body {
+    font-size: 14px;
+    color: #555;
+    margin: 0 0 16px;
+    line-height: 1.55;
+  }
+  #shopify-section-{{ section.id }} .sa-faq-card-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #0a0a0a;
+    text-decoration: none;
+    border-bottom: 1.5px solid currentColor;
+    padding-bottom: 2px;
+    transition: color 0.2s ease;
+  }
+  #shopify-section-{{ section.id }} .sa-faq-card-cta:hover { color: {{ section.settings.accent_color | default: '#0099d6' }}; }
+
+  #shopify-section-{{ section.id }} .sa-faq-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid rgba(10,10,10,0.10);
+  }
+  #shopify-section-{{ section.id }} .sa-faq-item {
+    border-bottom: 1px solid rgba(10,10,10,0.10);
+  }
+  #shopify-section-{{ section.id }} .sa-faq-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    width: 100%;
+    padding: 22px 4px;
+    background: none;
+    border: 0;
+    cursor: pointer;
+    text-align: left;
+    color: #0a0a0a;
+    font-family: var(--spx-font-display);
+    font-weight: 500;
+    font-size: clamp(17px, 1.8vw, 20px);
+    line-height: 1.3;
+    letter-spacing: -0.015em;
+    font-variation-settings: "WONK" 0, "SOFT" 30, "opsz" 144;
+    transition: color 0.2s ease;
+  }
+  #shopify-section-{{ section.id }} .sa-faq-toggle:hover { color: {{ section.settings.accent_color | default: '#0099d6' }}; }
+  #shopify-section-{{ section.id }} .sa-faq-icon {
+    flex: 0 0 auto;
+    width: 32px;
+    height: 32px;
+    border: 1.5px solid #0a0a0a;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.35s ease, background 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+    color: #0a0a0a;
+  }
+  #shopify-section-{{ section.id }} .sa-faq-item.is-open .sa-faq-icon {
+    transform: rotate(45deg);
+    background: {{ section.settings.accent_color | default: '#0099d6' }};
+    border-color: {{ section.settings.accent_color | default: '#0099d6' }};
+    color: #ffffff;
+  }
+  #shopify-section-{{ section.id }} .sa-faq-icon svg { width: 12px; height: 12px; display: block; }
+  #shopify-section-{{ section.id }} .sa-faq-content {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  #shopify-section-{{ section.id }} .sa-faq-item.is-open .sa-faq-content { grid-template-rows: 1fr; }
+  #shopify-section-{{ section.id }} .sa-faq-content-inner { overflow: hidden; min-height: 0; }
+  #shopify-section-{{ section.id }} .sa-faq-answer {
+    font-size: 15px;
+    line-height: 1.65;
+    color: #555;
+    margin: 0;
+    padding: 0 56px 24px 4px;
+    max-width: 720px;
+  }
+  @media (max-width: 900px) {
+    #shopify-section-{{ section.id }} .sa-faq {
+      grid-template-columns: 1fr;
+      gap: 32px;
+    }
+    #shopify-section-{{ section.id }} .sa-faq-side { position: static; }
+  }
+  @media (max-width: 640px) {
+    #shopify-section-{{ section.id }} .sa-faq { padding: 56px 20px; }
+    #shopify-section-{{ section.id }} .sa-faq-toggle { font-size: 16px; padding: 18px 0; }
+    #shopify-section-{{ section.id }} .sa-faq-icon { width: 28px; height: 28px; }
+    #shopify-section-{{ section.id }} .sa-faq-answer { padding-right: 8px; font-size: 14px; }
+  }
+{% endstyle %}
+
+<section class="sa-faq">
+  <aside class="sa-faq-side">
+    {%- if section.settings.eyebrow != blank -%}<p class="sa-faq-eyebrow">{{ section.settings.eyebrow | escape }}</p>{%- endif -%}
+    <h2 class="sa-faq-title">{{ section.settings.headline | default: 'Common questions.' | escape }}</h2>
+    {%- if section.settings.sub != blank -%}<p class="sa-faq-sub">{{ section.settings.sub | escape }}</p>{%- endif -%}
+    {%- if section.settings.card_body != blank -%}
+      <div class="sa-faq-card">
+        {%- if section.settings.card_eyebrow != blank -%}<p class="sa-faq-card-eyebrow">{{ section.settings.card_eyebrow | escape }}</p>{%- endif -%}
+        <p class="sa-faq-card-body">{{ section.settings.card_body | escape }}</p>
+        {%- if section.settings.card_cta != blank -%}
+          <a href="{{ section.settings.card_url | default: 'mailto:hello@spicexseasoning.com' }}" class="sa-faq-card-cta">
+            {{ section.settings.card_cta | escape }}
+            <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7h8M7 3l4 4-4 4"/></svg>
+          </a>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+  </aside>
+  <ul class="sa-faq-list">
+    {%- for block in section.blocks -%}
+      <li class="sa-faq-item" data-sa-faq-item {{ block.shopify_attributes }}>
+        <button type="button" class="sa-faq-toggle" data-sa-faq-toggle aria-expanded="false">
+          <span>{{ block.settings.question | escape }}</span>
+          <span class="sa-faq-icon" aria-hidden="true">
+            <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="7" y1="1" x2="7" y2="13"/><line x1="1" y1="7" x2="13" y2="7"/></svg>
+          </span>
+        </button>
+        <div class="sa-faq-content"><div class="sa-faq-content-inner"><div class="sa-faq-answer">{{ block.settings.answer }}</div></div></div>
+      </li>
+    {%- endfor -%}
+  </ul>
+</section>
+
+<script>
+  (function() {
+    var section = document.getElementById('shopify-section-{{ section.id }}');
+    if (!section) return;
+    var items = section.querySelectorAll('[data-sa-faq-item]');
+    section.querySelectorAll('[data-sa-faq-toggle]').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var item = btn.closest('[data-sa-faq-item]');
+        if (!item) return;
+        var willOpen = !item.classList.contains('is-open');
+        // Single-open: close all
+        items.forEach(function(other) {
+          other.classList.remove('is-open');
+          var t = other.querySelector('[data-sa-faq-toggle]');
+          if (t) t.setAttribute('aria-expanded', 'false');
+        });
+        if (willOpen) {
+          item.classList.add('is-open');
+          btn.setAttribute('aria-expanded', 'true');
+        }
+      });
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Shop All · FAQ",
+  "max_blocks": 12,
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Sidebar eyebrow", "default": "Before You Buy" },
+    { "type": "text", "id": "headline", "label": "Sidebar headline", "default": "Common questions." },
+    { "type": "textarea", "id": "sub", "label": "Sidebar subhead", "default": "Five of the most asked, before someone clicks add-to-cart." },
+    { "type": "text", "id": "card_eyebrow", "label": "Help card eyebrow", "default": "Still Need Help?" },
+    { "type": "textarea", "id": "card_body", "label": "Help card body", "default": "We answer every email personally, usually within a few hours." },
+    { "type": "text", "id": "card_cta", "label": "Help card CTA", "default": "Email us" },
+    { "type": "url", "id": "card_url", "label": "Help card link", "info": "Use mailto: for email" },
+    { "type": "color", "id": "bg_color", "label": "Background", "default": "#f7f3ec" },
+    { "type": "color", "id": "accent_color", "label": "Accent", "default": "#0099d6" }
+  ],
+  "blocks": [
+    {
+      "type": "question",
+      "name": "Question",
+      "settings": [
+        { "type": "text", "id": "question", "label": "Question", "default": "Which blend should I start with?" },
+        { "type": "richtext", "id": "answer", "label": "Answer", "default": "<p>Most cooks start with Daily Blend · it covers chicken, eggs, vegetables, potatoes, and basically every weeknight dinner.</p>" }
+      ]
+    }
+  ],
+  "presets": [{ "name": "Shop All · FAQ", "category": "Shop All" }]
+}
+{% endschema %}

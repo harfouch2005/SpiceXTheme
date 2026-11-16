@@ -1,0 +1,24 @@
+<section class="s2-sec s2-404">
+  <div class="s2-head" style="margin-bottom:22px">
+    <h1 class="s2-h">{{ section.settings.heading }}</h1>
+    {%- if section.settings.subheading != blank -%}<p class="s2-sub">{{ section.settings.subheading }}</p>{%- endif -%}
+  </div>
+  <div style="display:flex;flex-wrap:wrap;gap:14px 22px;justify-content:center;align-items:center;padding:0 20px">
+    <a class="s2-btn" href="{{ section.settings.button_link }}">{{ section.settings.button_label }}</a>
+    {%- if section.settings.link_label != blank -%}<a class="s2-link" href="{{ section.settings.link_url }}">{{ section.settings.link_label }}</a>{%- endif -%}
+  </div>
+</section>
+{% schema %}
+{
+  "name": "S2 Page not found",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "We can't find that page." },
+    { "type": "text", "id": "subheading", "label": "Subheading", "default": "The link may be old. All six blends are still right here." },
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "Build your box" },
+    { "type": "url", "id": "button_link", "label": "Button link" },
+    { "type": "text", "id": "link_label", "label": "Link label", "default": "Shop all six" },
+    { "type": "url", "id": "link_url", "label": "Link" }
+  ],
+  "presets": [{ "name": "S2 Page not found" }]
+}
+{% endschema %}

@@ -1,0 +1,27 @@
+<div class="s2-sticky" data-s2-sticky>
+  {%- if section.settings.note != blank -%}<span class="s2-sticky__note">{{ section.settings.note }}</span>{%- endif -%}
+  <a class="s2-btn" href="{{ section.settings.button_link }}">{{ section.settings.button_label }}</a>
+</div>
+<script>
+  (function(){
+    var bar = document.querySelector('[data-s2-sticky]');
+    var hero = document.querySelector('[data-s2-hero]');
+    if (!bar || bar.dataset.s2Bound) return;
+    bar.dataset.s2Bound = '1';
+    if (!hero || !('IntersectionObserver' in window)) { bar.classList.add('is-on'); return; }
+    new IntersectionObserver(function(entries){
+      bar.classList.toggle('is-on', !entries[0].isIntersecting);
+    }).observe(hero);
+  })();
+</script>
+{% schema %}
+{
+  "name": "S2 Sticky button",
+  "settings": [
+    { "type": "text", "id": "note", "label": "Note", "default": "Save up to $12.95" },
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "Build your box" },
+    { "type": "url", "id": "button_link", "label": "Button link" }
+  ],
+  "presets": [{ "name": "S2 Sticky button" }]
+}
+{% endschema %}

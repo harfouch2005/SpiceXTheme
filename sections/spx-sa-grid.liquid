@@ -1,0 +1,303 @@
+{%- comment -%}
+  Shop All · Product grid with accent-soft cards (flavor wheel)
+{%- endcomment -%}
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+
+{% style %}
+  #shopify-section-{{ section.id }} {
+    background: {{ section.settings.bg_color | default: '#f7f3ec' }};
+    color: #0a0a0a;
+    font-family: var(--spx-font-body);
+    box-sizing: border-box;
+  }
+  #shopify-section-{{ section.id }} *,
+  #shopify-section-{{ section.id }} *::before,
+  #shopify-section-{{ section.id }} *::after { box-sizing: border-box; }
+  #shopify-section-{{ section.id }} .sa-g {
+    max-width: 1480px;
+    margin: 0 auto;
+    padding: 80px clamp(20px, 4vw, 56px);
+  }
+  #shopify-section-{{ section.id }} .sa-g-head {
+    text-align: center;
+    margin: 0 auto 32px;
+  }
+  #shopify-section-{{ section.id }} .sa-g-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #6b6b6b;
+    margin: 0 0 12px;
+    line-height: 1;
+  }
+  #shopify-section-{{ section.id }} .sa-g-eyebrow::before,
+  #shopify-section-{{ section.id }} .sa-g-eyebrow::after { content: ''; width: 20px; height: 1px; background: #6b6b6b; }
+  #shopify-section-{{ section.id }} .sa-g-title {
+    font-family: var(--spx-font-display);
+    font-weight: 500;
+    font-size: clamp(28px, 3vw, 40px);
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+    color: #0a0a0a;
+    margin: 0;
+    font-variation-settings: "WONK" 0, "SOFT" 30, "opsz" 144;
+  }
+  #shopify-section-{{ section.id }} .sa-g-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+  }
+  #shopify-section-{{ section.id }} .sa-card {
+    --c: #0099d6;
+    --c-soft: #e6f4fb;
+    background: var(--c-soft);
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  #shopify-section-{{ section.id }} .sa-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 16px 32px -16px rgba(0,0,0,0.18);
+  }
+  #shopify-section-{{ section.id }} .sa-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: var(--c);
+    z-index: 2;
+  }
+  #shopify-section-{{ section.id }} .sa-card-img-wrap {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    display: block;
+    background: radial-gradient(ellipse at center, color-mix(in srgb, var(--c) 18%, transparent) 0%, transparent 60%);
+  }
+  #shopify-section-{{ section.id }} .sa-card-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 28px;
+    transition: transform 0.5s ease;
+    display: block;
+  }
+  #shopify-section-{{ section.id }} .sa-card:hover .sa-card-img { transform: scale(1.05); }
+  #shopify-section-{{ section.id }} .sa-card-img-placeholder {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #999;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    text-align: center;
+    padding: 24px;
+  }
+  #shopify-section-{{ section.id }} .sa-card-body {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex: 1;
+  }
+  #shopify-section-{{ section.id }} .sa-card-category {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--c);
+    margin: 0;
+    line-height: 1;
+  }
+  #shopify-section-{{ section.id }} .sa-card-title {
+    font-family: var(--spx-font-display);
+    font-weight: 600;
+    font-size: 24px;
+    color: #0a0a0a;
+    margin: 4px 0 0;
+    line-height: 1.1;
+    letter-spacing: -0.018em;
+    font-variation-settings: "WONK" 0, "SOFT" 30, "opsz" 144;
+  }
+  #shopify-section-{{ section.id }} .sa-card-title a { color: inherit; text-decoration: none; }
+  #shopify-section-{{ section.id }} .sa-card-title a:hover { color: var(--c); }
+  #shopify-section-{{ section.id }} .sa-card-use {
+    font-size: 13.5px;
+    color: #555;
+    font-style: italic;
+    line-height: 1.4;
+    margin: 4px 0 0;
+    font-family: var(--spx-font-display);
+    font-variation-settings: "WONK" 0, "SOFT" 50;
+  }
+  #shopify-section-{{ section.id }} .sa-card-foot {
+    margin-top: auto;
+    padding-top: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  #shopify-section-{{ section.id }} .sa-card-price {
+    font-family: var(--spx-font-display);
+    font-weight: 600;
+    font-size: 18px;
+    color: #0a0a0a;
+    letter-spacing: -0.015em;
+    font-variation-settings: "WONK" 0, "SOFT" 30;
+  }
+  #shopify-section-{{ section.id }} .sa-card-add {
+    background: transparent;
+    color: #0a0a0a;
+    border: 1.5px solid #0a0a0a;
+    padding: 9px 16px;
+    border-radius: 100px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    cursor: pointer;
+    line-height: 1;
+    transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    position: relative;
+    min-width: 80px;
+    text-align: center;
+  }
+  #shopify-section-{{ section.id }} .sa-card-add:hover {
+    background: var(--c);
+    color: #ffffff;
+    border-color: var(--c);
+  }
+  #shopify-section-{{ section.id }} .sa-card-add:disabled { opacity: 0.6; cursor: wait; }
+  #shopify-section-{{ section.id }} .sa-card-add-default,
+  #shopify-section-{{ section.id }} .sa-card-add-loading,
+  #shopify-section-{{ section.id }} .sa-card-add-added { display: inline-block; }
+  #shopify-section-{{ section.id }} .sa-card-add-loading,
+  #shopify-section-{{ section.id }} .sa-card-add-added { display: none; }
+  #shopify-section-{{ section.id }} .sa-card-add.is-loading .sa-card-add-default { display: none; }
+  #shopify-section-{{ section.id }} .sa-card-add.is-loading .sa-card-add-loading { display: inline-block; }
+  #shopify-section-{{ section.id }} .sa-card-add.is-added .sa-card-add-default { display: none; }
+  #shopify-section-{{ section.id }} .sa-card-add.is-added .sa-card-add-added { display: inline-block; background: var(--c); color: #fff; }
+
+  @media (max-width: 1024px) {
+    #shopify-section-{{ section.id }} .sa-g-grid { grid-template-columns: repeat(2, 1fr); gap: 24px; }
+  }
+  @media (max-width: 640px) {
+    #shopify-section-{{ section.id }} .sa-g { padding: 56px 20px; }
+    #shopify-section-{{ section.id }} .sa-g-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+    #shopify-section-{{ section.id }} .sa-card-img { padding: 18px; }
+    #shopify-section-{{ section.id }} .sa-card-body { padding: 14px; gap: 4px; }
+    #shopify-section-{{ section.id }} .sa-card-title { font-size: 17px; }
+    #shopify-section-{{ section.id }} .sa-card-use { font-size: 12px; }
+    #shopify-section-{{ section.id }} .sa-card-price { font-size: 15px; }
+    #shopify-section-{{ section.id }} .sa-card-add { padding: 7px 11px; font-size: 10px; min-width: 0; letter-spacing: 0.10em; }
+    #shopify-section-{{ section.id }} .sa-card-category { font-size: 10px; letter-spacing: 0.14em; }
+    #shopify-section-{{ section.id }} .sa-card-foot { flex-direction: column; align-items: stretch; gap: 8px; padding-top: 10px; }
+  }
+{% endstyle %}
+
+<section class="sa-g">
+  <header class="sa-g-head">
+    {%- if section.settings.eyebrow != blank -%}<p class="sa-g-eyebrow">{{ section.settings.eyebrow | escape }}</p>{%- endif -%}
+    {%- if section.settings.headline != blank -%}<h2 class="sa-g-title">{{ section.settings.headline | escape }}</h2>{%- endif -%}
+  </header>
+
+  <div class="sa-g-grid">
+    {%- for block in section.blocks -%}
+      {%- assign p = block.settings.product -%}
+      {%- assign img = block.settings.image -%}
+      {%- if img == blank and p != blank -%}{%- assign img = p.featured_image -%}{%- endif -%}
+      {%- assign variant_id = p.selected_or_first_available_variant.id -%}
+      {%- assign p_url = p.url | default: '#' -%}
+      {%- assign p_title = p.title | default: block.settings.title_override | default: 'Product' -%}
+      <article class="sa-card" style="--c: {{ block.settings.accent_color | default: '#0099d6' }}; --c-soft: {{ block.settings.accent_soft | default: '#e6f4fb' }};" {{ block.shopify_attributes }}>
+        <a href="{{ p_url }}" class="sa-card-img-wrap" aria-label="{{ p_title | escape }}">
+          {%- if img != blank -%}
+            <img class="sa-card-img" src="{{ img | image_url: width: 600 }}" srcset="{{ img | image_url: width: 300 }} 300w, {{ img | image_url: width: 500 }} 500w, {{ img | image_url: width: 700 }} 700w" sizes="(max-width: 640px) 50vw, 33vw" alt="{{ p_title | escape }}" loading="lazy">
+          {%- else -%}
+            <div class="sa-card-img-placeholder">Connect a product</div>
+          {%- endif -%}
+        </a>
+        <div class="sa-card-body">
+          {%- if block.settings.category != blank -%}<p class="sa-card-category">{{ block.settings.category | escape }}</p>{%- endif -%}
+          <h3 class="sa-card-title"><a href="{{ p_url }}">{{ p_title | escape }}</a></h3>
+          {%- if block.settings.use_case != blank -%}<p class="sa-card-use">{{ block.settings.use_case | escape }}</p>{%- endif -%}
+          <div class="sa-card-foot">
+            <span class="sa-card-price">{% if p != blank %}{{ p.price | money }}{% else %}·{% endif %}</span>
+            <button type="button" class="sa-card-add" data-sa-add data-variant-id="{{ variant_id }}" {% if variant_id == blank %}disabled aria-disabled="true"{% endif %} aria-label="Add {{ p_title | escape }} to cart">
+              <span class="sa-card-add-default">Add</span>
+              <span class="sa-card-add-loading">Adding</span>
+              <span class="sa-card-add-added">Added ✓</span>
+            </button>
+          </div>
+        </div>
+      </article>
+    {%- endfor -%}
+  </div>
+</section>
+
+<script>
+  (function() {
+    var section = document.getElementById('shopify-section-{{ section.id }}');
+    if (!section) return;
+    section.querySelectorAll('[data-sa-add]').forEach(function(btn) {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        var variantId = btn.getAttribute('data-variant-id');
+        if (!variantId || btn.disabled) return;
+        btn.classList.add('is-loading'); btn.classList.remove('is-added'); btn.disabled = true;
+        fetch('/cart/add.js', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id: variantId, quantity: 1 }) })
+          .then(function(r) { if (!r.ok) throw new Error('add failed'); return r.json(); })
+          .then(function() { return fetch('/cart.js'); })
+          .then(function(r) { return r.json(); })
+          .then(function(cart) {
+            window.dispatchEvent(new CustomEvent('cart:updated', { detail: cart }));
+            btn.classList.remove('is-loading'); btn.classList.add('is-added');
+            setTimeout(function() { btn.classList.remove('is-added'); btn.disabled = false; }, 1800);
+          })
+          .catch(function(e) { console.error(e); btn.classList.remove('is-loading'); btn.disabled = false; });
+      });
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Shop All · Product grid",
+  "max_blocks": 12,
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "The Lineup" },
+    { "type": "text", "id": "headline", "label": "Headline", "default": "Pick your blend." },
+    { "type": "color", "id": "bg_color", "label": "Background", "default": "#f7f3ec" }
+  ],
+  "blocks": [
+    {
+      "type": "product_card",
+      "name": "Product card",
+      "settings": [
+        { "type": "product", "id": "product", "label": "Product" },
+        { "type": "image_picker", "id": "image", "label": "Image override (optional)" },
+        { "type": "text", "id": "title_override", "label": "Title override (optional)" },
+        { "type": "color", "id": "accent_color", "label": "Accent color", "default": "#0099d6" },
+        { "type": "color", "id": "accent_soft", "label": "Accent soft (card background)", "default": "#e6f4fb" },
+        { "type": "text", "id": "category", "label": "Category label", "default": "DAILY SEASONING" },
+        { "type": "text", "id": "use_case", "label": "Use case (italic, one line)", "default": "Best on chicken, eggs, roasted vegetables." }
+      ]
+    }
+  ],
+  "presets": [{ "name": "Shop All · Product grid", "category": "Shop All" }]
+}
+{% endschema %}

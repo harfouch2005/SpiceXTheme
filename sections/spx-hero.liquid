@@ -1,0 +1,1684 @@
+{%- comment -%}
+  SpiceX Hero · full-bleed image background with overlaid editorial content.
+  - Image covers entire section
+  - Configurable dark overlay for text legibility
+  - Content positioned (left/center/right + top/center/bottom)
+  - Loox app block support in the trust strip
+  - All CSS scoped under #shopify-section-{{ section.id }}
+{%- endcomment -%}
+
+{%- liquid
+  assign section_id = section.id
+
+  # Hero image (desktop): setting > bundle product featured > none
+  assign hero_image = section.settings.image
+  if hero_image == blank
+    assign bundle_handle = section.settings.bundle_product_handle | default: 'bundle-save'
+    assign bundle = all_products[bundle_handle]
+    if bundle != blank
+      assign hero_image = bundle.featured_media.preview_image
+    endif
+  endif
+
+  # Hero image (mobile): mobile setting > desktop fallback
+  assign hero_image_mobile = section.settings.image_mobile
+  if hero_image_mobile == blank
+    assign hero_image_mobile = hero_image
+  endif
+
+  assign mobile_focal = section.settings.image_mobile_focal_point | default: section.settings.image_focal_point | default: 'center center'
+
+  # Primary CTA URL fallback to bundle product
+  assign primary_url = section.settings.primary_cta_url
+  if primary_url == blank
+    assign bundle_handle_cta = section.settings.bundle_product_handle | default: 'bundle-save'
+    assign bundle_cta = all_products[bundle_handle_cta]
+    if bundle_cta != blank
+      assign primary_url = bundle_cta.url
+    else
+      assign primary_url = '/collections/all'
+    endif
+  endif
+
+  assign overlay_alpha = section.settings.overlay_opacity | divided_by: 100.0
+  assign min_h_desktop = section.settings.min_height_desktop | default: 720
+  assign min_h_mobile = section.settings.min_height_mobile | default: 600
+
+  # Collect flavor blocks for the carousel (one slide per block)
+  assign flavor_blocks = section.blocks | where: 'type', 'flavor'
+  assign slide_count = flavor_blocks.size
+-%}
+
+{% style %}
+  #shopify-section-{{ section.id }} {
+    position: relative;
+    background: {{ section.settings.background_color }};
+    color: {{ section.settings.text_color }};
+    overflow: hidden;
+    box-sizing: border-box;
+  }
+  #shopify-section-{{ section.id }} *,
+  #shopify-section-{{ section.id }} *::before,
+  #shopify-section-{{ section.id }} *::after { box-sizing: border-box; }
+
+  #shopify-section-{{ section.id }} .spx-hero {
+    position: relative;
+    min-height: {{ min_h_desktop }}px;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+  }
+
+  /* ===== BACKGROUND ===== */
+  #shopify-section-{{ section.id }} .spx-hero__bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+  }
+  /* Carousel slides */
+  #shopify-section-{{ section.id }} .spx-hero__slides {
+    position: absolute;
+    inset: 0;
+  }
+  #shopify-section-{{ section.id }} .spx-hero__slide {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 0.7s ease;
+    pointer-events: none;
+  }
+  #shopify-section-{{ section.id }} .spx-hero__slide.is-active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  #shopify-section-{{ section.id }} .spx-hero__bg-image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  #shopify-section-{{ section.id }} .spx-hero__bg-image--desktop {
+    object-position: {{ section.settings.image_focal_point | default: 'center center' }};
+    display: block;
+  }
+  #shopify-section-{{ section.id }} .spx-hero__bg-image--mobile {
+    object-position: {{ mobile_focal }};
+    display: none;
+  }
+  #shopify-section-{{ section.id }} .spx-hero__bg-overlay {
+    position: absolute;
+    inset: 0;
+    background: {{ section.settings.overlay_color | default: '#000000' }};
+    opacity: {{ overlay_alpha }};
+    z-index: 1;
+    pointer-events: none;
+  }
+  /* Gradient overlay variant · darker on content side, fading out */
+  #shopify-section-{{ section.id }}.spx-hero--gradient-left .spx-hero__bg-overlay {
+    background: linear-gradient(90deg,
+      rgba(0, 0, 0, {{ overlay_alpha }}) 0%,
+      rgba(0, 0, 0, {{ overlay_alpha | divided_by: 1.5 }}) 45%,
+      rgba(0, 0, 0, 0) 95%);
+  }
+  #shopify-section-{{ section.id }}.spx-hero--gradient-right .spx-hero__bg-overlay {
+    background: linear-gradient(270deg,
+      rgba(0, 0, 0, {{ overlay_alpha }}) 0%,
+      rgba(0, 0, 0, {{ overlay_alpha | divided_by: 1.5 }}) 45%,
+      rgba(0, 0, 0, 0) 95%);
+  }
+  #shopify-section-{{ section.id }}.spx-hero--gradient-bottom .spx-hero__bg-overlay {
+    background: linear-gradient(0deg,
+      rgba(0, 0, 0, {{ overlay_alpha }}) 0%,
+      rgba(0, 0, 0, {{ overlay_alpha | divided_by: 1.5 }}) 50%,
+      rgba(0, 0, 0, 0) 95%);
+  }
+
+  /* ===== CONTENT ===== */
+  #shopify-section-{{ section.id }} .spx-hero__container {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: clamp(48px, 6vw, 96px) clamp(20px, 4vw, 64px) {% if slide_count > 1 %}clamp(96px, 9vw, 128px){% else %}clamp(48px, 6vw, 96px){% endif %};
+    display: flex;
+    align-items: {% case section.settings.content_v_align %}{% when 'top' %}flex-start{% when 'bottom' %}flex-end{% else %}center{% endcase %};
+    min-height: inherit;
+  }
+  #shopify-section-{{ section.id }} .spx-hero__content {
+    max-width: 640px;
+    {% if section.settings.content_h_align == 'center' %}margin: 0 auto; text-align: center;{% elsif section.settings.content_h_align == 'right' %}margin-left: auto; text-align: right;{% else %}margin-right: auto; text-align: left;{% endif %}
+  }
+
+  /* Heading group */
+  #shopify-section-{{ section.id }} .spx-hero__eyebrow {
+    font-family: var(--spx-font-body);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: {{ section.settings.eyebrow_color }};
+    margin: 0 0 18px;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+  }
+  #shopify-section-{{ section.id }} .spx-hero__eyebrow::before {
+    content: '';
+    display: inline-block;
+    width: 28px;
+    height: 1.5px;
+    background: currentColor;
+  }
+  #shopify-section-{{ section.id }} .spx-hero__title {
+    font-family: var(--spx-font-display);
+    font-size: clamp(40px, 6.5vw, 84px);
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    line-height: 1.02;
+    margin: 0 0 22px;
+    color: inherit;
+    font-variation-settings: "WONK" 0, "SOFT" 30, "opsz" 144;
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
+  }
+  #shopify-section-{{ section.id }} .spx-hero__title > span { display: block; }
+  #shopify-section-{{ section.id }} .spx-hero__title .spx-hero__title-accent {
+    font-style: italic;
+    font-weight: 700;
+    color: {{ section.settings.accent_color }};
+    font-variation-settings: "WONK" 0, "SOFT" 50, "opsz" 144;
+  }
+  #shopify-section-{{ section.id }} .spx-hero__sub {
+    font-family: var(--spx-font-body);
+    font-size: clamp(16px, 1.5vw, 19px);
+    line-height: 1.5;
+    margin: 0 0 32px;
+    max-width: 540px;
+    color: inherit;
+    opacity: 0.92;
+    text-shadow: 0 1px 8px rgba(0, 0, 0, 0.25);
+  }
+  {%- if section.settings.content_h_align == 'center' -%}
+  #shopify-section-{{ section.id }} .spx-hero__sub { margin-left: auto; margin-right: auto; }
+  {%- elsif section.settings.content_h_align == 'right' -%}
+  #shopify-section-{{ section.id }} .spx-hero__sub { margin-left: auto; }
+  {%- endif -%}
+
+  /* CTAs */
+  #shopify-section-{{ section.id }} .spx-hero__ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 28px;
+    {% if section.settings.content_h_align == 'center' %}justify-content: center;{% elsif section.settings.content_h_align == 'right' %}justify-content: flex-end;{% endif %}
+  }
+  #shopify-section-{{ section.id }} .spx-hero__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 17px 32px;
+    font-family: var(--spx-font-body);
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: transform 0.15s ease, background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+    line-height: 1;
+    cursor: pointer;
+    border: 2px solid transparent;
+    white-space: nowrap;
+  }
+  #shopify-section-{{ section.id }} .spx-hero__btn--primary {
+    background: rgba(255, 255, 255, 0.08);
+    color: #ffffff;
+    border-color: {{ section.settings.primary_btn_bg | default: '#e8a823' }};
+    border-width: 2px;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
+    padding-left: 14px;
+  }
+  #shopify-section-{{ section.id }} .spx-hero__btn--primary:hover {
+    background: rgba(232, 168, 35, 0.18);
+    transform: translateY(-2px);
+    box-shadow: 0 16px 32px rgba(0, 0, 0, 0.32);
+  }
+  #shopify-section-{{ section.id }} .spx-hero__btn--primary svg { width: 16px; height: 16px; }
+  #shopify-section-{{ section.id }} .spx-hero__btn-save {
+    display: inline-flex;
+    align-items: center;
+    background: #8b1a1a;
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    padding: 5px 9px;
+    border-radius: 4px;
+    line-height: 1;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  #shopify-section-{{ section.id }} .spx-hero__btn--secondary {
+    background: transparent;
+    color: #ffffff;
+    border-color: rgba(255, 255, 255, 0.55);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+  }
+  #shopify-section-{{ section.id }} .spx-hero__btn--secondary:hover {
+    background: rgba(255, 255, 255, 0.10);
+    border-color: #ffffff;
+    transform: translateY(-1px);
+  }
+  #shopify-section-{{ section.id }} .spx-hero__btn--secondary svg { width: 14px; height: 14px; transition: transform 0.2s ease; }
+  #shopify-section-{{ section.id }} .spx-hero__btn--secondary:hover svg { transform: translateX(3px); }
+
+  /* Trust strip */
+  #shopify-section-{{ section.id }} .spx-hero__trust {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 14px 20px;
+    font-family: var(--spx-font-body);
+    font-size: 13px;
+    color: inherit;
+    opacity: 0.94;
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.3);
+    {% if section.settings.content_h_align == 'center' %}justify-content: center;{% elsif section.settings.content_h_align == 'right' %}justify-content: flex-end;{% endif %}
+  }
+  /* Above-CTA position: centered, with bottom margin instead of sitting last */
+  #shopify-section-{{ section.id }} .spx-hero__trust--above-cta {
+    justify-content: center;
+    margin: 0 0 22px;
+    width: 100%;
+  }
+  #shopify-section-{{ section.id }} .spx-hero__trust-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  #shopify-section-{{ section.id }} .spx-hero__stars {
+    display: inline-flex;
+    color: {{ section.settings.stars_color }};
+    letter-spacing: 0.05em;
+    font-size: 14px;
+    line-height: 1;
+  }
+  #shopify-section-{{ section.id }} .spx-hero__rating { font-weight: 700; color: inherit; }
+  #shopify-section-{{ section.id }} .spx-hero__divider {
+    width: 1px;
+    height: 14px;
+    background: currentColor;
+    opacity: 0.35;
+    display: inline-block;
+  }
+
+  /* Loox widget container */
+  #shopify-section-{{ section.id }} .spx-hero__loox {
+    display: inline-flex;
+    align-items: center;
+    font-family: var(--spx-font-body);
+    font-size: 13px;
+    color: inherit;
+    line-height: 1.2;
+  }
+  #shopify-section-{{ section.id }} .spx-hero__loox > * {
+    color: inherit !important;
+    font-family: var(--spx-font-body) !important;
+  }
+  #shopify-section-{{ section.id }} .spx-hero__loox .loox-icons-rating,
+  #shopify-section-{{ section.id }} .spx-hero__loox svg [fill]:not([fill="none"]) {
+    color: {{ section.settings.stars_color }} !important;
+    fill: {{ section.settings.stars_color }} !important;
+  }
+
+  /* Flavor dots nav (carousel) */
+  #shopify-section-{{ section.id }} .spx-hero__dots {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: clamp(20px, 3vw, 32px);
+    z-index: 4;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    padding: 0 16px;
+  }
+  #shopify-section-{{ section.id }} .spx-hero__dot {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    background: rgba(0, 0, 0, 0.30);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    padding: 8px 14px;
+    border-radius: 999px;
+    color: rgba(255, 255, 255, 0.72);
+    font-family: var(--spx-font-body);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    line-height: 1;
+    cursor: pointer;
+    transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+  }
+  #shopify-section-{{ section.id }} .spx-hero__dot:hover {
+    color: #ffffff;
+    border-color: rgba(255, 255, 255, 0.45);
+  }
+  #shopify-section-{{ section.id }} .spx-hero__dot.is-active {
+    color: var(--dot-text-color, #0a0a0a);
+    background: var(--dot-color, {{ section.settings.accent_color | default: '#e8a823' }});
+    border-color: var(--dot-color, {{ section.settings.accent_color | default: '#e8a823' }});
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.30);
+  }
+  #shopify-section-{{ section.id }} .spx-hero__dot-mark {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--dot-color, currentColor);
+    display: inline-block;
+    flex: 0 0 auto;
+    opacity: 1;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.18);
+  }
+  #shopify-section-{{ section.id }} .spx-hero__dot.is-active .spx-hero__dot-mark {
+    background: var(--dot-text-color, #0a0a0a);
+    box-shadow: none;
+  }
+  #shopify-section-{{ section.id }} .spx-hero__dot-label {
+    white-space: nowrap;
+  }
+
+  /* Per-slide price badge · top-right corner, crossfades with active slide */
+  #shopify-section-{{ section.id }} .spx-hero__price-badges {
+    position: absolute;
+    top: clamp(20px, 3vw, 36px);
+    right: clamp(20px, 3vw, 48px);
+    z-index: 3;
+    pointer-events: none;
+  }
+  #shopify-section-{{ section.id }} .spx-hero__price-badge {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: #ffffff;
+    color: #0a0a0a;
+    padding: 16px 22px;
+    border-radius: 14px;
+    font-family: var(--spx-font-body);
+    text-align: center;
+    line-height: 1;
+    transform: rotate(-4deg);
+    box-shadow:
+      0 16px 36px rgba(0, 0, 0, 0.32),
+      0 0 0 4px rgba(232, 168, 35, 0.22);
+    min-width: 124px;
+    opacity: 0;
+    transition: opacity 0.7s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+  }
+  #shopify-section-{{ section.id }} .spx-hero__price-badge.is-active { opacity: 1; }
+  #shopify-section-{{ section.id }} .spx-hero__price-badge-label {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #6b6b6b;
+  }
+  #shopify-section-{{ section.id }} .spx-hero__price-badge-price {
+    font-family: var(--spx-font-display);
+    font-size: 30px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: #0a0a0a;
+    font-variation-settings: "WONK" 0, "SOFT" 30;
+  }
+  #shopify-section-{{ section.id }} .spx-hero__price-badge-savings {
+    display: inline-block;
+    background: #8b1a1a;
+    color: #ffffff;
+    font-size: 10.5px;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 5px 9px;
+    border-radius: 4px;
+    margin-top: 2px;
+  }
+  /* Add-to-Cart pill inside the price badge */
+  #shopify-section-{{ section.id }} .spx-hero__price-badge-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    width: 100%;
+    padding: 7px 12px;
+    margin-top: 9px;
+    background: var(--cta-color, #0099d6);
+    color: var(--cta-text-color, #ffffff);
+    border: 0;
+    border-radius: 100px;
+    font-family: var(--spx-font-body);
+    font-size: 9.5px;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    cursor: pointer;
+    line-height: 1;
+    white-space: nowrap;
+    transition: filter 0.2s ease, transform 0.2s ease, opacity 0.2s ease;
+    pointer-events: auto;
+    position: relative;
+  }
+  #shopify-section-{{ section.id }} .spx-hero__price-badge-cta:hover {
+    filter: brightness(1.08);
+    transform: translateY(-1px);
+  }
+  #shopify-section-{{ section.id }} .spx-hero__price-badge-cta:disabled { opacity: 0.7; cursor: wait; }
+  #shopify-section-{{ section.id }} .spx-hero__price-badge-cta svg { width: 10px; height: 10px; }
+  #shopify-section-{{ section.id }} .spx-hero__price-badge-cta-default,
+  #shopify-section-{{ section.id }} .spx-hero__price-badge-cta-loading,
+  #shopify-section-{{ section.id }} .spx-hero__price-badge-cta-added {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+  }
+  #shopify-section-{{ section.id }} .spx-hero__price-badge-cta-loading,
+  #shopify-section-{{ section.id }} .spx-hero__price-badge-cta-added { display: none; }
+  #shopify-section-{{ section.id }} .spx-hero__price-badge-cta.is-loading .spx-hero__price-badge-cta-default { display: none; }
+  #shopify-section-{{ section.id }} .spx-hero__price-badge-cta.is-loading .spx-hero__price-badge-cta-loading { display: inline-flex; }
+  #shopify-section-{{ section.id }} .spx-hero__price-badge-cta.is-added .spx-hero__price-badge-cta-default { display: none; }
+  #shopify-section-{{ section.id }} .spx-hero__price-badge-cta.is-added .spx-hero__price-badge-cta-added { display: inline-flex; }
+  #shopify-section-{{ section.id }} .spx-hero__price-badge-spin {
+    width: 11px;
+    height: 11px;
+    border: 2px solid currentColor;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spx-hero-badge-spin 0.7s linear infinite;
+    opacity: 0.85;
+  }
+  @keyframes spx-hero-badge-spin { to { transform: rotate(360deg); } }
+  /* Slightly more breathing room since badge is now interactive */
+  #shopify-section-{{ section.id }} .spx-hero__price-badge {
+    min-width: 138px;
+  }
+  /* Allow pointer events on the badges layer when CTA is present */
+  #shopify-section-{{ section.id }} .spx-hero__price-badges { pointer-events: none; }
+  #shopify-section-{{ section.id }} .spx-hero__price-badge { pointer-events: auto; }
+
+  /* Side callouts (desktop only) · bubble annotations with line pointing to bottle */
+  #shopify-section-{{ section.id }} .spx-hero__callouts {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    pointer-events: none;
+    display: none;
+  }
+  #shopify-section-{{ section.id }} .spx-hero__callout-group {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 0.7s ease;
+  }
+  #shopify-section-{{ section.id }} .spx-hero__callout-group.is-active { opacity: 1; }
+  #shopify-section-{{ section.id }} .spx-hero__callout {
+    position: absolute;
+    pointer-events: auto;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    color: #0a0a0a;
+    padding: 14px 18px;
+    border-radius: 13px;
+    max-width: 240px;
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.22), 0 0 0 1px rgba(0, 0, 0, 0.04);
+    font-family: var(--spx-font-body);
+    transform: translateY(-50%);
+  }
+  #shopify-section-{{ section.id }} .spx-hero__callout--left {
+    left: clamp(20px, 4vw, 64px);
+  }
+  #shopify-section-{{ section.id }} .spx-hero__callout--right {
+    right: clamp(20px, 4vw, 64px);
+  }
+  #shopify-section-{{ section.id }} .spx-hero__callout-title {
+    display: block;
+    font-size: 10.5px;
+    font-weight: 800;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #8b1a1a;
+    margin-bottom: 6px;
+    line-height: 1;
+  }
+  #shopify-section-{{ section.id }} .spx-hero__callout-text {
+    font-size: 13px;
+    line-height: 1.45;
+    color: #0a0a0a;
+    margin: 0;
+    font-weight: 500;
+  }
+  /* Connector line + endpoint dot · gestures toward the bottle */
+  #shopify-section-{{ section.id }} .spx-hero__callout--left::after,
+  #shopify-section-{{ section.id }} .spx-hero__callout--right::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: clamp(40px, 6vw, 96px);
+    height: 1px;
+    transform: translateY(-50%);
+  }
+  #shopify-section-{{ section.id }} .spx-hero__callout--left::after {
+    left: 100%;
+    margin-left: 6px;
+    background: linear-gradient(to right, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.15));
+  }
+  #shopify-section-{{ section.id }} .spx-hero__callout--right::after {
+    right: 100%;
+    margin-right: 6px;
+    background: linear-gradient(to left, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.15));
+  }
+  #shopify-section-{{ section.id }} .spx-hero__callout--left::before,
+  #shopify-section-{{ section.id }} .spx-hero__callout--right::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #ffffff;
+    transform: translateY(-50%);
+    box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.18);
+  }
+  #shopify-section-{{ section.id }} .spx-hero__callout--left::before {
+    left: 100%;
+    margin-left: calc(clamp(40px, 6vw, 96px) + 6px);
+  }
+  #shopify-section-{{ section.id }} .spx-hero__callout--right::before {
+    right: 100%;
+    margin-right: calc(clamp(40px, 6vw, 96px) + 6px);
+  }
+  /* Only show callouts on roomy viewports */
+  @media (min-width: 1024px) {
+    #shopify-section-{{ section.id }} .spx-hero__callouts { display: block; }
+  }
+
+  /* Savings badge · top-right corner */
+  #shopify-section-{{ section.id }} .spx-hero__badge {
+    position: absolute;
+    top: clamp(20px, 3vw, 36px);
+    right: clamp(20px, 3vw, 48px);
+    background: {{ section.settings.badge_bg }};
+    color: {{ section.settings.badge_text }};
+    padding: 14px 18px;
+    border-radius: 999px;
+    font-family: var(--spx-font-body);
+    font-weight: 800;
+    text-align: center;
+    line-height: 1.1;
+    transform: rotate(-6deg);
+    box-shadow:
+      0 14px 32px rgba(0, 0, 0, 0.30),
+      0 0 0 6px rgba(232, 168, 35, 0.18);
+    z-index: 3;
+  }
+  #shopify-section-{{ section.id }} .spx-hero__badge-top {
+    display: block;
+    font-size: 10.5px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    opacity: 0.85;
+    margin-bottom: 3px;
+  }
+  #shopify-section-{{ section.id }} .spx-hero__badge-main {
+    display: block;
+    font-size: clamp(16px, 1.6vw, 22px);
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+
+  /* Entrance animation */
+  #shopify-section-{{ section.id }} .spx-hero__eyebrow,
+  #shopify-section-{{ section.id }} .spx-hero__title,
+  #shopify-section-{{ section.id }} .spx-hero__sub,
+  #shopify-section-{{ section.id }} .spx-hero__ctas,
+  #shopify-section-{{ section.id }} .spx-hero__trust {
+    opacity: 0;
+    transform: translateY(14px);
+    animation: spx-hero-up 0.75s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  }
+  #shopify-section-{{ section.id }} .spx-hero__eyebrow { animation-delay: 0.05s; }
+  #shopify-section-{{ section.id }} .spx-hero__title { animation-delay: 0.15s; }
+  #shopify-section-{{ section.id }} .spx-hero__sub { animation-delay: 0.3s; }
+  #shopify-section-{{ section.id }} .spx-hero__trust { animation-delay: 0.4s; }
+  #shopify-section-{{ section.id }} .spx-hero__ctas { animation-delay: 0.5s; }
+  @keyframes spx-hero-up {
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    #shopify-section-{{ section.id }} .spx-hero__eyebrow,
+    #shopify-section-{{ section.id }} .spx-hero__title,
+    #shopify-section-{{ section.id }} .spx-hero__sub,
+    #shopify-section-{{ section.id }} .spx-hero__ctas,
+    #shopify-section-{{ section.id }} .spx-hero__trust {
+      opacity: 1;
+      transform: none;
+      animation: none;
+    }
+  }
+
+  /* Mobile */
+  @media (max-width: 768px) {
+    #shopify-section-{{ section.id }} .spx-hero { min-height: {{ min_h_mobile }}px; }
+    #shopify-section-{{ section.id }} .spx-hero__bg-image--desktop { display: none; }
+    #shopify-section-{{ section.id }} .spx-hero__bg-image--mobile { display: block; }
+    #shopify-section-{{ section.id }} .spx-hero__container {
+      padding: {% if slide_count > 0 %}88px{% else %}48px{% endif %} 20px {% if slide_count > 1 %}128px{% else %}64px{% endif %};
+      align-items: flex-end;
+    }
+    /* Tighter rhythm between elements on mobile */
+    #shopify-section-{{ section.id }} .spx-hero__eyebrow { margin-bottom: 12px; }
+    #shopify-section-{{ section.id }} .spx-hero__title { margin-bottom: 14px; line-height: 1.0; }
+    #shopify-section-{{ section.id }} .spx-hero__sub { margin-bottom: 18px; }
+    #shopify-section-{{ section.id }} .spx-hero__trust--above-cta { margin-bottom: 14px; }
+    #shopify-section-{{ section.id }} .spx-hero__btn { width: 100%; padding: 16px 22px; }
+    #shopify-section-{{ section.id }} .spx-hero__btn--primary { padding-left: 16px; }
+    #shopify-section-{{ section.id }} .spx-hero__ctas { flex-direction: column; align-items: stretch; gap: 10px; }
+    #shopify-section-{{ section.id }} .spx-hero__btn-save { font-size: 10.5px; padding: 4px 8px; }
+    /* Mobile: 3-column grid keeps the dot stack predictable and prevents overlap with CTAs */
+    #shopify-section-{{ section.id }} .spx-hero__dots {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      padding: 0 14px;
+      bottom: 16px;
+      width: 100%;
+      left: 0;
+      right: 0;
+    }
+    #shopify-section-{{ section.id }} .spx-hero__dot {
+      font-size: 9.5px;
+      padding: 7px 6px;
+      gap: 6px;
+      letter-spacing: 0.05em;
+      justify-content: center;
+      min-width: 0;
+    }
+    #shopify-section-{{ section.id }} .spx-hero__dot-mark { width: 6px; height: 6px; }
+    #shopify-section-{{ section.id }} .spx-hero__dot-label {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    /* Pinned dot (e.g. Bundle) · span all 3 columns, ordered last */
+    #shopify-section-{{ section.id }} .spx-hero__dot--pinned {
+      grid-column: 1 / -1;
+      order: 99;
+      margin-top: 4px;
+      font-size: 10px;
+      padding: 9px 14px;
+      letter-spacing: 0.1em;
+    }
+    #shopify-section-{{ section.id }} .spx-hero__badge {
+      top: 20px;
+      right: 16px;
+      padding: 10px 14px;
+    }
+    #shopify-section-{{ section.id }} .spx-hero__badge-main { font-size: 14px; }
+    #shopify-section-{{ section.id }} .spx-hero__badge-top { font-size: 9.5px; }
+    #shopify-section-{{ section.id }} .spx-hero__price-badges { top: 14px; right: 14px; }
+    #shopify-section-{{ section.id }} .spx-hero__price-badge { padding: 9px 11px; min-width: 116px; border-radius: 10px; gap: 2px; }
+    #shopify-section-{{ section.id }} .spx-hero__price-badge-label { font-size: 8.5px; letter-spacing: 0.14em; }
+    #shopify-section-{{ section.id }} .spx-hero__price-badge-price { font-size: 19px; }
+    #shopify-section-{{ section.id }} .spx-hero__price-badge-savings { font-size: 8.5px; padding: 3px 6px; letter-spacing: 0.08em; }
+    #shopify-section-{{ section.id }} .spx-hero__price-badge-cta { font-size: 8.5px; padding: 6px 8px; margin-top: 7px; letter-spacing: 0.10em; gap: 4px; }
+    #shopify-section-{{ section.id }} .spx-hero__price-badge-cta svg { width: 9px; height: 9px; }
+    #shopify-section-{{ section.id }} .spx-hero__price-badge-spin { width: 9px; height: 9px; }
+    #shopify-section-{{ section.id }} .spx-hero__trust {
+      font-size: 12px;
+      gap: 10px 14px;
+      row-gap: 10px;
+      justify-content: center;
+      text-align: center;
+    }
+    /* Loox widget gets its own row, centered + scaled down on mobile */
+    #shopify-section-{{ section.id }} .spx-hero__loox {
+      flex-basis: 100%;
+      justify-content: center;
+      font-size: 12px;
+    }
+    #shopify-section-{{ section.id }} .spx-hero__loox > * {
+      font-size: 12px !important;
+      line-height: 1.2 !important;
+    }
+    #shopify-section-{{ section.id }} .spx-hero__loox svg,
+    #shopify-section-{{ section.id }} .spx-hero__loox img {
+      max-height: 14px !important;
+    }
+    /* The first divider sits between Loox and the trust items · hide it on mobile so the items row starts clean */
+    #shopify-section-{{ section.id }} .spx-hero__trust > .spx-hero__divider:first-of-type {
+      display: none;
+    }
+  }
+{% endstyle %}
+
+<section class="spx-hero spx-hero--{{ section.settings.overlay_style | default: 'flat' }}">
+
+  {%- comment -%} ===== BACKGROUND IMAGE + OVERLAY ===== {%- endcomment -%}
+  <div class="spx-hero__bg" aria-hidden="true">
+    {%- if slide_count > 0 -%}
+      {%- comment -%} Carousel mode: one slide per flavor block {%- endcomment -%}
+      <div class="spx-hero__slides" data-spx-slides>
+        {%- for block in flavor_blocks -%}
+          {%- assign slide_desktop = block.settings.image -%}
+          {%- if slide_desktop == blank -%}{%- assign slide_desktop = hero_image -%}{%- endif -%}
+          {%- assign slide_mobile = block.settings.image_mobile -%}
+          {%- if slide_mobile == blank -%}{%- assign slide_mobile = slide_desktop -%}{%- endif -%}
+          {%- assign slide_focal = block.settings.focal | default: 'center center' -%}
+          {%- assign slide_focal_mobile = block.settings.focal_mobile -%}
+          {%- if slide_focal_mobile == blank or slide_focal_mobile == 'center center' -%}
+            {%- assign slide_focal_mobile = slide_focal -%}
+          {%- endif -%}
+          <div class="spx-hero__slide{% if forloop.first %} is-active{% endif %}" data-spx-slide="{{ forloop.index0 }}" {{ block.shopify_attributes }}>
+            {%- if slide_desktop != blank -%}
+              <img class="spx-hero__bg-image spx-hero__bg-image--desktop"
+                src="{{ slide_desktop | image_url: width: 2000 }}"
+                srcset="{{ slide_desktop | image_url: width: 1200 }} 1200w, {{ slide_desktop | image_url: width: 1600 }} 1600w, {{ slide_desktop | image_url: width: 2000 }} 2000w, {{ slide_desktop | image_url: width: 2600 }} 2600w"
+                sizes="100vw"
+                style="object-position: {{ slide_focal }};"
+                alt=""
+                loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
+                {% if forloop.first %}fetchpriority="high"{% endif %}>
+            {%- endif -%}
+            {%- if slide_mobile != blank -%}
+              <img class="spx-hero__bg-image spx-hero__bg-image--mobile"
+                src="{{ slide_mobile | image_url: width: 1000 }}"
+                srcset="{{ slide_mobile | image_url: width: 600 }} 600w, {{ slide_mobile | image_url: width: 800 }} 800w, {{ slide_mobile | image_url: width: 1000 }} 1000w, {{ slide_mobile | image_url: width: 1400 }} 1400w"
+                sizes="100vw"
+                style="object-position: {{ slide_focal_mobile }};"
+                alt=""
+                loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
+                {% if forloop.first %}fetchpriority="high"{% endif %}>
+            {%- endif -%}
+          </div>
+        {%- endfor -%}
+      </div>
+    {%- else -%}
+      {%- comment -%} Single image mode (no carousel) {%- endcomment -%}
+      {%- if hero_image != blank -%}
+        <img class="spx-hero__bg-image spx-hero__bg-image--desktop"
+          src="{{ hero_image | image_url: width: 2000 }}"
+          srcset="{{ hero_image | image_url: width: 1200 }} 1200w, {{ hero_image | image_url: width: 1600 }} 1600w, {{ hero_image | image_url: width: 2000 }} 2000w, {{ hero_image | image_url: width: 2600 }} 2600w"
+          sizes="100vw"
+          alt=""
+          loading="eager"
+          fetchpriority="high">
+      {%- endif -%}
+      {%- if hero_image_mobile != blank -%}
+        <img class="spx-hero__bg-image spx-hero__bg-image--mobile"
+          src="{{ hero_image_mobile | image_url: width: 1000 }}"
+          srcset="{{ hero_image_mobile | image_url: width: 600 }} 600w, {{ hero_image_mobile | image_url: width: 800 }} 800w, {{ hero_image_mobile | image_url: width: 1000 }} 1000w, {{ hero_image_mobile | image_url: width: 1400 }} 1400w"
+          sizes="100vw"
+          alt=""
+          loading="eager"
+          fetchpriority="high">
+      {%- endif -%}
+    {%- endif -%}
+    <div class="spx-hero__bg-overlay"></div>
+  </div>
+
+  {%- comment -%} ===== PER-SLIDE PRICE BADGES (carousel) ===== {%- endcomment -%}
+  {%- if slide_count > 0 -%}
+    <div class="spx-hero__price-badges" data-spx-badges>
+      {%- for block in flavor_blocks -%}
+        {%- assign badge_product = block.settings.product -%}
+        {%- assign badge_variant_id = badge_product.selected_or_first_available_variant.id -%}
+        {%- if block.settings.price != blank or block.settings.savings != blank or badge_variant_id != blank -%}
+          <div class="spx-hero__price-badge{% if forloop.first %} is-active{% endif %}"
+            data-spx-badge="{{ forloop.index0 }}"
+            style="--cta-color: {{ block.settings.dot_color | default: '#0099d6' }}; --cta-text-color: {{ block.settings.dot_text_color | default: '#ffffff' }};">
+            {%- if block.settings.price_label != blank -%}
+              <span class="spx-hero__price-badge-label" aria-hidden="true">{{ block.settings.price_label | escape }}</span>
+            {%- endif -%}
+            {%- if block.settings.price != blank -%}
+              <span class="spx-hero__price-badge-price" aria-hidden="true">{{ block.settings.price | escape }}</span>
+            {%- endif -%}
+            {%- if block.settings.savings != blank -%}
+              <span class="spx-hero__price-badge-savings" aria-hidden="true">{{ block.settings.savings | escape }}</span>
+            {%- endif -%}
+            {%- if badge_variant_id != blank -%}
+              <button type="button"
+                class="spx-hero__price-badge-cta"
+                data-spx-hero-add="{{ badge_variant_id }}"
+                aria-label="Add {{ block.settings.name | default: 'item' | escape }} to cart">
+                <span class="spx-hero__price-badge-cta-default">
+                  <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><line x1="7" y1="2" x2="7" y2="12"/><line x1="2" y1="7" x2="12" y2="7"/></svg>
+                  Add to Cart
+                </span>
+                <span class="spx-hero__price-badge-cta-loading"><span class="spx-hero__price-badge-spin" aria-hidden="true"></span></span>
+                <span class="spx-hero__price-badge-cta-added">
+                  <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7l3 3 5-6"/></svg>
+                  Added
+                </span>
+              </button>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  {%- endif -%}
+
+  {%- comment -%} ===== PER-SLIDE SIDE CALLOUTS (desktop) ===== {%- endcomment -%}
+  {%- if slide_count > 0 -%}
+    <div class="spx-hero__callouts" data-spx-callouts-layer aria-hidden="true">
+      {%- for block in flavor_blocks -%}
+        {%- assign has_left = false -%}
+        {%- assign has_right = false -%}
+        {%- if block.settings.callout_left_title != blank or block.settings.callout_left_text != blank -%}
+          {%- assign has_left = true -%}
+        {%- endif -%}
+        {%- if block.settings.callout_right_title != blank or block.settings.callout_right_text != blank -%}
+          {%- assign has_right = true -%}
+        {%- endif -%}
+        {%- if has_left or has_right -%}
+          <div class="spx-hero__callout-group{% if forloop.first %} is-active{% endif %}" data-spx-callouts="{{ forloop.index0 }}">
+            {%- if has_left -%}
+              <aside class="spx-hero__callout spx-hero__callout--left" style="top: {{ block.settings.callout_left_top | default: 70 }}%;">
+                {%- if block.settings.callout_left_title != blank -%}
+                  <span class="spx-hero__callout-title">{{ block.settings.callout_left_title | escape }}</span>
+                {%- endif -%}
+                {%- if block.settings.callout_left_text != blank -%}
+                  <p class="spx-hero__callout-text">{{ block.settings.callout_left_text | escape }}</p>
+                {%- endif -%}
+              </aside>
+            {%- endif -%}
+            {%- if has_right -%}
+              <aside class="spx-hero__callout spx-hero__callout--right" style="top: {{ block.settings.callout_right_top | default: 40 }}%;">
+                {%- if block.settings.callout_right_title != blank -%}
+                  <span class="spx-hero__callout-title">{{ block.settings.callout_right_title | escape }}</span>
+                {%- endif -%}
+                {%- if block.settings.callout_right_text != blank -%}
+                  <p class="spx-hero__callout-text">{{ block.settings.callout_right_text | escape }}</p>
+                {%- endif -%}
+              </aside>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  {%- endif -%}
+
+  {%- comment -%} ===== SAVINGS BADGE (legacy single-image) ===== {%- endcomment -%}
+  {%- if section.settings.show_badge and section.settings.badge_main != blank -%}
+    <div class="spx-hero__badge" aria-hidden="true">
+      {%- if section.settings.badge_top != blank -%}
+        <span class="spx-hero__badge-top">{{ section.settings.badge_top | escape }}</span>
+      {%- endif -%}
+      <span class="spx-hero__badge-main">{{ section.settings.badge_main | escape }}</span>
+    </div>
+  {%- endif -%}
+
+  {%- comment -%} ===== CONTENT OVER IMAGE ===== {%- endcomment -%}
+  <div class="spx-hero__container">
+    <div class="spx-hero__content">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="spx-hero__eyebrow">{{ section.settings.eyebrow | escape }}</p>
+      {%- endif -%}
+
+      <h1 class="spx-hero__title">
+        {%- if section.settings.title_line_1 != blank -%}
+          <span>{{ section.settings.title_line_1 | escape }}</span>
+        {%- endif -%}
+        {%- if section.settings.title_line_2 != blank -%}
+          <span>{{ section.settings.title_line_2 | escape }}</span>
+        {%- endif -%}
+        {%- if section.settings.title_accent != blank -%}
+          <span class="spx-hero__title-accent">{{ section.settings.title_accent | escape }}</span>
+        {%- endif -%}
+      </h1>
+
+      {%- if section.settings.sub != blank -%}
+        <p class="spx-hero__sub">{{ section.settings.sub | escape }}</p>
+      {%- endif -%}
+
+      {%- if section.settings.show_trust -%}
+        <div class="spx-hero__trust spx-hero__trust--above-cta">
+          {%- comment -%} Loox app blocks (live data) {%- endcomment -%}
+          {%- assign has_app_block = false -%}
+          {%- for block in section.blocks -%}
+            {%- if block.type == '@app' -%}
+              {%- assign has_app_block = true -%}
+              <div class="spx-hero__loox" {{ block.shopify_attributes }}>
+                {% render block %}
+              </div>
+            {%- endif -%}
+          {%- endfor -%}
+
+          {%- if has_app_block == false and section.settings.loox_embed != blank -%}
+            <div class="spx-hero__loox">{{ section.settings.loox_embed }}</div>
+          {%- elsif has_app_block == false and section.settings.trust_rating != blank -%}
+            <div class="spx-hero__trust-item">
+              <span class="spx-hero__stars" aria-hidden="true">★★★★★</span>
+              <span class="spx-hero__rating">{{ section.settings.trust_rating | escape }}</span>
+              {%- if section.settings.trust_reviews != blank -%}
+                <span>from {{ section.settings.trust_reviews | escape }}</span>
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+          {%- if section.settings.trust_extra != blank -%}
+            <span class="spx-hero__divider" aria-hidden="true"></span>
+            <div class="spx-hero__trust-item">{{ section.settings.trust_extra | escape }}</div>
+          {%- endif -%}
+          {%- if section.settings.trust_extra_2 != blank -%}
+            <span class="spx-hero__divider" aria-hidden="true"></span>
+            <div class="spx-hero__trust-item">{{ section.settings.trust_extra_2 | escape }}</div>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+
+      {%- if section.settings.primary_cta_text != blank or section.settings.secondary_cta_text != blank -%}
+        <div class="spx-hero__ctas">
+          {%- if section.settings.primary_cta_text != blank -%}
+            <a href="{{ primary_url }}" class="spx-hero__btn spx-hero__btn--primary">
+              {%- if section.settings.primary_cta_save != blank -%}
+                <span class="spx-hero__btn-save">{{ section.settings.primary_cta_save | escape }}</span>
+              {%- endif -%}
+              {{ section.settings.primary_cta_text | escape }}
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+            </a>
+          {%- endif -%}
+          {%- if section.settings.secondary_cta_text != blank -%}
+            <a href="{{ section.settings.secondary_cta_url | default: '/collections/all' }}" class="spx-hero__btn spx-hero__btn--secondary">
+              {{ section.settings.secondary_cta_text | escape }}
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+            </a>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+
+  {%- comment -%} ===== FLAVOR DOTS (carousel nav) ===== {%- endcomment -%}
+  {%- if slide_count > 1 -%}
+    <nav class="spx-hero__dots" aria-label="Flavor selector" data-spx-dots>
+      {%- for block in flavor_blocks -%}
+        {%- assign dot_name = block.settings.name | default: 'Flavor' -%}
+        <button type="button"
+          class="spx-hero__dot{% if forloop.first %} is-active{% endif %}{% if block.settings.pin_bottom_mobile %} spx-hero__dot--pinned{% endif %}"
+          data-spx-dot="{{ forloop.index0 }}"
+          {% if block.settings.pin_bottom_mobile %}data-spx-pin="bottom"{% endif %}
+          style="--dot-color: {{ block.settings.dot_color | default: '#e8a823' }}; --dot-text-color: {{ block.settings.dot_text_color | default: '#0a0a0a' }};"
+          aria-label="Show {{ dot_name | escape }}"
+          aria-current="{% if forloop.first %}true{% else %}false{% endif %}">
+          <span class="spx-hero__dot-mark" aria-hidden="true"></span>
+          <span class="spx-hero__dot-label">{{ dot_name | escape }}</span>
+        </button>
+      {%- endfor -%}
+    </nav>
+  {%- endif -%}
+
+</section>
+
+{%- if slide_count > 1 -%}
+<script>
+  (function() {
+    var section = document.getElementById('shopify-section-{{ section.id }}');
+    if (!section) return;
+    var slides = section.querySelectorAll('[data-spx-slide]');
+    var dots = section.querySelectorAll('[data-spx-dot]');
+    var badges = section.querySelectorAll('[data-spx-badge]');
+    var callouts = section.querySelectorAll('[data-spx-callouts]');
+    if (slides.length < 2) return;
+
+    var active = 0;
+    var timer = null;
+    var autoplay = {% if section.settings.carousel_autoplay %}true{% else %}false{% endif %};
+    var delay = {{ section.settings.carousel_interval | default: 6 }} * 1000;
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    function show(i) {
+      slides.forEach(function(s, idx) { s.classList.toggle('is-active', idx === i); });
+      dots.forEach(function(d, idx) {
+        d.classList.toggle('is-active', idx === i);
+        d.setAttribute('aria-current', idx === i ? 'true' : 'false');
+      });
+      badges.forEach(function(b) {
+        var bi = parseInt(b.getAttribute('data-spx-badge'), 10);
+        b.classList.toggle('is-active', bi === i);
+      });
+      callouts.forEach(function(c) {
+        var ci = parseInt(c.getAttribute('data-spx-callouts'), 10);
+        c.classList.toggle('is-active', ci === i);
+      });
+      active = i;
+    }
+    function next() { show((active + 1) % slides.length); }
+    function start() {
+      if (!autoplay || reduce) return;
+      stop();
+      timer = setInterval(next, delay);
+    }
+    function stop() { if (timer) { clearInterval(timer); timer = null; } }
+
+    dots.forEach(function(d, i) {
+      d.addEventListener('click', function() { show(i); start(); });
+    });
+    section.addEventListener('mouseenter', stop);
+    section.addEventListener('mouseleave', start);
+    section.addEventListener('focusin', stop);
+    section.addEventListener('focusout', start);
+
+    var touchX = null;
+    section.addEventListener('touchstart', function(e) {
+      touchX = e.touches[0].clientX; stop();
+    }, { passive: true });
+    section.addEventListener('touchend', function(e) {
+      if (touchX === null) return;
+      var dx = e.changedTouches[0].clientX - touchX;
+      if (dx > 40) show((active - 1 + slides.length) % slides.length);
+      else if (dx < -40) next();
+      touchX = null;
+      start();
+    }, { passive: true });
+
+    start();
+
+    // ===== Per-slide Add to Cart inside price badge =====
+    section.querySelectorAll('[data-spx-hero-add]').forEach(function(btn) {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var variantId = btn.getAttribute('data-spx-hero-add');
+        if (!variantId || btn.disabled) return;
+        btn.classList.add('is-loading');
+        btn.classList.remove('is-added');
+        btn.disabled = true;
+        fetch('/cart/add.js', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify({ id: variantId, quantity: 1 })
+        })
+          .then(function(r) { if (!r.ok) throw new Error('Add failed'); return r.json(); })
+          .then(function() { return fetch('/cart.js', { headers: { 'Accept': 'application/json' } }); })
+          .then(function(r) { return r.json(); })
+          .then(function(cart) {
+            window.dispatchEvent(new CustomEvent('cart:updated', { detail: cart }));
+            if (window.theme && window.theme.cart && typeof window.theme.cart.open === 'function') {
+              window.theme.cart.open();
+            }
+            btn.classList.remove('is-loading');
+            btn.classList.add('is-added');
+            setTimeout(function() { btn.classList.remove('is-added'); btn.disabled = false; }, 1800);
+          })
+          .catch(function(err) {
+            console.error('SpiceX hero add to cart:', err);
+            btn.classList.remove('is-loading');
+            btn.disabled = false;
+          });
+      });
+    });
+  })();
+</script>
+{%- else -%}
+<script>
+  (function() {
+    var section = document.getElementById('shopify-section-{{ section.id }}');
+    if (!section) return;
+    // Single-slide mode still needs Add to Cart handlers if a product is connected
+    section.querySelectorAll('[data-spx-hero-add]').forEach(function(btn) {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        var variantId = btn.getAttribute('data-spx-hero-add');
+        if (!variantId || btn.disabled) return;
+        btn.classList.add('is-loading');
+        btn.disabled = true;
+        fetch('/cart/add.js', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify({ id: variantId, quantity: 1 })
+        })
+          .then(function(r) { if (!r.ok) throw new Error('Add failed'); return r.json(); })
+          .then(function() { return fetch('/cart.js'); })
+          .then(function(r) { return r.json(); })
+          .then(function(cart) {
+            window.dispatchEvent(new CustomEvent('cart:updated', { detail: cart }));
+            btn.classList.remove('is-loading');
+            btn.classList.add('is-added');
+            setTimeout(function() { btn.classList.remove('is-added'); btn.disabled = false; }, 1800);
+          })
+          .catch(function() {
+            btn.classList.remove('is-loading');
+            btn.disabled = false;
+          });
+      });
+    });
+  })();
+</script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "SpiceX hero",
+  "class": "spx-hero-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Made in the USA · All-natural"
+    },
+    {
+      "type": "text",
+      "id": "title_line_1",
+      "label": "Title · line 1",
+      "default": "Real ingredients."
+    },
+    {
+      "type": "text",
+      "id": "title_line_2",
+      "label": "Title · line 2",
+      "default": "Read the label."
+    },
+    {
+      "type": "text",
+      "id": "title_accent",
+      "label": "Title · italic accent (line 3)",
+      "default": "Fall in love."
+    },
+    {
+      "type": "textarea",
+      "id": "sub",
+      "label": "Subhead",
+      "default": "Six all-natural seasoning blends, made by hand in the USA. No fillers, no MSG, no mystery junk. Just clean ingredients you can recognize."
+    },
+    {
+      "type": "header",
+      "content": "Background image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Desktop / web background image",
+      "info": "Full-bleed background for desktop. If empty, uses the bundle product's featured image."
+    },
+    {
+      "type": "select",
+      "id": "image_focal_point",
+      "label": "Desktop image focal point",
+      "default": "center center",
+      "options": [
+        { "value": "center top", "label": "Top" },
+        { "value": "center center", "label": "Center" },
+        { "value": "center bottom", "label": "Bottom" },
+        { "value": "left center", "label": "Left" },
+        { "value": "right center", "label": "Right" }
+      ]
+    },
+    {
+      "type": "image_picker",
+      "id": "image_mobile",
+      "label": "Mobile background image",
+      "info": "Shown on screens 768px and below. Use a portrait-friendly crop. Falls back to desktop image if empty."
+    },
+    {
+      "type": "select",
+      "id": "image_mobile_focal_point",
+      "label": "Mobile image focal point",
+      "default": "center center",
+      "options": [
+        { "value": "center top", "label": "Top" },
+        { "value": "center center", "label": "Center" },
+        { "value": "center bottom", "label": "Bottom" },
+        { "value": "left center", "label": "Left" },
+        { "value": "right center", "label": "Right" }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "bundle_product_handle",
+      "label": "Bundle product handle (fallback)",
+      "default": "bundle-save"
+    },
+    {
+      "type": "header",
+      "content": "Flavor carousel"
+    },
+    {
+      "type": "paragraph",
+      "content": "Add Flavor blocks below to enable the carousel. Each block becomes a slide with its own bottle image, accessed via dots at the bottom of the hero. Needs 2+ blocks to show dots."
+    },
+    {
+      "type": "checkbox",
+      "id": "carousel_autoplay",
+      "label": "Auto-advance carousel",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "carousel_interval",
+      "label": "Auto-advance interval",
+      "min": 3,
+      "max": 12,
+      "step": 1,
+      "default": 6,
+      "unit": "s"
+    },
+    {
+      "type": "header",
+      "content": "Overlay"
+    },
+    {
+      "type": "select",
+      "id": "overlay_style",
+      "label": "Overlay style",
+      "default": "gradient-left",
+      "options": [
+        { "value": "flat", "label": "Flat (even darkness)" },
+        { "value": "gradient-left", "label": "Gradient from left" },
+        { "value": "gradient-right", "label": "Gradient from right" },
+        { "value": "gradient-bottom", "label": "Gradient from bottom" }
+      ]
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "Overlay color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Overlay opacity",
+      "info": "Darker overlay = better text legibility; lighter overlay = more image visible.",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "default": 45,
+      "unit": "%"
+    },
+    {
+      "type": "header",
+      "content": "Layout & size"
+    },
+    {
+      "type": "select",
+      "id": "content_h_align",
+      "label": "Content horizontal align",
+      "default": "left",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "content_v_align",
+      "label": "Content vertical align",
+      "default": "center",
+      "options": [
+        { "value": "top", "label": "Top" },
+        { "value": "center", "label": "Center" },
+        { "value": "bottom", "label": "Bottom" }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "min_height_desktop",
+      "label": "Desktop min-height",
+      "min": 500,
+      "max": 900,
+      "step": 20,
+      "default": 720,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "min_height_mobile",
+      "label": "Mobile min-height",
+      "min": 400,
+      "max": 800,
+      "step": 20,
+      "default": 600,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "Savings badge"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_badge",
+      "label": "Show savings badge",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "badge_top",
+      "label": "Badge top text",
+      "default": "BEST VALUE"
+    },
+    {
+      "type": "text",
+      "id": "badge_main",
+      "label": "Badge main text",
+      "default": "Save $12.95"
+    },
+    {
+      "type": "color",
+      "id": "badge_bg",
+      "label": "Badge background",
+      "default": "#8b1a1a"
+    },
+    {
+      "type": "color",
+      "id": "badge_text",
+      "label": "Badge text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Buttons"
+    },
+    {
+      "type": "text",
+      "id": "primary_cta_text",
+      "label": "Primary button text",
+      "default": "Get the Bundle"
+    },
+    {
+      "type": "text",
+      "id": "primary_cta_save",
+      "label": "Primary button save pill",
+      "info": "Small inline pill on the left of the button. Leave blank to hide.",
+      "default": "Save $12.95"
+    },
+    {
+      "type": "url",
+      "id": "primary_cta_url",
+      "label": "Primary button URL"
+    },
+    {
+      "type": "color",
+      "id": "primary_btn_bg",
+      "label": "Primary button background",
+      "default": "#e8a823"
+    },
+    {
+      "type": "color",
+      "id": "primary_btn_text",
+      "label": "Primary button text",
+      "default": "#0a0a0a"
+    },
+    {
+      "type": "text",
+      "id": "secondary_cta_text",
+      "label": "Secondary button text",
+      "default": "Shop Individual Blends"
+    },
+    {
+      "type": "url",
+      "id": "secondary_cta_url",
+      "label": "Secondary button URL"
+    },
+    {
+      "type": "header",
+      "content": "Trust strip"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_trust",
+      "label": "Show trust strip",
+      "default": true
+    },
+    {
+      "type": "html",
+      "id": "loox_embed",
+      "label": "Loox widget embed (HTML, optional)",
+      "info": "Paste Loox embed code. Used only if no @app block is added."
+    },
+    {
+      "type": "text",
+      "id": "trust_rating",
+      "label": "Star rating (fallback)",
+      "default": "4.9"
+    },
+    {
+      "type": "text",
+      "id": "trust_reviews",
+      "label": "Review count text (fallback)",
+      "default": "300+ reviews"
+    },
+    {
+      "type": "text",
+      "id": "trust_extra",
+      "label": "Trust item 2",
+      "default": "Free shipping on 2+ jars"
+    },
+    {
+      "type": "text",
+      "id": "trust_extra_2",
+      "label": "Trust item 3",
+      "default": "30-day money-back"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Section background (visible if no image)",
+      "default": "#0a0a0a"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "eyebrow_color",
+      "label": "Eyebrow color",
+      "default": "#e8a823"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Italic accent color",
+      "default": "#e8a823"
+    },
+    {
+      "type": "color",
+      "id": "stars_color",
+      "label": "Stars color",
+      "default": "#e8a823"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "@app"
+    },
+    {
+      "type": "flavor",
+      "name": "Flavor slide",
+      "limit": 12,
+      "settings": [
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Flavor name",
+          "default": "Flavor",
+          "info": "Shown as the dot label."
+        },
+        {
+          "type": "checkbox",
+          "id": "pin_bottom_mobile",
+          "label": "Pin dot to its own row at the bottom (mobile)",
+          "info": "Use this to single out the bundle / featured slide so it doesn't crowd the blend dots.",
+          "default": false
+        },
+        {
+          "type": "color",
+          "id": "dot_color",
+          "label": "Brand color (dot + active pill)",
+          "default": "#e8a823"
+        },
+        {
+          "type": "color",
+          "id": "dot_text_color",
+          "label": "Active pill text color",
+          "default": "#0a0a0a",
+          "info": "Used when this dot is active. Pick black or white depending on the brand color contrast."
+        },
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product (for Add to Cart in price badge)",
+          "info": "Connect a Shopify product to enable the Add to Cart button inside this slide's price badge."
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Desktop image",
+          "info": "Background image for this slide. If empty, uses the hero's main desktop image."
+        },
+        {
+          "type": "image_picker",
+          "id": "image_mobile",
+          "label": "Mobile image",
+          "info": "Falls back to the desktop image if empty."
+        },
+        {
+          "type": "select",
+          "id": "focal",
+          "label": "Desktop focal point",
+          "default": "center center",
+          "options": [
+            { "value": "center top", "label": "Top" },
+            { "value": "center center", "label": "Center" },
+            { "value": "center bottom", "label": "Bottom" },
+            { "value": "left center", "label": "Left" },
+            { "value": "right center", "label": "Right" }
+          ]
+        },
+        {
+          "type": "select",
+          "id": "focal_mobile",
+          "label": "Mobile focal point",
+          "default": "center center",
+          "info": "Used for the mobile background image. Falls back to desktop focal if left at default.",
+          "options": [
+            { "value": "center top", "label": "Top" },
+            { "value": "center center", "label": "Center" },
+            { "value": "center bottom", "label": "Bottom" },
+            { "value": "left center", "label": "Left" },
+            { "value": "right center", "label": "Right" },
+            { "value": "left top", "label": "Top-left" },
+            { "value": "right top", "label": "Top-right" },
+            { "value": "left bottom", "label": "Bottom-left" },
+            { "value": "right bottom", "label": "Bottom-right" }
+          ]
+        },
+        {
+          "type": "header",
+          "content": "Price badge"
+        },
+        {
+          "type": "text",
+          "id": "price_label",
+          "label": "Top label",
+          "default": "Per Bottle"
+        },
+        {
+          "type": "text",
+          "id": "price",
+          "label": "Price",
+          "default": "$12.99"
+        },
+        {
+          "type": "text",
+          "id": "savings",
+          "label": "Savings line (optional)",
+          "info": "Shown in red below the price, e.g. 'Save $12.95'. Leave blank to hide."
+        },
+        {
+          "type": "header",
+          "content": "Side callouts (desktop only)"
+        },
+        {
+          "type": "paragraph",
+          "content": "Bubble annotations with a line pointing to the bottle. Hidden on mobile. Leave both title + text blank to hide a callout."
+        },
+        {
+          "type": "text",
+          "id": "callout_left_title",
+          "label": "Left callout · title"
+        },
+        {
+          "type": "textarea",
+          "id": "callout_left_text",
+          "label": "Left callout · text"
+        },
+        {
+          "type": "range",
+          "id": "callout_left_top",
+          "label": "Left callout · vertical position",
+          "min": 15,
+          "max": 85,
+          "step": 5,
+          "default": 70,
+          "unit": "%"
+        },
+        {
+          "type": "text",
+          "id": "callout_right_title",
+          "label": "Right callout · title"
+        },
+        {
+          "type": "textarea",
+          "id": "callout_right_text",
+          "label": "Right callout · text"
+        },
+        {
+          "type": "range",
+          "id": "callout_right_top",
+          "label": "Right callout · vertical position",
+          "min": 15,
+          "max": 85,
+          "step": 5,
+          "default": 40,
+          "unit": "%"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "SpiceX hero",
+      "category": "Hero"
+    }
+  ]
+}
+{% endschema %}

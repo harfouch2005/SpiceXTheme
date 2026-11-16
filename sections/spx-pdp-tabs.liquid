@@ -1,0 +1,403 @@
+{%- comment -%}
+  SpiceX PDP · Tabs (Ingredients / Shipping / Nutrition · How to Use hidden by default via setting)
+  - Ingredients rendered as a nutrition-label style paragraph (comma-separated)
+{%- endcomment -%}
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+
+{% style %}
+  #shopify-section-{{ section.id }} {
+    --c: {{ section.settings.accent_color | default: '#0099d6' }};
+    --ink: #0a0a0a;
+    --ink-mute: #555555;
+    --ink-dim: #999999;
+    --line: rgba(10, 10, 10, 0.10);
+    background: {{ section.settings.bg_color | default: '#f7f3ec' }};
+    color: var(--ink);
+    font-family: var(--spx-font-body, var(--spx-font-body));
+    box-sizing: border-box;
+  }
+  #shopify-section-{{ section.id }} *, #shopify-section-{{ section.id }} *::before, #shopify-section-{{ section.id }} *::after { box-sizing: border-box; }
+
+  #shopify-section-{{ section.id }} .pdp-t {
+    max-width: 1480px;
+    margin: 0 auto;
+    padding: 80px clamp(20px, 4vw, 56px);
+  }
+  #shopify-section-{{ section.id }} .pdp-t-inner { max-width: 920px; margin: 0 auto; }
+  #shopify-section-{{ section.id }} .pdp-t-nav {
+    display: flex;
+    gap: 32px;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 40px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  #shopify-section-{{ section.id }} .pdp-t-nav::-webkit-scrollbar { display: none; }
+  #shopify-section-{{ section.id }} .pdp-t-btn {
+    background: none;
+    border: 0;
+    padding: 14px 2px;
+    font-family: inherit;
+    font-size: 12.5px;
+    font-weight: 700;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    white-space: nowrap;
+    transition: color 0.2s ease, border-color 0.2s ease;
+  }
+  #shopify-section-{{ section.id }} .pdp-t-btn:hover { color: var(--ink); }
+  #shopify-section-{{ section.id }} .pdp-t-btn.is-active { color: var(--ink); border-bottom-color: var(--c); }
+  #shopify-section-{{ section.id }} .pdp-t-panel { display: none; }
+  #shopify-section-{{ section.id }} .pdp-t-panel.is-active { display: block; }
+
+  /* Ingredients · nutrition-label style */
+  #shopify-section-{{ section.id }} .pdp-ing-grid {
+    display: grid;
+    grid-template-columns: 3fr 2fr;
+    gap: 48px;
+    align-items: start;
+  }
+  #shopify-section-{{ section.id }} .pdp-ing-heading {
+    font-family: var(--spx-font-display, 'Arial Black', sans-serif);
+    font-weight: 800;
+    font-size: 26px;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    margin: 0 0 20px;
+  }
+  #shopify-section-{{ section.id }} .pdp-ing-label {
+    background: #ffffff;
+    border: 1.5px solid var(--ink);
+    border-radius: 8px;
+    padding: 18px 22px;
+  }
+  #shopify-section-{{ section.id }} .pdp-ing-label-title {
+    font-family: var(--spx-font-display, 'Arial Black', sans-serif);
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink);
+    margin: 0 0 10px;
+    padding-bottom: 10px;
+    border-bottom: 3px solid var(--ink);
+  }
+  #shopify-section-{{ section.id }} .pdp-ing-para {
+    font-size: 15px;
+    line-height: 1.75;
+    color: var(--ink);
+    margin: 0;
+  }
+  #shopify-section-{{ section.id }} .pdp-ing-para strong { font-weight: 700; }
+  #shopify-section-{{ section.id }} .pdp-ing-foot {
+    margin: 12px 0 0;
+    font-size: 11.5px;
+    color: var(--ink-dim);
+  }
+  #shopify-section-{{ section.id }} .pdp-ing-not {
+    background: #fbf8f2;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 18px 20px;
+  }
+  #shopify-section-{{ section.id }} .pdp-ing-not-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin: 0 0 14px;
+    line-height: 1;
+  }
+  #shopify-section-{{ section.id }} .pdp-ing-not-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+  #shopify-section-{{ section.id }} .pdp-ing-not-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 13.5px;
+    color: var(--ink-mute);
+    line-height: 1.45;
+  }
+  #shopify-section-{{ section.id }} .pdp-ing-x {
+    width: 14px;
+    height: 14px;
+    color: var(--ink-dim);
+    flex: 0 0 auto;
+    margin-top: 3px;
+  }
+  #shopify-section-{{ section.id }} .pdp-ing-x svg { width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+
+  /* How to use (hidden unless enabled) */
+  #shopify-section-{{ section.id }} .pdp-use-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px;
+  }
+  #shopify-section-{{ section.id }} .pdp-use-card {
+    background: #ffffff;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid var(--line);
+  }
+  #shopify-section-{{ section.id }} .pdp-use-img {
+    width: 100%;
+    aspect-ratio: 4/3;
+    object-fit: cover;
+    display: block;
+  }
+  #shopify-section-{{ section.id }} .pdp-use-body { padding: 18px; }
+  #shopify-section-{{ section.id }} .pdp-use-title {
+    font-family: var(--spx-font-display, 'Arial Black', sans-serif);
+    font-weight: 800;
+    font-size: 17px;
+    color: var(--ink);
+    margin: 0 0 8px;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+  }
+  #shopify-section-{{ section.id }} .pdp-use-body p {
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--ink-mute);
+    margin: 0;
+  }
+
+  /* Shipping prose */
+  #shopify-section-{{ section.id }} .pdp-prose {
+    max-width: 640px;
+    margin: 0 auto;
+    font-size: 15.5px;
+    line-height: 1.7;
+    color: var(--ink-mute);
+  }
+  #shopify-section-{{ section.id }} .pdp-prose p { margin: 0 0 16px; }
+  #shopify-section-{{ section.id }} .pdp-prose strong { color: var(--ink); font-weight: 700; }
+
+  /* Nutrition */
+  #shopify-section-{{ section.id }} .pdp-nutr {
+    max-width: 480px;
+    margin: 0 auto;
+    background: #ffffff;
+    border-radius: 8px;
+    padding: 20px 24px;
+    border: 1.5px solid var(--ink);
+  }
+  #shopify-section-{{ section.id }} .pdp-nutr-title {
+    font-family: var(--spx-font-display, 'Arial Black', sans-serif);
+    font-weight: 800;
+    font-size: 20px;
+    margin: 0 0 12px;
+    color: var(--ink);
+    padding-bottom: 12px;
+    border-bottom: 4px solid var(--ink);
+  }
+  #shopify-section-{{ section.id }} .pdp-nutr-meta {
+    font-size: 12px;
+    color: var(--ink-mute);
+    margin: 0 0 14px;
+  }
+  #shopify-section-{{ section.id }} .pdp-nutr-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--line);
+    font-size: 14px;
+    color: var(--ink);
+  }
+  #shopify-section-{{ section.id }} .pdp-nutr-row:last-child { border-bottom: 0; }
+  #shopify-section-{{ section.id }} .pdp-nutr-row strong { font-weight: 700; }
+  #shopify-section-{{ section.id }} .pdp-nutr-foot {
+    margin-top: 14px;
+    font-size: 11.5px;
+    color: var(--ink-dim);
+    text-align: center;
+  }
+
+  @media (max-width: 720px) {
+    #shopify-section-{{ section.id }} .pdp-t { padding: 56px 20px; }
+    #shopify-section-{{ section.id }} .pdp-ing-grid { grid-template-columns: 1fr; gap: 28px; }
+    #shopify-section-{{ section.id }} .pdp-use-grid { grid-template-columns: 1fr; gap: 20px; }
+  }
+{% endstyle %}
+
+{%- liquid
+  assign show_how = false
+  if section.settings.show_how
+    assign show_how = true
+  endif
+-%}
+
+<section class="pdp-t">
+  <div class="pdp-t-inner">
+    <div class="pdp-t-nav" role="tablist">
+      <button type="button" class="pdp-t-btn is-active" data-pdp-tab="ingredients" role="tab" aria-selected="true">Ingredients</button>
+      {%- if show_how -%}
+        <button type="button" class="pdp-t-btn" data-pdp-tab="how" role="tab" aria-selected="false">How to use</button>
+      {%- endif -%}
+      <button type="button" class="pdp-t-btn" data-pdp-tab="shipping" role="tab" aria-selected="false">Shipping & returns</button>
+      <button type="button" class="pdp-t-btn" data-pdp-tab="nutrition" role="tab" aria-selected="false">Nutrition</button>
+    </div>
+
+    {%- comment -%} ===== INGREDIENTS (nutrition-label style) ===== {%- endcomment -%}
+    <div class="pdp-t-panel is-active" data-pdp-panel="ingredients">
+      <div class="pdp-ing-grid">
+        <div>
+          <h3 class="pdp-ing-heading">{{ section.settings.ing_heading | default: "What's in this jar." | escape }}</h3>
+          <div class="pdp-ing-label">
+            <p class="pdp-ing-label-title">Ingredients</p>
+            {%- liquid
+              assign ings_raw = section.settings.ingredients | default: 'Sea Salt, Black Pepper, Granulated Garlic'
+              assign ings = ings_raw | split: ','
+              assign cleaned = ''
+              for ing in ings
+                assign c = ing | strip
+                if c != blank
+                  if cleaned == ''
+                    assign cleaned = c
+                  else
+                    assign cleaned = cleaned | append: ', ' | append: c
+                  endif
+                endif
+              endfor
+            -%}
+            <p class="pdp-ing-para">{{ cleaned | escape }}.</p>
+            <p class="pdp-ing-foot">That's the whole list · every ingredient, exactly as printed on the jar.</p>
+          </div>
+        </div>
+        <div class="pdp-ing-not">
+          <p class="pdp-ing-not-label">{{ section.settings.not_in_label | default: 'Not in this jar' | escape }}</p>
+          <ul class="pdp-ing-not-list">
+            {%- assign nots_raw = section.settings.not_in | default: 'No silicon dioxide, No anti-caking agents, No MSG, No natural flavors, No added sugar' -%}
+            {%- assign nots = nots_raw | split: ',' -%}
+            {%- for n in nots -%}
+              {%- assign cn = n | strip -%}
+              {%- if cn != blank -%}
+                <li class="pdp-ing-not-item">
+                  <span class="pdp-ing-x" aria-hidden="true"><svg viewBox="0 0 14 14"><line x1="3" y1="3" x2="11" y2="11"/><line x1="11" y1="3" x2="3" y2="11"/></svg></span>
+                  <span>{{ cn | escape }}</span>
+                </li>
+              {%- endif -%}
+            {%- endfor -%}
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    {%- comment -%} ===== HOW TO USE (only when enabled AND cards have images) ===== {%- endcomment -%}
+    {%- if show_how -%}
+    <div class="pdp-t-panel" data-pdp-panel="how">
+      <div class="pdp-use-grid">
+        {%- for i in (1..3) -%}
+          {%- assign t_key = 'use_' | append: i | append: '_title' -%}
+          {%- assign b_key = 'use_' | append: i | append: '_body' -%}
+          {%- assign i_key = 'use_' | append: i | append: '_image' -%}
+          {%- assign t_val = section.settings[t_key] -%}
+          {%- assign b_val = section.settings[b_key] -%}
+          {%- assign i_val = section.settings[i_key] -%}
+          {%- if i_val != blank -%}
+            <div class="pdp-use-card">
+              <img class="pdp-use-img" src="{{ i_val | image_url: width: 600 }}" alt="{{ t_val | escape }}" loading="lazy">
+              <div class="pdp-use-body">
+                {%- if t_val != blank -%}<h4 class="pdp-use-title">{{ t_val | escape }}</h4>{%- endif -%}
+                {%- if b_val != blank -%}<p>{{ b_val | escape }}</p>{%- endif -%}
+              </div>
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    </div>
+    {%- endif -%}
+
+    {%- comment -%} ===== SHIPPING ===== {%- endcomment -%}
+    <div class="pdp-t-panel" data-pdp-panel="shipping">
+      <div class="pdp-prose">
+        {%- if section.settings.shipping_text != blank -%}
+          {{ section.settings.shipping_text }}
+        {%- else -%}
+          <p>Most orders ship from our USA kitchen within 1 business day. U.S. delivery typically arrives in 3-5 business days. <strong>Free shipping with purchase of 2 or more jars · bundles always ship free.</strong></p>
+          <p>Every order comes with a 30-day money back guarantee.</p>
+        {%- endif -%}
+      </div>
+    </div>
+
+    {%- comment -%} ===== NUTRITION ===== {%- endcomment -%}
+    <div class="pdp-t-panel" data-pdp-panel="nutrition">
+      <div class="pdp-nutr">
+        <h3 class="pdp-nutr-title">Nutrition Facts</h3>
+        <p class="pdp-nutr-meta">Serving size: {{ section.settings.serving_size | default: '1/4 tsp' | escape }}</p>
+        <div class="pdp-nutr-row"><span>Calories</span><strong>{{ section.settings.calories | default: '0' | escape }}</strong></div>
+        <div class="pdp-nutr-row"><span>Total Fat</span><strong>{{ section.settings.fat | default: '0g' | escape }}</strong></div>
+        <div class="pdp-nutr-row"><span>Sodium</span><strong>{{ section.settings.sodium | default: '230mg (10% DV)' | escape }}</strong></div>
+        <div class="pdp-nutr-row"><span>Total Carbs</span><strong>{{ section.settings.carbs | default: '0g' | escape }}</strong></div>
+        <div class="pdp-nutr-row"><span>Total Sugars</span><strong>{{ section.settings.sugars | default: '0g' | escape }}</strong></div>
+        <div class="pdp-nutr-row"><span>Protein</span><strong>{{ section.settings.protein | default: '0g' | escape }}</strong></div>
+        <p class="pdp-nutr-foot">Full nutrition information printed on every jar.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  (function() {
+    var section = document.getElementById('shopify-section-{{ section.id }}');
+    if (!section) return;
+    var btns = section.querySelectorAll('[data-pdp-tab]');
+    var panels = section.querySelectorAll('[data-pdp-panel]');
+    btns.forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var key = btn.getAttribute('data-pdp-tab');
+        btns.forEach(function(b) {
+          var on = b.getAttribute('data-pdp-tab') === key;
+          b.classList.toggle('is-active', on);
+          b.setAttribute('aria-selected', on ? 'true' : 'false');
+        });
+        panels.forEach(function(p) {
+          p.classList.toggle('is-active', p.getAttribute('data-pdp-panel') === key);
+        });
+      });
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "PDP · Tabs",
+  "settings": [
+    { "type": "header", "content": "Ingredients" },
+    { "type": "text", "id": "ing_heading", "label": "Heading", "default": "What's in this jar." },
+    { "type": "textarea", "id": "ingredients", "label": "Ingredients (comma-separated)", "default": "Sea Salt, Black Pepper, Granulated Garlic" },
+    { "type": "text", "id": "not_in_label", "label": "Not-in label", "default": "Not in this jar" },
+    { "type": "textarea", "id": "not_in", "label": "Not-in items (comma-separated)", "default": "No silicon dioxide, No anti-caking agents, No MSG, No natural flavors, No added sugar" },
+    { "type": "header", "content": "How to use" },
+    { "type": "checkbox", "id": "show_how", "label": "Show 'How to use' tab", "info": "Hidden by default. Turn on only once real photos are added below · cards without an image never render.", "default": false },
+    { "type": "text", "id": "use_1_title", "label": "Use 1 title", "default": "On chicken" },
+    { "type": "textarea", "id": "use_1_body", "label": "Use 1 body", "default": "Sprinkle generously before grilling, roasting, or sautéing." },
+    { "type": "image_picker", "id": "use_1_image", "label": "Use 1 image" },
+    { "type": "text", "id": "use_2_title", "label": "Use 2 title", "default": "On eggs" },
+    { "type": "textarea", "id": "use_2_body", "label": "Use 2 body", "default": "A quarter teaspoon over scrambled eggs or avocado toast." },
+    { "type": "image_picker", "id": "use_2_image", "label": "Use 2 image" },
+    { "type": "text", "id": "use_3_title", "label": "Use 3 title", "default": "On vegetables" },
+    { "type": "textarea", "id": "use_3_body", "label": "Use 3 body", "default": "Toss roasted potatoes, broccoli, or sweet potato fries with olive oil and Daily Blend." },
+    { "type": "image_picker", "id": "use_3_image", "label": "Use 3 image" },
+    { "type": "header", "content": "Shipping & returns" },
+    { "type": "richtext", "id": "shipping_text", "label": "Shipping copy" },
+    { "type": "header", "content": "Nutrition" },
+    { "type": "text", "id": "serving_size", "label": "Serving size", "default": "1/4 tsp" },
+    { "type": "text", "id": "calories", "label": "Calories", "default": "0" },
+    { "type": "text", "id": "fat", "label": "Fat", "default": "0g" },
+    { "type": "text", "id": "sodium", "label": "Sodium", "default": "230mg (10% DV)" },
+    { "type": "text", "id": "carbs", "label": "Carbs", "default": "0g" },
+    { "type": "text", "id": "sugars", "label": "Sugars", "default": "0g" },
+    { "type": "text", "id": "protein", "label": "Protein", "default": "0g" },
+    { "type": "header", "content": "Style" },
+    { "type": "color", "id": "accent_color", "label": "Accent", "default": "#0099d6" },
+    { "type": "color", "id": "bg_color", "label": "Background", "default": "#f7f3ec" }
+  ],
+  "presets": [{ "name": "PDP · Tabs", "category": "Product" }]
+}
+{% endschema %}

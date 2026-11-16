@@ -1,0 +1,715 @@
+{%- comment -%}
+  SpiceX Header
+  - Centered prominent logo (image or text fallback)
+  - Symmetrical nav split (left & right of logo) · desktop
+  - Hamburger drawer on mobile
+  - Cart icon with brand-gold count badge
+  - Sticky on scroll with subtle shadow once scrolled past hero
+  - All CSS scoped under #shopify-section-{{ section.id }}
+{%- endcomment -%}
+
+{%- liquid
+  assign section_id = section.id
+-%}
+
+{%- capture spx_home_icon -%}<svg class="spx-h__nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11.2L12 4l9 7.2V20a2 2 0 0 1-2 2h-4v-7h-6v7H5a2 2 0 0 1-2-2v-8.8z"/></svg>{%- endcapture -%}
+{%- capture spx_jar_icon -%}<svg class="spx-h__nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="7" y="3" width="10" height="3.5" rx="0.5"/><path d="M8 6.5 H 16 V 20.5 a 0.5 0.5 0 0 1 -0.5 0.5 H 8.5 a 0.5 0.5 0 0 1 -0.5 -0.5 Z"/><line x1="10" y1="12" x2="14" y2="12"/><line x1="10" y1="15" x2="14" y2="15"/></svg>{%- endcapture -%}
+{%- capture spx_box_icon -%}<svg class="spx-h__nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 8 L 12 3.5 L 20.5 8 L 12 12.5 Z"/><path d="M3.5 8 V 17 L 12 21 L 20.5 17 V 8"/><line x1="12" y1="12.5" x2="12" y2="21"/></svg>{%- endcapture -%}
+
+{% style %}
+  #shopify-section-{{ section.id }} {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    background: {{ section.settings.bg_color }};
+    color: {{ section.settings.text_color }};
+    font-family: var(--spx-font-body, 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    transition: box-shadow 0.25s ease, background 0.25s ease;
+    box-sizing: border-box;
+  }
+  #shopify-section-{{ section.id }} *,
+  #shopify-section-{{ section.id }} *::before,
+  #shopify-section-{{ section.id }} *::after { box-sizing: border-box; }
+
+  #shopify-section-{{ section.id }}.is-scrolled {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+  }
+
+  /* Bar */
+  #shopify-section-{{ section.id }} .spx-h__bar {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 14px clamp(20px, 4vw, 56px);
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 16px;
+    position: relative;
+  }
+  /* Force left/right cols to equal min width so logo stays dead-center */
+  #shopify-section-{{ section.id }} .spx-h__col--left,
+  #shopify-section-{{ section.id }} .spx-h__col--right {
+    min-width: 0;
+  }
+
+  /* Columns */
+  #shopify-section-{{ section.id }} .spx-h__col {
+    display: flex;
+    align-items: center;
+  }
+  #shopify-section-{{ section.id }} .spx-h__col--left { justify-content: flex-start; }
+  #shopify-section-{{ section.id }} .spx-h__col--center { justify-content: center; }
+  #shopify-section-{{ section.id }} .spx-h__col--right { justify-content: flex-end; gap: 18px; }
+
+  /* Nav */
+  #shopify-section-{{ section.id }} .spx-h__nav {
+    display: flex;
+    gap: clamp(18px, 2vw, 28px);
+    align-items: center;
+  }
+  #shopify-section-{{ section.id }} .spx-h__nav a {
+    color: inherit;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    line-height: 1;
+    padding: 8px 0;
+    position: relative;
+    transition: color 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+  }
+  #shopify-section-{{ section.id }} .spx-h__nav-icon {
+    width: 16px;
+    height: 16px;
+    display: block;
+    flex: 0 0 auto;
+  }
+  #shopify-section-{{ section.id }} .spx-h__nav a::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 2px;
+    height: 1.5px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform 0.25s ease;
+  }
+  #shopify-section-{{ section.id }} .spx-h__nav a:hover::after { transform: scaleX(1); }
+
+  /* Logo */
+  #shopify-section-{{ section.id }} .spx-h__logo {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+    line-height: 1;
+  }
+  #shopify-section-{{ section.id }} .spx-h__logo-img {
+    display: block;
+    height: {{ section.settings.logo_max_height_desktop }}px;
+    max-height: {{ section.settings.logo_max_height_desktop }}px;
+    width: auto;
+    max-width: 260px;
+    object-fit: contain;
+  }
+  #shopify-section-{{ section.id }} .spx-h__logo-text {
+    font-family: var(--spx-font-display, 'Fraunces', 'Times New Roman', serif);
+    font-size: clamp(34px, 4vw, 48px);
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    color: inherit;
+    line-height: 1;
+    font-variation-settings: "WONK" 0, "SOFT" 0, "opsz" 144;
+  }
+  #shopify-section-{{ section.id }} .spx-h__logo-text em {
+    font-style: normal;
+    color: {{ section.settings.logo_accent_color }};
+    font-weight: 800;
+  }
+
+  /* Cart */
+  #shopify-section-{{ section.id }} .spx-h__cart {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    height: 40px;
+    padding: 0 10px;
+    color: inherit;
+    text-decoration: none;
+    transition: opacity 0.2s ease;
+  }
+  #shopify-section-{{ section.id }} .spx-h__cart:hover { opacity: 0.72; }
+  #shopify-section-{{ section.id }} .spx-h__cart-icon {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    flex: 0 0 auto;
+  }
+  #shopify-section-{{ section.id }} .spx-h__cart svg {
+    width: 24px;
+    height: 24px;
+    display: block;
+  }
+  #shopify-section-{{ section.id }} .spx-h__cart-label {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    line-height: 1;
+    color: inherit;
+  }
+  #shopify-section-{{ section.id }} .spx-h__cart-count {
+    position: absolute;
+    top: -6px;
+    right: -8px;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    background: {{ section.settings.cart_badge_color }};
+    color: #0a0a0a;
+    border-radius: 999px;
+    font-size: 10.5px;
+    font-weight: 800;
+    line-height: 18px;
+    text-align: center;
+    letter-spacing: 0;
+  }
+  #shopify-section-{{ section.id }} .spx-h__cart-count[data-count="0"] { display: none; }
+  @media (max-width: 900px) {
+    #shopify-section-{{ section.id }} .spx-h__cart { padding: 0; gap: 0; width: 40px; justify-content: center; }
+    #shopify-section-{{ section.id }} .spx-h__cart-label { display: none; }
+    #shopify-section-{{ section.id }} .spx-h__cart-count { top: 0; right: -4px; }
+  }
+
+  /* Hamburger */
+  #shopify-section-{{ section.id }} .spx-h__hamburger {
+    display: none;
+    background: transparent;
+    border: 0;
+    padding: 8px;
+    cursor: pointer;
+    color: inherit;
+    line-height: 0;
+  }
+  #shopify-section-{{ section.id }} .spx-h__hamburger svg { width: 22px; height: 22px; display: block; }
+
+  /* Mobile */
+  @media (max-width: 900px) {
+    #shopify-section-{{ section.id }} .spx-h__bar {
+      padding: 12px 14px;
+      /* Slimmer side cols on mobile so the logo gets more breathing room */
+      grid-template-columns: 44px 1fr 44px;
+      min-height: 68px;
+    }
+    #shopify-section-{{ section.id }} .spx-h__nav { display: none; }
+    #shopify-section-{{ section.id }} .spx-h__hamburger { display: inline-flex; }
+    /* Hamburger and cart anchor to their sides; logo absolutely centered */
+    #shopify-section-{{ section.id }} .spx-h__col--center {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+    #shopify-section-{{ section.id }} .spx-h__col--center .spx-h__logo {
+      pointer-events: auto;
+    }
+    #shopify-section-{{ section.id }} .spx-h__logo-img {
+      height: {{ section.settings.logo_max_height_mobile }}px;
+      max-height: {{ section.settings.logo_max_height_mobile }}px;
+      max-width: 60vw;
+    }
+    #shopify-section-{{ section.id }} .spx-h__logo-text { font-size: 38px; }
+    #shopify-section-{{ section.id }} .spx-h__col--right { gap: 0; justify-content: flex-end; }
+    #shopify-section-{{ section.id }} .spx-h__col--left { justify-content: flex-start; }
+  }
+  @media (max-width: 380px) {
+    #shopify-section-{{ section.id }} .spx-h__logo-img { max-height: 44px; max-width: 56vw; }
+    #shopify-section-{{ section.id }} .spx-h__logo-text { font-size: 32px; }
+  }
+
+  /* Drawer (mobile) */
+  #shopify-section-{{ section.id }} .spx-h__drawer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 86%;
+    max-width: 380px;
+    height: 100dvh;
+    background: {{ section.settings.bg_color }};
+    color: {{ section.settings.text_color }};
+    z-index: 100;
+    transform: translateX(-100%);
+    transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    display: flex;
+    flex-direction: column;
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.10);
+  }
+  #shopify-section-{{ section.id }} .spx-h__drawer.is-open { transform: translateX(0); }
+  #shopify-section-{{ section.id }} .spx-h__drawer-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 22px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  }
+  #shopify-section-{{ section.id }} .spx-h__drawer-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.20em;
+    text-transform: uppercase;
+    opacity: 0.55;
+  }
+  #shopify-section-{{ section.id }} .spx-h__drawer-close {
+    background: transparent;
+    border: 0;
+    padding: 6px;
+    cursor: pointer;
+    color: inherit;
+    line-height: 0;
+  }
+  #shopify-section-{{ section.id }} .spx-h__drawer-close svg { width: 20px; height: 20px; display: block; }
+  #shopify-section-{{ section.id }} .spx-h__drawer-nav {
+    display: flex;
+    flex-direction: column;
+    padding: 12px 0;
+  }
+  #shopify-section-{{ section.id }} .spx-h__drawer-nav a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 22px;
+    color: inherit;
+    text-decoration: none;
+    font-size: 17px;
+    font-weight: 600;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+  }
+  #shopify-section-{{ section.id }} .spx-h__drawer-nav .spx-h__nav-icon {
+    width: 20px;
+    height: 20px;
+    flex: 0 0 auto;
+  }
+  /* Drawer footer with prominent Cart button */
+  #shopify-section-{{ section.id }} .spx-h__drawer-foot {
+    margin-top: auto;
+    padding: 20px 22px 28px;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+  }
+  #shopify-section-{{ section.id }} .spx-h__drawer-cart {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    background: {{ section.settings.cart_badge_color }};
+    color: #0a0a0a;
+    padding: 16px 20px;
+    border-radius: 100px;
+    font-family: var(--spx-font-body, 'DM Sans', sans-serif);
+    font-size: 14px;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    text-decoration: none;
+    line-height: 1;
+    box-shadow: 0 10px 24px -10px rgba(232, 168, 35, 0.5);
+    transition: transform 0.2s ease, filter 0.2s ease;
+  }
+  #shopify-section-{{ section.id }} .spx-h__drawer-cart:hover {
+    transform: translateY(-1px);
+    filter: brightness(1.06);
+  }
+  #shopify-section-{{ section.id }} .spx-h__drawer-cart-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    flex: 0 0 auto;
+  }
+  #shopify-section-{{ section.id }} .spx-h__drawer-cart-icon svg {
+    width: 22px;
+    height: 22px;
+    display: block;
+  }
+  #shopify-section-{{ section.id }} .spx-h__drawer-cart-label {
+    flex: 1;
+  }
+  #shopify-section-{{ section.id }} .spx-h__drawer-cart-count {
+    background: #0a0a0a;
+    color: #ffffff;
+    border-radius: 100px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    padding: 4px 9px;
+    min-width: 26px;
+    text-align: center;
+    line-height: 1.2;
+  }
+  #shopify-section-{{ section.id }} .spx-h__drawer-cart-count[data-count="0"] { display: none; }
+  #shopify-section-{{ section.id }} .spx-h__drawer-hint {
+    display: block;
+    margin-top: 10px;
+    text-align: center;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(10, 10, 10, 0.55);
+    font-weight: 600;
+  }
+
+  /* Overlay */
+  #shopify-section-{{ section.id }} .spx-h__overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: 99;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+  #shopify-section-{{ section.id }} .spx-h__overlay.is-open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+{% endstyle %}
+
+<header data-spx-h>
+  <div class="spx-h__bar">
+
+    {%- comment -%} ===== LEFT: hamburger (mobile) + nav (desktop) ===== {%- endcomment -%}
+    <div class="spx-h__col spx-h__col--left">
+      <button type="button" class="spx-h__hamburger" aria-label="Open menu" data-spx-h-open>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+          <line x1="4" y1="6" x2="20" y2="6"/>
+          <line x1="4" y1="12" x2="20" y2="12"/>
+          <line x1="4" y1="18" x2="20" y2="18"/>
+        </svg>
+      </button>
+      <nav class="spx-h__nav spx-h__nav--left" aria-label="Primary navigation">
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'nav_left' and block.settings.label != blank -%}
+            {%- assign nav_icon = '' -%}
+            {%- assign lbl_lower = block.settings.label | downcase -%}
+            {%- if lbl_lower == 'home' or block.settings.url == '/' or block.settings.url == blank -%}
+              {%- assign nav_icon = spx_home_icon -%}
+            {%- elsif lbl_lower contains 'bundle' -%}
+              {%- assign nav_icon = spx_box_icon -%}
+            {%- elsif lbl_lower contains 'shop' -%}
+              {%- assign nav_icon = spx_jar_icon -%}
+            {%- endif -%}
+            <a href="{{ block.settings.url | default: '/' }}" {{ block.shopify_attributes }}>{{ nav_icon }}<span>{{ block.settings.label | escape }}</span></a>
+          {%- endif -%}
+        {%- endfor -%}
+      </nav>
+    </div>
+
+    {%- comment -%} ===== CENTER: logo (with robust fallbacks) ===== {%- endcomment -%}
+    {%- liquid
+      assign logo_text = section.settings.logo_text
+      if logo_text == blank
+        assign logo_text = 'Spice'
+      endif
+      assign logo_accent = section.settings.logo_accent
+      if logo_accent == blank
+        assign logo_accent = 'X'
+      endif
+    -%}
+    <div class="spx-h__col spx-h__col--center">
+      <a href="{{ routes.root_url }}" class="spx-h__logo" aria-label="{{ shop.name }} home">
+        {%- if section.settings.logo != blank -%}
+          {%- liquid
+            assign logo_format = section.settings.logo.format | default: ''
+            assign is_svg = false
+            if logo_format == 'svg'
+              assign is_svg = true
+            endif
+          -%}
+          {%- if is_svg -%}
+            {%- comment -%} SVG: skip srcset + explicit width/height (vector has no fixed size) {%- endcomment -%}
+            <img class="spx-h__logo-img"
+              src="{{ section.settings.logo | image_url }}"
+              alt="{{ shop.name }}"
+              onerror="this.style.display='none'; var fb=this.nextElementSibling; if(fb){fb.style.display='inline-flex';}"
+              onload="if(this.naturalWidth===0){this.style.display='none'; var fb=this.nextElementSibling; if(fb){fb.style.display='inline-flex';}}">
+          {%- else -%}
+            <img class="spx-h__logo-img"
+              src="{{ section.settings.logo | image_url: width: 600 }}"
+              srcset="{{ section.settings.logo | image_url: width: 300 }} 300w, {{ section.settings.logo | image_url: width: 600 }} 600w, {{ section.settings.logo | image_url: width: 900 }} 900w"
+              sizes="(max-width: 900px) {{ section.settings.logo_max_height_mobile }}px, {{ section.settings.logo_max_height_desktop }}px"
+              alt="{{ shop.name }}"
+              width="{{ section.settings.logo.width | default: 600 }}"
+              height="{{ section.settings.logo.height | default: 200 }}"
+              onerror="this.style.display='none'; var fb=this.nextElementSibling; if(fb){fb.style.display='inline-flex';}">
+          {%- endif -%}
+          <span class="spx-h__logo-text" style="display:none">{{ logo_text | escape }}<em>{{ logo_accent | escape }}</em></span>
+        {%- else -%}
+          <span class="spx-h__logo-text">{{ logo_text | escape }}<em>{{ logo_accent | escape }}</em></span>
+        {%- endif -%}
+      </a>
+    </div>
+
+    {%- comment -%} ===== RIGHT: nav (desktop) + cart ===== {%- endcomment -%}
+    <div class="spx-h__col spx-h__col--right">
+      <nav class="spx-h__nav spx-h__nav--right" aria-label="Secondary navigation">
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'nav_right' and block.settings.label != blank -%}
+            {%- assign nav_icon_r = '' -%}
+            {%- assign lbl_lower_r = block.settings.label | downcase -%}
+            {%- if lbl_lower_r == 'home' or block.settings.url == '/' or block.settings.url == blank -%}
+              {%- assign nav_icon_r = spx_home_icon -%}
+            {%- elsif lbl_lower_r contains 'bundle' -%}
+              {%- assign nav_icon_r = spx_box_icon -%}
+            {%- elsif lbl_lower_r contains 'shop' -%}
+              {%- assign nav_icon_r = spx_jar_icon -%}
+            {%- endif -%}
+            <a href="{{ block.settings.url | default: '/' }}" {{ block.shopify_attributes }}>{{ nav_icon_r }}<span>{{ block.settings.label | escape }}</span></a>
+          {%- endif -%}
+        {%- endfor -%}
+      </nav>
+      <a href="{{ routes.cart_url }}" class="spx-h__cart" aria-label="Cart">
+        <span class="spx-h__cart-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 5h2.5l2.6 11.4a2 2 0 0 0 2 1.6h8.3a2 2 0 0 0 2-1.5L21.5 8.5H7"/>
+            <circle cx="10" cy="21" r="1.4" fill="currentColor" stroke="none"/>
+            <circle cx="17.5" cy="21" r="1.4" fill="currentColor" stroke="none"/>
+          </svg>
+          <span class="spx-h__cart-count" data-cart-count data-count="{{ cart.item_count }}">{{ cart.item_count }}</span>
+        </span>
+        <span class="spx-h__cart-label">Cart</span>
+      </a>
+    </div>
+
+  </div>
+
+  {%- comment -%} ===== MOBILE DRAWER ===== {%- endcomment -%}
+  <div class="spx-h__overlay" data-spx-h-overlay></div>
+  <aside class="spx-h__drawer" data-spx-h-drawer aria-hidden="true" aria-label="Menu">
+    <div class="spx-h__drawer-head">
+      <span class="spx-h__drawer-label">Menu</span>
+      <button type="button" class="spx-h__drawer-close" aria-label="Close menu" data-spx-h-close>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+          <path d="M6 6l12 12M18 6 6 18"/>
+        </svg>
+      </button>
+    </div>
+    <nav class="spx-h__drawer-nav" aria-label="Mobile navigation">
+      {%- for block in section.blocks -%}
+        {%- if block.settings.label != blank -%}
+          {%- assign nav_icon_d = '' -%}
+          {%- assign lbl_lower_d = block.settings.label | downcase -%}
+          {%- if lbl_lower_d == 'home' or block.settings.url == '/' or block.settings.url == blank -%}
+            {%- assign nav_icon_d = spx_home_icon -%}
+          {%- elsif lbl_lower_d contains 'bundle' -%}
+            {%- assign nav_icon_d = spx_box_icon -%}
+          {%- elsif lbl_lower_d contains 'shop' -%}
+            {%- assign nav_icon_d = spx_jar_icon -%}
+          {%- endif -%}
+          <a href="{{ block.settings.url | default: '/' }}">{{ nav_icon_d }}<span>{{ block.settings.label | escape }}</span></a>
+        {%- endif -%}
+      {%- endfor -%}
+    </nav>
+
+    {%- comment -%} ===== Drawer footer: Cart / Checkout CTA ===== {%- endcomment -%}
+    <div class="spx-h__drawer-foot">
+      <a href="{{ routes.cart_url }}" class="spx-h__drawer-cart" aria-label="View cart">
+        <span class="spx-h__drawer-cart-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 5h2.5l2.6 11.4a2 2 0 0 0 2 1.6h8.3a2 2 0 0 0 2-1.5L21.5 8.5H7"/>
+            <circle cx="10" cy="21" r="1.4" fill="currentColor" stroke="none"/>
+            <circle cx="17.5" cy="21" r="1.4" fill="currentColor" stroke="none"/>
+          </svg>
+        </span>
+        <span class="spx-h__drawer-cart-label">View Cart</span>
+        <span class="spx-h__drawer-cart-count" data-cart-count data-count="{{ cart.item_count }}">{{ cart.item_count }}</span>
+      </a>
+      <span class="spx-h__drawer-hint">Free shipping on 2+ jars</span>
+    </div>
+  </aside>
+</header>
+
+<script>
+  (function() {
+    var sectionEl = document.getElementById('shopify-section-{{ section.id }}');
+    if (!sectionEl) return;
+    var header = sectionEl.querySelector('[data-spx-h]');
+    var drawer = sectionEl.querySelector('[data-spx-h-drawer]');
+    var overlay = sectionEl.querySelector('[data-spx-h-overlay]');
+    var openBtn = sectionEl.querySelector('[data-spx-h-open]');
+    var closeBtn = sectionEl.querySelector('[data-spx-h-close]');
+
+    function open() {
+      drawer.classList.add('is-open');
+      drawer.setAttribute('aria-hidden', 'false');
+      overlay.classList.add('is-open');
+      document.documentElement.style.overflow = 'hidden';
+    }
+    function close() {
+      drawer.classList.remove('is-open');
+      drawer.setAttribute('aria-hidden', 'true');
+      overlay.classList.remove('is-open');
+      document.documentElement.style.overflow = '';
+    }
+
+    if (openBtn) openBtn.addEventListener('click', open);
+    if (closeBtn) closeBtn.addEventListener('click', close);
+    if (overlay) overlay.addEventListener('click', close);
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && drawer.classList.contains('is-open')) close();
+    });
+
+    {% if section.settings.sticky_shadow %}
+    // Subtle shadow once scrolled
+    var scrolled = false;
+    function checkScroll() {
+      var should = window.scrollY > 30;
+      if (should !== scrolled) {
+        scrolled = should;
+        sectionEl.classList.toggle('is-scrolled', scrolled);
+      }
+    }
+    window.addEventListener('scroll', checkScroll, { passive: true });
+    checkScroll();
+    {% endif %}
+
+    // Cart count auto-update (listens for cart:updated events)
+    function updateCartCount(count) {
+      var els = sectionEl.querySelectorAll('[data-cart-count]');
+      els.forEach(function(el) {
+        el.textContent = count;
+        el.setAttribute('data-count', count);
+      });
+    }
+    document.addEventListener('cart:updated', function(e) {
+      if (e.detail && typeof e.detail.item_count !== 'undefined') {
+        updateCartCount(e.detail.item_count);
+      }
+    });
+    window.addEventListener('cart:updated', function(e) {
+      if (e.detail && typeof e.detail.item_count !== 'undefined') {
+        updateCartCount(e.detail.item_count);
+      }
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "SpiceX header",
+  "class": "spx-h-section",
+  "max_blocks": 12,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Logo"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo image",
+      "info": "Upload your SpiceX logo. If empty, falls back to text."
+    },
+    {
+      "type": "range",
+      "id": "logo_max_height_desktop",
+      "label": "Logo height (desktop)",
+      "min": 40,
+      "max": 120,
+      "step": 4,
+      "default": 72,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "logo_max_height_mobile",
+      "label": "Logo height (mobile)",
+      "min": 32,
+      "max": 90,
+      "step": 2,
+      "default": 56,
+      "unit": "px"
+    },
+    {
+      "type": "text",
+      "id": "logo_text",
+      "label": "Logo text (used if no image)",
+      "default": "Spice"
+    },
+    {
+      "type": "text",
+      "id": "logo_accent",
+      "label": "Logo accent letter",
+      "default": "X"
+    },
+    {
+      "type": "color",
+      "id": "logo_accent_color",
+      "label": "Logo accent color (text fallback only)",
+      "default": "#e8a823"
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#0a0a0a"
+    },
+    {
+      "type": "color",
+      "id": "cart_badge_color",
+      "label": "Cart count badge",
+      "default": "#e8a823"
+    },
+    {
+      "type": "checkbox",
+      "id": "sticky_shadow",
+      "label": "Add shadow when scrolled",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "nav_left",
+      "name": "Nav link (left of logo)",
+      "settings": [
+        { "type": "text", "id": "label", "label": "Label", "default": "Shop" },
+        { "type": "url", "id": "url", "label": "URL" }
+      ]
+    },
+    {
+      "type": "nav_right",
+      "name": "Nav link (right of logo)",
+      "settings": [
+        { "type": "text", "id": "label", "label": "Label", "default": "Our Story" },
+        { "type": "url", "id": "url", "label": "URL" }
+      ]
+    }
+  ],
+  "default": {
+    "blocks": [
+      { "type": "nav_left", "settings": { "label": "Home", "url": "/" } }
+    ]
+  }
+}
+{% endschema %}
